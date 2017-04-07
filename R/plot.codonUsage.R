@@ -1,6 +1,6 @@
-#' @name plot.codonUsage
-#' @aliases plot.codonUsage,BioData-method
-#' @rdname plot.codonUsage-methods
+#' @name plotCodonUsage
+#' @aliases plotCodonUsage,BioData-method
+#' @rdname plotCodonUsage-methods
 #' @docType methods
 #' @description plots the codon usage for one sample
 #' The function uses sampleCodonUsage() to extract this information from for the sample
@@ -13,15 +13,15 @@
 #' @param main the figure title default="Pie Chart"
 #' @param color a vector of color information to use for the codons default= rainbow
 #' @param fname the filename to plot to as png (default use x11 as plotting device)
-#' @title description of function plot.codonUsage
+#' @title description of function plotCodonUsage
 #' @export 
-setGeneric('plot.codonUsage', ## Name
+setGeneric('plotCodonUsage', ## Name
 	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('plot.codonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		standardGeneric('plotCodonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
-setMethod('plot.codonUsage', signature = c ('BioData'),
+setMethod('plotCodonUsage', signature = c ('BioData'),
 	definition = function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) {
 	data <- sampleCodonUsage(x, sname, codons=codons, min_reads=min_reads, tRF.reliability=tRF.reliability,tRF.type=tRF.type  )
 	if ( is.null(color) ) {

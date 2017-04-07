@@ -28,7 +28,7 @@ value <- sampleCodonUsage(x, 'H9.PUS7KO.1_S6.all.reads' )
 
 expect_equal(value, res)
 
-plot.codonUsage(x,'H9.PUS7KO.1_S6.all.reads', fname="test" )
+plotCodonUsage(x,'H9.PUS7KO.1_S6.all.reads', fname="test" )
 
 expect_equal(file.exists('test_pie.png'), TRUE)
 if ( file.exists('test_pie.png') ) {

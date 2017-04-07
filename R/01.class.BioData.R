@@ -1,19 +1,32 @@
 require('R6')
-require("r6x")
+#require("r6x")
 
-#' @name BioData
-#' @title BioData
-#' @description  An R6 class to store numeric data with corresponding sample and annotation data.
-#' @slot objects a data.frame containing the expression values for each gene x sample (gene = row)
-#' @slot samples a data.frame describing the columnanmes in the data column
-#' @slot annotation a data.frame describing the rownames in the data rows
-#' @slot outpath the default outpath for the plots and tables from this package
-#' @slot name the name for this package (all filesnames contain that)
-#' @slot zscored genes are normalized?
-#' @slot snorm samples normalized?
-#' @slot usedObj here a set of used and probably lateron important objects can be saved. Be very carful using any of them!
-#' @export BioData
-BioData <- withFormalClass(
+#' Class a simple interface to biological data (numeric) and rich annotation for both columns (samples) and rows (values)
+#'
+#' @docType class
+#' @importFrom R6 R6Class
+#' @importFrom grDevices dev.off png rainbow x11
+#' @importFrom graphics legend axis barplot image par pie abline hist layout lines mtext plot plot.new rect text title
+#' @importFrom stats quantile as.dendrogram density dist hclust median order.dendrogram reorder sd
+#' @export
+#' @keywords BioData
+#' @return Object of \code{\link{R6Class}} to store BioData.
+#' @format \code{\link{R6Class}} object.
+#' @examples
+#' set.seed(1)
+#' dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
+#' colnames(dat) <- paste('Sample', 1:10)
+#' rownames(dat) <- paste( 'gene', 1:100)
+#' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
+#' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
+#' x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' @field data the numerical data as data.frame
+#' @field samples the sample annotation as data.frame
+#' @field annotation the row annotation as data.frame
+#' @field usedObj a multi purpose list to store whichever ananlyis results do not fit in the stats list
+#' @field stats all stats with one result for each data row
+#' @export 
+BioData <- #withFormalClass(
 		R6Class(
 		'BioData',
 		class = TRUE,
@@ -124,48 +137,58 @@ BioData <- withFormalClass(
 					}
 					ret
 				}
-		)
-))
+	)
+)
 
-#' @name tRNAMINT
-#' @title tRNAMINT
-#' @description  An R6 class to visualize Expression data.
-#' @slot objects a data.frame containing the expression values for each gene x sample (gene = row)
-#' @slot samples a data.frame describing the columnanmes in the data column
-#' @slot annotation a data.frame describing the rownames in the data rows
-#' @slot outpath the default outpath for the plots and tables from this package
-#' @slot name the name for this package (all filesnames contain that)
-#' @slot zscored genes are normalized?
-#' @slot snorm samples normalized?
-#' @slot usedObj here a set of used and probably lateron important objects can be saved. Be very carful using any of them!
+#' Class interface for the MINT output
+#'
+#' @docType class
+#' @importFrom R6 R6Class
+#' @export
+#' @keywords MINT tRNA
+#' @return Object of \code{\link{R6Class}} to store MINT results.
+#' @format \code{\link{R6Class}} object.
+#' @examples
+#' set.seed(1)
+#' dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
+#' colnames(dat) <- paste('Sample', 1:10)
+#' rownames(dat) <- paste( 'gene', 1:100)
+#' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
+#' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
+#' x <- tRNAMINT$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' @field data the numerical data as data.frame
+#' @field samples the sample annotation as data.frame
+#' @field annotation the row annotation as data.frame
+#' @field usedObj a multi purpose list to store whichever ananlyis results do not fit in the stats list
+#' @field stats all stats with one result for each data row
 #' @export tRNAMINT
-tRNAMINT <-withFormalClass(
+tRNAMINT <-
 		R6Class( 'tRNAMINT',
 		inherit = BioData,
 		class = TRUE
-))
+)
 
 ## obtained from https://rappster.wordpress.com/2015/04/03/r6s3-and-s4-getting-the-best-of-both-worlds/
 
 .onAttach <- function(libname, pkgname) {
-#	packageStartupMessage("Welcome to my package BioData")
-#	where <- as.environment("package:BioData")
-#	clss <- list(
-#			c("BioData", "R6"),
-#			c("tRNAMINT", "BioData")
-#	)
-#	## Ensure clean initial state for subsequent package loads
-#	## while developing //
-#	sapply(clss, function(cls) {
-#				idx <- sapply(cls, isClass)
-#				suppressWarnings(try(sapply(cls[idx], removeClass,
-#										where = where), silent = TRUE))
-#			})
-#	## Set formal class equivalent //
-#	sapply(clss, function(cls) {
-#				try(setOldClass(cls, where = where), silent = TRUE)
-#			})
-	r6x::formalizeClasses()
+	#packageStartupMessage("Welcome to my package BioData")
+	where <- as.environment("package:BioData")
+	clss <- list(
+			c("BioData", "R6"),
+			c("tRNAMINT", "BioData")
+	)
+	## Ensure clean initial state for subsequent package loads
+	## while developing //
+	sapply(clss, function(cls) {
+				idx <- sapply(cls, isClass )
+				suppressWarnings(try(sapply(cls[idx], removeClass,
+										where = where), silent = TRUE))
+			})
+	## Set formal class equivalent //
+	sapply(clss, function(cls) {
+				try(setOldClass(cls, where = where), silent = TRUE)
+			})
+#	r6x::formalizeClasses()
 }
 
-try(t <- BioData$new(),silent=T)
+#try(t <- BioData$new(),silent=T)

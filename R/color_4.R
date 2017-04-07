@@ -1,13 +1,13 @@
-#' $name colors_4
-#' $aliases colors_4,BioData-method
-#' $rdname colors_4-methods
-#' $docType methods
-#' $description Create the colour information for a samples or annotation column
-#' $param x the BioData object
-#' $param name the name of data column to colour
-#' $param colFunc a colour function like default = function(x) {rainbow(x)}
-#' $title description of function createRFgrouping_col
-#' $export 
+#' @name colors_4
+#' @aliases colors_4,BioData-method
+#' @rdname colors_4-methods
+#' @docType methods
+#' @description Create the colour information for a samples or annotation column
+#' @param x the BioData object
+#' @param name the name of data column to colour
+#' @param colFunc a colour function like default = function(x) {rainbow(x)}
+#' @title description of function createRFgrouping_col
+#' @export 
 setGeneric('colors_4', ## Name
 		function ( x, name,  colFunc = NULL  ) { ## Argumente der generischen Funktion
 			standardGeneric('colors_4') ## der Aufruf von standardGeneric sorgt für das Dispatching
@@ -20,7 +20,7 @@ setMethod('colors_4', signature = c ('BioData'),
 				x$usedObj[['colorRange']] = list()
 			}
 			if ( is.null(colFunc) ){
-				colFunc = function(x) {rainbow(x)}
+				colFunc = function(x) {grDevices::rainbow(x)}
 			}
 			
 			mix <- function ( col, l ) {

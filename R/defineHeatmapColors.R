@@ -1,21 +1,21 @@
-#' $name defineHeatmapColors
-#' $aliases defineHeatmapColors,BioData-method
-#' $rdname defineHeatmapColors-methods
-#' $docType methods
-#' $description  uses ggplot2 to plot heatmaps
-#' $param merged the merged data object with the Expression column that should be colored
-#' $param colrs and optional colors vector( gray + bluered for data and rainbow for samples)
-#' $param lowest the lowest color in teh heatmap (gray by default)
-#' $title description of function gg.heatmap.list
-#' $return a list with the modified merged table and the colors vector
-#' $export 
+#' @name defineHeatmapColors
+#' @aliases defineHeatmapColors,BioData-method
+#' @rdname defineHeatmapColors-methods
+#' @docType methods
+#' @description  uses ggplot2 to plot heatmaps
+#' @param merged the merged data object with the Expression column that should be colored
+#' @param colrs and optional colors vector( gray + bluered for data and rainbow for samples)
+#' @param lowest the lowest color in teh heatmap (gray by default)
+#' @title description of function gg.heatmap.list
+#' @return a list with the modified merged table and the colors vector
+#' @export 
 setGeneric('defineHeatmapColors', ## Name
 		function (x, melted,..., colrs=NULL, lowest='gray') { ## Argumente der generischen Funktion
 			standardGeneric('defineHeatmapColors') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
 
-setMethod('defineHeatmapColors', signature = c ( 'tRNAMINT') ,
+setMethod('defineHeatmapColors', signature = c('tRNAMINT') ,
 		definition = function (x, melted, colrs=NULL, lowest='gray' ){
 			if ( ! is.null(lowest) ) {
 				colors= c(
@@ -52,7 +52,7 @@ setMethod('defineHeatmapColors', signature = c ( 'tRNAMINT') ,
 )
 
 
-setMethod('defineHeatmapColors', signature = c ( 'BioData') ,
+setMethod('defineHeatmapColors', signature = c('BioData') ,
 		definition = function (x, melted, colrs=NULL ){
 			if ( is.factor( melted$Expression )) {
 				## here might be some row grouping going on!
@@ -84,22 +84,22 @@ setMethod('defineHeatmapColors', signature = c ( 'BioData') ,
 		}
 )
 
-#' $name minValueExpr
-#' $aliases minValueExpr,BioData-method
-#' $rdname minValueExpr-methods
-#' $docType methods
-#' $description just get me the min value for the object
-#' $param x data object
-#' $title description of function gg.heatmap.list
-#' $return a list with the modified merged table and the colors vector
-#' $export
+#' @name minValueExpr
+#' @aliases minValueExpr,BioData-method
+#' @rdname minValueExpr-methods
+#' @docType methods
+#' @description just get me the min value for the object
+#' @param x data object
+#' @title description of function gg.heatmap.list
+#' @return a list with the modified merged table and the colors vector
+#' @export
 setGeneric('minValueExpr', ## Name
 		function (x) { ## Argumente der generischen Funktion
 			standardGeneric('minValueExpr') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
 
-setMethod('minValueExpr', signature = c ( 'tRNAMINT') ,
+setMethod('minValueExpr', signature = c( 'tRNAMINT') ,
 		definition = function (x ){
 			x$data <- apply(x$data,2,function(a) { a[is.na(a)] <- 0 ; a})
 			m <- 0
@@ -109,7 +109,7 @@ setMethod('minValueExpr', signature = c ( 'tRNAMINT') ,
 			m
 		}
 )
-setMethod('minValueExpr', signature = c ( 'BioData') ,
+setMethod('minValueExpr', signature = c( 'BioData') ,
 		definition = function (x ){
 			m <- 0
 			if ( x$zscored ) {

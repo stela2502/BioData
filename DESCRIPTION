@@ -6,8 +6,9 @@ Description: The package is a base R6 class to store numeric data on biological 
 Depends: 
   R (>= 3.3.2),
   stringr,
+	RSvgDevice,
   gplots
-License: GLP3
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat

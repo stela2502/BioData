@@ -16,7 +16,7 @@ setGeneric('saveObj', ## Name
 setMethod('saveObj', signature = c ('BioData'),
 		definition = function ( data, file=NULL ){
 			if ( is.null(file)){
-				file=paste(str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
+				file=paste(stringr::str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
 			}
 			print ( paste('data exported to', file.path(data$outpath,file) ) )
 			save(data , file=file.path(data$outpath, file) )

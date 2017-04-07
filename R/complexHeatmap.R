@@ -1,31 +1,31 @@
 
-#' $name complexHeatmap
-#' $aliases complexHeatmap,BioData-method
-#' $rdname complexHeatmap-methods
-#' $docType methods
-#' $description plot the PCR heatmap using the heatmap.3 function included in this package 
-#' $param x the BioData object
-#' $param ofile the outfile to create in the x$outpath folder
-#' $param colGroups columns in the samples table to use to order the data (first == order)
-#' $param rowGroups rows in the annotation table to use to color the heatmap rows (first == order)
-#' $param colColors a named list of column color vectors
-#' $param rowColors a named list of row color vectors
-#' $param pdf export as pdf (default = FALSE)
-#' $param subpath the subpath for the plots (default = '')
-#' $param heapmapCols the color function to calculate the heatmap colours ( default function (x) { c("darkgrey",bluered(x)) } )
-#' $param brks how many breaks should the expression value color key have (default=10)
-#' $title description of function complexHeatmap
-#' $export 
+#' @name complexHeatmap
+#' @aliases complexHeatmap,BioData-method
+#' @rdname complexHeatmap-methods
+#' @docType methods
+#' @description plot the PCR heatmap using the heatmap.3 function included in this package 
+#' @param x the BioData object
+#' @param ofile the outfile to create in the x@outpath folder
+#' @param colGroups columns in the samples table to use to order the data (first == order)
+#' @param rowGroups rows in the annotation table to use to color the heatmap rows (first == order)
+#' @param colColors a named list of column color vectors
+#' @param rowColors a named list of row color vectors
+#' @param pdf export as pdf (default = FALSE)
+#' @param subpath the subpath for the plots (default = '')
+#' @param heapmapCols the color function to calculate the heatmap colours ( default function (x) { c("darkgrey",bluered(x)) } )
+#' @param brks how many breaks should the expression value color key have (default=10)
+#' @title description of function complexHeatmap
+#' @export 
 setGeneric('complexHeatmap', ## Name
 		function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE, subpath='', 
-				main = '',  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo' ) { ## Argumente der generischen Funktion
+				main = '',  heapmapCols= function(x){ c("darkgrey",gplots::bluered(x))}, brks=10, X11type= 'cairo' ) { ## Argumente der generischen Funktion
 			standardGeneric('complexHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
 
 setMethod('complexHeatmap', signature = c ('BioData'),
 		definition = function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE,
-				subpath='', main = '' ,  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo' ) {
+				subpath='', main = '' ,  heapmapCols= function(x){ c("darkgrey",gplots::bluered(x))}, brks=10, X11type= 'cairo' ) {
 			
 			Rowv = FALSE
 			Colv = FALSE
@@ -101,10 +101,10 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					png( file=paste(file.path(x$outpath,ofile),'png',sep='.'), width=1600, height=800, type=X11type)
 				}
 				for ( v in colGroups ) {
-					plot.legend(x, file=paste(ofile, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(ofile, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
 				}
 				for ( v in rowGroups ) {
-					plot.legend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
 			heatmap.3(

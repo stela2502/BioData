@@ -18,6 +18,7 @@ setMethod('loadObj', signature = c ('character'),
 			if ( is.null(file)){
 				stop( "Sorry I need a 'file' to load from" )
 			}
+			data <- NULL # will be read by the next line
 			load( file )
 			data
 		}

@@ -3,7 +3,7 @@
 \docType{methods}
 \name{reduceTo}
 \alias{reduceTo}
-\alias{reduceTo,NGScollation-method}
+\alias{reduceTo,BioData-method}
 \title{description of function reduceTo}
 \usage{
 reduceTo(x, what = "row", to = NULL, ...)

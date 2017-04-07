@@ -1,9 +1,14 @@
 Package: BioData
-Title: What the Package Does (one line, title case)
+Title: The package allows to annotate a numeric data.table with col and row data
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.3.2)
-License: What license is it under?
+Authors@R: person("Stefan", "Lang", email = "Stefan.Lang@med.lu.se", role = c("aut", "cre"))
+Description: The package is a base R6 class to store numeric data on biological experiments that most of the time have complex annotation for both columns and rows of this data.
+Depends: 
+  R (>= 3.3.2),
+  stringr,
+  gplots
+License: GLP3
 Encoding: UTF-8
 LazyData: true
+Suggests: testthat
+RoxygenNote: 6.0.1

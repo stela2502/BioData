@@ -93,7 +93,7 @@ opendir ( my $folder, "$plugin_path" ) or die $!;
 
 my @files = grep !/^\./,  grep '*\.R$/', readdir($folder);
 
-my $className = "NGScollation";
+my $className = "BioData";
 my $outpath = $plugin_path."/outpath";
 system( "mkdir -p $outpath") unless ( -d $outpath);
 my $cmd;

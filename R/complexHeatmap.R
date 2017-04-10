@@ -41,21 +41,12 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			if ( is.null(x$usedObj)){
 				x$usedObj=list()
 			}
-			if ( is.null(colColors) ){
-				colColors <- x$usedObj[['colorRange']]
-			}
-			if ( is.null(rowColors) ){
-				rowColors <- x$usedObj[['colorRange']]
-			}
+			
 			if ( ! is.null(colGroups) ) {
 				ColSideColorsSize <- length(colGroups)
 				x <- reorder.samples(x, colGroups[1] )
 				for ( i in colGroups ){
-					if ( is.na(match( i, names(colColors))) ){
-						x <- colors_4( x, i )
-						colGroups[[i]] <- x$usedObj[['colorRange']][[i]]
-						#stop( paste( "No colours for the grouping", i, "in the colour objects:", paste(names(colColors), collapse= ' , ') ) )
-					}
+					colors_4(x,i)
 					ColSideColors <- cbind(ColSideColors, colColors[[ match( i, names(colColors)) ]][x$samples[, i]] )
 				}
 				colnames(ColSideColors) = colGroups
@@ -71,8 +62,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			if ( ! is.null(rowGroups) ) {
 				RowSideColorsSize <- length(rowGroups)
-				x <- reorder.genes(x, rowGroups[1] )
+				reorder.genes(x, rowGroups[1] )
 				for ( i in rowGroups ){
+					colors_4(x,i)
 					RowSideColors <- rbind( RowSideColors,rowColors[[ match( i, names(rowColors)) ]][x$annotation[, i]] )
 				}
 				rownames(RowSideColors) = rowGroups
@@ -86,6 +78,14 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}else {
 				## probably calculate the clustering??
 			}
+			
+			if ( is.null(colColors) ){
+				colColors <- x$usedObj[['colorRange']]
+			}
+			if ( is.null(rowColors) ){
+				rowColors <- x$usedObj[['colorRange']]
+			}
+			
 			data <- as.matrix(x$data)
 			data[is.na(data)] <- 0
 			brks <- unique(as.vector(c(minValueExpr(x),quantile(data[which(data!= minValueExpr(x))],seq(0,1,by=1/brks)),max(data))))

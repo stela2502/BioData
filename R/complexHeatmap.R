@@ -41,12 +41,28 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			if ( is.null(x$usedObj)){
 				x$usedObj=list()
 			}
+			if ( ! is.null(colGroups) ) {
+				for ( i in colGroups ){
+					colors_4(x,i)
+				}
+			}
+			if ( ! is.null(rowGroups) ) {
+				for ( i in rowGroups ){
+					colors_4(x,i)
+				}
+			}
+			
+			if ( is.null(colColors) ){
+				colColors <- x$usedObj[['colorRange']]
+			}
+			if ( is.null(rowColors) ){
+				rowColors <- x$usedObj[['colorRange']]
+			}
 			
 			if ( ! is.null(colGroups) ) {
 				ColSideColorsSize <- length(colGroups)
 				x <- reorder.samples(x, colGroups[1] )
 				for ( i in colGroups ){
-					colors_4(x,i)
 					ColSideColors <- cbind(ColSideColors, colColors[[ match( i, names(colColors)) ]][x$samples[, i]] )
 				}
 				colnames(ColSideColors) = colGroups
@@ -79,12 +95,6 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				## probably calculate the clustering??
 			}
 			
-			if ( is.null(colColors) ){
-				colColors <- x$usedObj[['colorRange']]
-			}
-			if ( is.null(rowColors) ){
-				rowColors <- x$usedObj[['colorRange']]
-			}
 			
 			data <- as.matrix(x$data)
 			data[is.na(data)] <- 0
@@ -107,12 +117,14 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					plotLegend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
-			heatmap.3(
+			try(
+				heatmap.3(
 					data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv=F, Colv = F,  key=F, symkey=FALSE,
 					trace='none', 
 					ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
 					RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 
 					cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", lwid=c(0.5,4), lhei=c(1,4)
+				)
 			)
 			
 			if ( ! is.null(ofile)){

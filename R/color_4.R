@@ -6,16 +6,17 @@
 #' @param x the BioData object
 #' @param name the name of data column to colour
 #' @param colFunc a colour function like default = function(x) {rainbow(x)}
+#' @param force forcefully overwrite an existing color entry for this column (default FALSE)
 #' @title description of function createRFgrouping_col
 #' @export 
 setGeneric('colors_4', ## Name
-		function ( x, name,  colFunc = NULL  ) { ## Argumente der generischen Funktion
+		function ( x, name,  colFunc = NULL, force=FALSE  ) { ## Argumente der generischen Funktion
 			standardGeneric('colors_4') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
 
 setMethod('colors_4', signature = c ('BioData'),
-		definition = function ( x, name, colFunc = NULL ) {
+		definition = function ( x, name, colFunc = NULL, force=FALSE  ) {
 			if ( is.null(x$usedObj[['colorRange']])){
 				x$usedObj[['colorRange']] = list()
 			}
@@ -32,6 +33,9 @@ setMethod('colors_4', signature = c ('BioData'),
 					}
 				}
 				col
+			}
+			if ( force ) {
+				x$usedObj[['colorRange']][[name]] = NULL
 			}
 			if ( is.null( x$usedObj[['colorRange']][[name]] ) ) {
 				if ( !is.na( match(name, colnames(x$samples)))){

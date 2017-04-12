@@ -6,7 +6,7 @@
 \alias{colors_4,BioData-method}
 \title{description of function createRFgrouping_col}
 \usage{
-colors_4(x, name, colFunc = NULL)
+colors_4(x, name, colFunc = NULL, force = FALSE)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -14,6 +14,8 @@ colors_4(x, name, colFunc = NULL)
 \item{name}{the name of data column to colour}
 
 \item{colFunc}{a colour function like default = function(x) {rainbow(x)}}
+
+\item{force}{forcefully overwrite an existing color entry for this column (default FALSE)}
 }
 \description{
 Create the colour information for a samples or annotation column

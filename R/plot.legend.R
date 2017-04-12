@@ -38,7 +38,7 @@ setMethod('plotLegend', signature = c ('BioData'),
 			}
 			if ( ! is.null(file) ) {
 				file = file.path(x$outpath, paste( collapse='_',unlist(strsplit( c(file, colname), '\\s+', perl=T))))
-				h = 4 * ceiling(n /17)
+				h = 4 * ceiling(n /10)
 				if ( svg ) {
 					devSVG( file=paste(file,'svg',sep='.'), width= 4, height=h )
 				}

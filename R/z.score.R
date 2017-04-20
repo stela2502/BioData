@@ -21,25 +21,35 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 				m$raw <- m$data
 				ma  <- as.matrix(m$data)
 				i = 0
+				opts <- unique(as.character(m$samples$NormalizationMode))
+				
+				norm.name <- function( x ) {
+					for( name in opts) {
+						x[m$samples$NormalizationMode == name] = norm.z ( as.numeric(x[m$samples$NormalizationMode == name]))
+					}
+					x
+				}
+				norm.z <-  function (x) {
+					i = i+1
+					n <- which(is.na(x) == T)
+					if ( length(x) - length(n) > 1 ){
+						if (length(n) == 0 ){
+							x <-  scale(as.vector(t(x)))
+						}
+						else {
+							x[-n] <- scale(as.vector(t(x[-n])))
+							x[n] <- NA
+						}
+						
+					}
+					else {
+						x[] = NA
+					}
+					x
+				}
+				
 				ret <- t(
-						apply(ma,1, function (x) {
-									i = i+1
-									n <- is.na(x)
-									if ( length(x) - length(n) > 1 ){
-										if (length(n) == 0 ){
-											x <-  scale(as.vector(t(x)))
-										}
-										else {
-											x[-n] <- scale(as.vector(t(x[-n])))
-											x[n] <- NA
-										}
-										
-									}
-									else {
-										x[] = NA
-									}
-									x}
-						)
+						apply(ma,1, norm.name)
 				)
 				#ret[which(is.na(ret)==T)] <- -20
 				m$data <- data.frame(ret)

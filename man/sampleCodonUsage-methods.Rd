@@ -25,3 +25,4 @@ sampleCodonUsage(x, sname, codons = NULL, min_reads = 1,
 \description{
 Calculates the sum of tRNA fragments for one sample that come from a specific tRNA for one codon.
 }
+

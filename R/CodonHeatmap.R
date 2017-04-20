@@ -11,7 +11,7 @@
 #' @param codon which codon to focus on (a column in the annotation table)
 #' @param fname the output filename
 #' @param main the title string for the heatmap default="Heatmap"
-#' @param fun collapse the data before plotting; e.g. 
+#' @param fun collapse the data before plotting; e.g.
 #' function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}  
 #' @title description of function heatmap
 #' @export 

@@ -42,6 +42,9 @@ setMethod('colors_4', signature = c ('BioData'),
 					if ( is.na(match(class(x$samples[, name ]),'factor')) ){
 						x$samples[, name ] <- factor(x$samples[, name ])
 					}
+					if ( class(x$samples) == 'factor' ) {
+						x$samples = data.frame(x$samples)
+					}
 					x$usedObj[['colorRange']][[name]] <- mix(
 							colFunc( length(levels( x$samples[, name ]))) ,
 							length(levels( x$samples[, name ])) 
@@ -50,6 +53,9 @@ setMethod('colors_4', signature = c ('BioData'),
 				else if ( !is.na( match(name, colnames(x$annotation)))){
 					if ( is.na(match(class(x$annotation[, name ]),'factor')) ){
 						x$annotation[, name ] <- factor(x$annotation[, name ])
+					}
+					if ( class(x$annotation) == 'factor' ) {
+						x$annotation = data.frame(x$annotation)
 					}
 					x$usedObj[['colorRange']][[name]] <- mix( 
 							colFunc( length(levels( x$annotation[, name ]))),

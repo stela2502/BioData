@@ -2,13 +2,15 @@
 #' @aliases tRNA_stats,tRNAMINT-method
 #' @rdname tRNA_stats-methods
 #' @docType methods
-#' @description 
-#' @param x  TEXT MISSING
-#' @param acol  TEXT MISSING
-#' @param scol  TEXT MISSING
-#' @param norm.type  TEXT MISSING default=NULL
-#' @param codon  TEXT MISSING default=NULL
-#' @param fun  TEXT MISSING default=function(x) { sum(x, na.rm=TRUE) }
+#' @description This function calculates the tRNA statistics as described in XYZ
+#' @param x the tRNAMINT object
+#' @param acol the statistics will be calculated for every entry in this column
+#' @param scol column containing the sample grouping (two groups are required)
+#' @param norm.type a tRNAMINT object normally contains 3 or more different norm datasets per sample.
+#' This value is used as a patter to select one normalization mode.
+#' @param codon the tRNAMINT object can extract codon information from the fragments using the extractCodonInformation() function.
+#' If you give one codon column name here (x$usedObj$Codons) the stats will be calculated for this codon only
+#' @param fun multiple fragments are summed up for this analysis; this is the summing function: default=function(x) { sum(x, na.rm=TRUE) }
 #' @title description of function tRNA_stats
 #' @export 
 setGeneric('tRNA_stats', ## Name

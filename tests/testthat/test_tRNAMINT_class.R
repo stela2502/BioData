@@ -1,6 +1,8 @@
 library(BioData)
 x <- loadObj('TestData.tRNAMINT.RData')
 
+x <- renew(x)
+
 x$outpath = "./"
 
 expect_equal( dim(x$data), c(5000 ,24) )

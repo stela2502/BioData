@@ -40,7 +40,12 @@ setGeneric('reorder.genes', ## Name
 setMethod('reorder.genes', signature = c ('BioData'),
 		definition = function ( x, column, ... ) {
 			x$data <- x$data[ order( x$annotation[,column]),]
-			x$annotation <- x$annotation[order( x$annotation[,column]),]
+			t <- x$annotation[order( x$annotation[,column]),]
+			if ( class(t) == 'factor' ) {
+				t <- data.frame(t)
+				colnames(t) <- colnames(x$annotation)
+			}
+			x$annotation <- t
 			invisible(x)
 		}
 

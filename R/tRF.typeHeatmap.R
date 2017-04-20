@@ -1,0 +1,41 @@
+#' @name tRF.typeHeatmap
+#' @aliases tRF.typeHeatmap,tRNAMINT-method
+#' @rdname tRF.typeHeatmap-methods
+#' @docType methods
+#' @description tRF.typeHeatmap specific for tRNAMINT data. These heatmaps should be run on size ordered objects 
+#' in order to visualize the read counts of the different tRNA fragments starting from the 5' over the center to the 3' and full length fragments.
+#' @param x the tRNAMINT object
+#' @param colGroup what do you want to have coloured at the top 
+#' @param norm.type any of 'all reads' 'all tRNA reads'  or 'Unnormalized'
+#' @param tRF.type which tRF.type to focus on (a column in the annotation table)
+#' @param fname the output filename
+#' @param main the title string for the heatmap default="Heatmap"
+#' @param fun collapse the data before plotting; e.g.
+#' function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}  
+#' @title description of function heatmap
+#' @export 
+setGeneric('tRF.typeHeatmap', ## Name
+	function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}) { ## Argumente der generischen Funktion
+		standardGeneric('tRF.typeHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	}
+)
+
+setMethod('tRF.typeHeatmap', signature = c ('tRNAMINT'),
+	definition = function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}) {
+		rowGroup=c('Codon')
+		colors_4(x,colGroup) # just make sure they are defined globaly
+	colors_4(x,'tRF.type.s.') # just make sure they are defined globaly
+	x <- x$clone() ## I might drop a lot...
+	if ( !is.null(norm.type) ) {
+		reduceTo(x,what='col', colnames(x$data)[ grep( norm.type, x$samples$NormalizationMode ) ] )
+	}
+	if ( ! is.null(tRF.type) ) {
+		reduceTo(x,what='row', rownames(x$data)[ which( x$annotation$tRF.type.s. == tRF.type ) ] )
+	}
+	if ( ! is.null(fun)){
+		x = fun(x)
+	}
+	colors_4(x,colGroup)
+	complexHeatmap(x, colGroups=colGroup, ofile=fname,rowGroups=rowGroup, pdf=T, main=main )
+	
+} )

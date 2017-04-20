@@ -21,3 +21,4 @@ collapse(x, what = "row", group, fun = function(x) {     mean(x, na.rm =
 \description{
 This function collapses a dataset on any row or column information using the function fun.
 }
+

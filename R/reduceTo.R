@@ -47,7 +47,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 						}
 						x$name = name
 					}else {
-						print (paste( "None of the probesets matched the probesets in",x$objects[[name]]@name, "-> keep everything!"))
+						print (paste( "None of the probesets matched the probesets in",x$name, "-> keep everything!"))
 					}
 					
 					

@@ -80,7 +80,6 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				RowSideColorsSize <- length(rowGroups)
 				reorder.genes(x, rowGroups[1] )
 				for ( i in rowGroups ){
-					colors_4(x,i)
 					RowSideColors <- rbind( RowSideColors,rowColors[[ match( i, names(rowColors)) ]][x$annotation[, i]] )
 				}
 				rownames(RowSideColors) = rowGroups
@@ -94,8 +93,6 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}else {
 				## probably calculate the clustering??
 			}
-			
-			
 			data <- as.matrix(x$data)
 			data[is.na(data)] <- 0
 			brks <- unique(as.vector(c(minValueExpr(x),quantile(data[which(data!= minValueExpr(x))],seq(0,1,by=1/brks)),max(data))))

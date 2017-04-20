@@ -45,6 +45,16 @@ BioData <- #withFormalClass(
 				name='BioData',
 				usedObj = NULL,
 				drop=c('MDS'),
+				print = function (...) {
+					cat (paste("An object of class", paste(collapse="::",rev(class(self))),"\n" ) )
+					cat("named ",self$name,"\n")
+					cat (paste( 'with',nrow(self$data),'genes and', ncol(self$data),' samples.'),"\n")
+					cat (paste("Annotation datasets (",paste(dim(self$annotation),collapse=','),"): '",paste( colnames(self$annotation ), collapse="', '"),"'  ",sep='' ),"\n")
+					cat (paste("Sample annotation (",paste(dim(self$samples),collapse=','),"): '",paste( colnames(self$samples ), collapse="', '"),"'  ",sep='' ),"\n")
+					if ( length(names(self$stats)) > 0 ){
+						cat ( "P values were calculated for ", length(names(self$stats)) -1, " condition(s)\n")
+					}
+				},
 				initialize = function (dat,Samples, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
 					
 					S <- Samples
@@ -102,14 +112,6 @@ BioData <- #withFormalClass(
 					
 					self$sampleNamesCol <- namecol
 					self$force.numeric
-				},
-				force.numeric = function ( ) {
-					for ( i in 1: ncol(self$data) ) {
-						if ( ! is.numeric(self$data[,i]) ) {
-							self$data[,i] <- as.numeric(self$data[,i])
-						}
-					}
-					invisible(x)
 				},
 				pwd = function () {
 					system( 'pwd > __pwd' )

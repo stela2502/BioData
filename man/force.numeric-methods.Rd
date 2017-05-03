@@ -14,4 +14,3 @@ force.numeric(x)
 \description{
 make sure, that all variables in the data table are numeric. Add NAs if necessary.
 }
-

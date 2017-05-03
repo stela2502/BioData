@@ -10,10 +10,17 @@ Depends:
     stringr,
     RSvgDevice,
     gplots,
-    weights
+    weights,
+    reshape2, 
+	rgl, 
+	gplots,
+    RFclust.SGE,
+	ggplot2,
+	mclust,
+	DDRTree
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests:
     testthat
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

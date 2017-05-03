@@ -17,4 +17,3 @@ a list with the modified merged table and the colors vector
 \description{
 just get me the min value for the object
 }
-

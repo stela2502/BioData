@@ -17,4 +17,3 @@ the z scored matrix / BioData object
 \description{
 z score the matrix
 }
-

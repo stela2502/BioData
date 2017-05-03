@@ -20,4 +20,3 @@ collapse2codons(x, sum.fun = function(x) {     sum(x, na.rm = T) },
 This function collapses the data to the different codons and reports the sum.fun of all codons.
 Single fragments can/will be counted multiple times.
 }
-

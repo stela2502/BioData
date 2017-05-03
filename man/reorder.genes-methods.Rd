@@ -16,4 +16,3 @@ reorder.genes(x, column, ...)
 \description{
 this function reorderes the BioData object based on a column in the samples table (e.g. for plotting)
 }
-

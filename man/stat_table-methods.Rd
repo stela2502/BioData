@@ -16,4 +16,3 @@ stat_table(l, padjMethod = "BH")
 \description{
 converts a list of tables one table adding the list name as first column
 }
-

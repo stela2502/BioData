@@ -7,7 +7,7 @@
 \title{description of function tRNA_stats}
 \usage{
 tRNA_stats(x, acol, scol, norm.type = NULL, codon = NULL,
-  fun = function(x) {     sum(x, na.rm = TRUE) })
+  fun = function(x) {     x[is.na(x)] = 0     mean(x) })
 }
 \arguments{
 \item{x}{the tRNAMINT object}
@@ -27,4 +27,3 @@ If you give one codon column name here (x$usedObj$Codons) the stats will be calc
 \description{
 This function calculates the tRNA statistics as described in XYZ
 }
-

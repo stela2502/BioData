@@ -36,6 +36,7 @@ BioData <- #withFormalClass(
 				samples=NULL,
 				annotation=NULL,
 				ranks=NULL,
+				logged=FALSE,
 				stats=NULL,
 				snorm=FALSE,
 				zscored=FALSE,
@@ -170,6 +171,34 @@ tRNAMINT <-
 		class = TRUE
 )
 
+#' Class interface for two coor microarray data
+#'
+#' @docType class
+#' @importFrom R6 R6Class
+#' @export
+#' @keywords Affy MicroArray
+#' @return Object of \code{\link{R6Class}} to store two color microarray data (gene level)
+#' @format \code{\link{R6Class}} object.
+#' @examples
+#' set.seed(1)
+#' dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
+#' colnames(dat) <- paste('Sample', 1:10)
+#' rownames(dat) <- paste( 'gene', 1:100)
+#' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
+#' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
+#' x <- MicroArray$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' @field data the numerical data as data.frame
+#' @field samples the sample annotation as data.frame
+#' @field annotation the row annotation as data.frame
+#' @field usedObj a multi purpose list to store whichever ananlyis results do not fit in the stats list
+#' @field stats all stats with one result for each data row
+#' @export MicroArray
+MicroArray <-
+		R6Class( 'MicroArray',
+				inherit = BioData,
+				class = TRUE
+		)
+
 ## obtained from https://rappster.wordpress.com/2015/04/03/r6s3-and-s4-getting-the-best-of-both-worlds/
 
 .onAttach <- function(libname, pkgname) {
@@ -177,7 +206,8 @@ tRNAMINT <-
 	where <- as.environment("package:BioData")
 	clss <- list(
 			c("BioData", "R6"),
-			c("tRNAMINT", "BioData")
+			c("tRNAMINT", "BioData"),
+			c("MicroArray", "BioData")
 	)
 	## Ensure clean initial state for subsequent package loads
 	## while developing //

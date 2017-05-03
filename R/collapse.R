@@ -17,6 +17,9 @@ setGeneric('collapse', ## Name
 
 setMethod('collapse', signature = c ('BioData'),
 	definition = function ( x, what='row', group, fun = function(x){ mean(x, na.rm=TRUE)} ) {
+		if ( is.null(x$raw) ) {
+			x$raw <- x$data
+		}
 	if ( what == 'row') {
 		if ( is.null( x$annotation[[group]]) ) {
 			stop( paste("No colname", group, "defined in the annotation data" ) )

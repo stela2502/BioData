@@ -22,7 +22,12 @@ setMethod('collapse2codons', signature = c ('tRNAMINT'),
 	for ( codon in x$usedObj$Codons ) {
 		a <- x$clone()
 		reduceTo(a,'row', rownames(a$data)[which(a$annotation[,codon] == 1)] )
-		dat <- rbind( dat, apply( a$data,2,sum.fun))
+		if ( class(a$data) == 'numeric') {
+			dat <- rbind( dat, a$data )
+			a$data <- t(data.frame(a$data))
+		}else {
+			dat <- rbind( dat, apply( a$data,2,sum.fun))
+		}
 	}
 	dat <- data.frame(dat)
 	

@@ -56,7 +56,7 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 				colnames(m$data)<- colnames(m$raw)
 				m$zscored = TRUE
 			}
-			m
+			invisible(m)
 		})
 
 setMethod('z.score', signature = c ('matrix'),
@@ -67,7 +67,7 @@ setMethod('z.score', signature = c ('matrix'),
 			sd[which(sd==0)] <- 1e-8
 			m <- (m - me) /sd
 			rownames(m) <- rn
-			m
+			invisible(m)
 		})
 
 setMethod('z.score',signature = c ('BioData'),
@@ -77,6 +77,6 @@ setMethod('z.score',signature = c ('BioData'),
 				m$data <- data.frame(z.score( as.matrix( m$data )))
 				m$zscored = TRUE
 			}
-			m
+			invisible(m)
 		})
 

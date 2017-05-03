@@ -8,7 +8,7 @@
 \usage{
 tRF.typeHeatmap(x, colGroup, norm.type = NULL, tRF.type = NULL,
   fname = NULL, main = "Heatmap", fun = function(x) {    
-  collapse2codons(x) })
+  collapse2codons(x) }, z.score = FALSE, brks = 10)
 }
 \arguments{
 \item{x}{the tRNAMINT object}
@@ -23,11 +23,14 @@ tRF.typeHeatmap(x, colGroup, norm.type = NULL, tRF.type = NULL,
 
 \item{main}{the title string for the heatmap default="Heatmap"}
 
-\item{fun}{collapse the data before plotting; e.g.
+\item{fun}{collapse the data before plotting; e.g.}
+
+\item{z.score}{z.score the data after the summary (default = F)}
+
+\item{brks}{how many shades of heatmap colors ( default 10 )
 function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}}
 }
 \description{
 tRF.typeHeatmap specific for tRNAMINT data. These heatmaps should be run on size ordered objects 
 in order to visualize the read counts of the different tRNA fragments starting from the 5' over the center to the 3' and full length fragments.
 }
-

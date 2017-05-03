@@ -11,17 +11,19 @@
 #' @param fname the output filename
 #' @param main the title string for the heatmap default="Heatmap"
 #' @param fun collapse the data before plotting; e.g.
+#' @param z.score z.score the data after the summary (default = F)
+#' @param brks how many shades of heatmap colors ( default 10 )
 #' function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}  
 #' @title description of function heatmap
 #' @export 
 setGeneric('tRF.typeHeatmap', ## Name
-	function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}) { ## Argumente der generischen Funktion
+	function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}, z.score=FALSE, brks=10) { ## Argumente der generischen Funktion
 		standardGeneric('tRF.typeHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('tRF.typeHeatmap', signature = c ('tRNAMINT'),
-	definition = function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}) {
+	definition = function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}, z.score=FALSE, brks=10) {
 		rowGroup=c('Codon')
 		colors_4(x,colGroup) # just make sure they are defined globaly
 	colors_4(x,'tRF.type.s.') # just make sure they are defined globaly
@@ -35,7 +37,10 @@ setMethod('tRF.typeHeatmap', signature = c ('tRNAMINT'),
 	if ( ! is.null(fun)){
 		x = fun(x)
 	}
+	if ( z.score ) {
+		z.score(x)
+	}
 	colors_4(x,colGroup)
-	complexHeatmap(x, colGroups=colGroup, ofile=fname,rowGroups=rowGroup, pdf=T, main=main )
-	
+	complexHeatmap(x, colGroups=colGroup, ofile=fname,rowGroups=rowGroup, pdf=T, main=main, brks=brks )
+	x
 } )

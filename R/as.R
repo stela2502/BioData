@@ -1,5 +1,4 @@
 #' @name as.BioData
-#' @alias.BioDataes as.BioData,BioData-method
 #' @rdname as.BioData-methods
 #' @docType methods
 #' @description create a NGSexpressionSet from a counts list object

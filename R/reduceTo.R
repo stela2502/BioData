@@ -15,7 +15,10 @@ setGeneric('reduceTo', ## Name
 )
 
 setMethod('reduceTo', signature = c ('BioData'),
-		definition = function ( x, what='row', to=NULL, name='reducedTo' ) {
+		definition = function ( x, what='row', to=NULL, name='reducedTo', copy=FALSE ) {
+			if ( copy ) {
+				x <- x$clone()
+			}
 			if ( ! is.null(to)) {
 				if ( what =="row") {
 					if ( length(which(is.na(match(to,rownames(x$data)))==F)) > 0 ) {

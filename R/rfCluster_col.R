@@ -24,12 +24,12 @@
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 setGeneric('rfCluster_col',
-		function ( x, rep=5, SGE=F, email='none', k=16, slice=30, subset=200,nforest=500, ntree=500, name='RFclust'){
+		function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust'){
 			standardGeneric('rfCluster_col')
 		}
 )
 setMethod('rfCluster_col', signature = c ('BioData'),
-		definition = function ( x, rep=5, SGE=F, email="none", k=16, slice=30, subset=200 ,nforest=500, ntree=1000, name='RFclust') {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust') {
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
@@ -79,7 +79,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}
 					else {
 						print ( "You should wait some time now to let the calculation finish! -> re-run the function")
-						print ( "check: system( 'ps -Af | grep Rcmd | grep -v grep')")
+						print ( "check: system( 'ps -Af | grep \"R.*BATCH\" | grep -v grep')")
 					}
 				}
 				else {

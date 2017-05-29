@@ -24,12 +24,12 @@
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 setGeneric('rfCluster_row',
-		function ( x, rep=5, SGE=F, email="none", k=16, slice=30, subset=200,nforest=500, ntree=500, name='RFclust'){
+		function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust'){
 			standardGeneric('rfCluster_row')
 		}
 )
 setMethod('rfCluster_row', signature = c ('BioData'),
-		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=1, subset=200 ,nforest=500, ntree=1000, name='RFclust_row') {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row') {
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')

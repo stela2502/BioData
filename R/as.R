@@ -1,27 +1,28 @@
-#' @name as.BioData
-#' @rdname as.BioData-methods
+#' @name as_BioData
+#' @rdname as_BioData-methods
 #' @docType methods
 #' @description create a NGSexpressionSet from a counts list object
 #' @param dat the counts list you get from Rsubread::featureCounts()
-#' @title description of function as.BioData
+#' @title description of function as_BioData
 #' @export 
-setGeneric('as.BioData', ## Name
+setGeneric('as_BioData', ## Name
 	function ( dat ) { ## Argumente der generischen Funktion
-		standardGeneric('as.BioData') ## der Aufruf von standardGeneric sorgt für das.BioData Dispatching
+		standardGeneric('as_BioData') ## der Aufruf von standardGeneric sorgt für das_BioData Dispatching
 	}
 )
 
-setMethod('as.BioData', signature = c ('list'),
+setMethod('as_BioData', signature = c ('list'),
 	definition = function ( dat ) {
 	ret = NULL
 	if (all.equal( names ( dat), c("counts" ,"annotation", "targets", "stat")  ) ) {
 		samples <- data.frame(t(dat$stat))
-		colnames(samples) <- as.BioData.character(t(samples[1,]))
+		colnames(samples) <- as.character(t(samples[1,]))
+		samples <- samples[-1,]
 		samples$filename <- rownames(samples)
 		rownames(samples) <-1:nrow(samples)
 		ret <- BioData$new( 
 				dat= cbind(dat$annotation, dat$counts), 
-				samples = samples, 
+				Samples = samples, 
 				namecol= 'filename', 
 				namerow= 'GeneID',
 				outpath= ''

@@ -18,6 +18,10 @@ Depends:
 	ggplot2,
 	mclust,
 	DDRTree
+biocViews:
+	RDRToolbox,
+	destiny,
+	DEseq2
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

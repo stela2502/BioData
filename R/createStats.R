@@ -32,9 +32,10 @@ setMethod('createStats', signature = c ('BioData'),
 		if ( is.na(id)) { id <- 1 } 
 		x<- preprocess ( x, condition )
 		conditions <- as.vector(unique(x$samples[,condition]))
+		x$usedObj[['cds']][[id]] <- DESeq2::DESeq(x$usedObj[['cds']][[id]]) ## run it
 		if ( ! is.null(A) && ! is.null(B)) {
 			x <- add_to_stat ( x, 
-				stat = DESeq::nbinomTest(x$usedObj[['cds']][[id]], A, B ), 
+				stat = as.data.frame(DESeq2::results(x$usedObj[['cds']][[id]], contrast= c( condition,  A, B ) )), 
 				name = paste( A, B ,sep=' vs. ')
 			)
 		}
@@ -42,7 +43,7 @@ setMethod('createStats', signature = c ('BioData'),
 			for ( i in 1:(length(conditions)-1) ){
 				for ( a in (i+1):length(conditions) ){
 					x <- add_to_stat ( x, 
-						stat = DESeq::nbinomTest(x$usedObj[['cds']][[id]], conditions[i] , conditions[a] ), 
+						stat = as.data.frame(DESeq2::results(x$usedObj[['cds']][[id]], contrast= c( condition, conditions[i] , conditions[a] ) )), 
 						name = paste( conditions[i], conditions[a],sep=' vs. ')
 					)
 

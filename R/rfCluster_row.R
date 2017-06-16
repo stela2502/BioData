@@ -21,6 +21,7 @@
 #' @param name if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')
 #' @param nforest the numer of forests to grow for each rep (defualt = 500)
 #' @param ntree the numer of trees per forest (default = 500)
+#' @param settings slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 setGeneric('rfCluster_row',
@@ -70,7 +71,11 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$data)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
-						x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+						if ( length(settings) > 0 ) {
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
+						}else {
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+						}
 					}
 					names(x$usedObj[['rfExpressionSets_row']])[i] <- tname
 					names(x$usedObj[['rfObj_row']])[i] <- tname

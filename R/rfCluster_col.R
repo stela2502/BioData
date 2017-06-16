@@ -21,15 +21,16 @@
 #' @param name if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')
 #' @param nforest the numer of forests to grow for each rep (defualt = 500)
 #' @param ntree the numer of trees per forest (default = 500)
+#' @param settings slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 setGeneric('rfCluster_col',
-		function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust'){
+		function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust', settings=list()){
 			standardGeneric('rfCluster_col')
 		}
 )
 setMethod('rfCluster_col', signature = c ('BioData'),
-		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust') {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list()) {
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
@@ -69,7 +70,11 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
 						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$data)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
-						x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+						if ( length(settings) > 0 ) {
+							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
+						}else {
+							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+						}
 					}
 					names(x$usedObj[['rfExpressionSets']]) [i] <- tname
 					names(x$usedObj[['rfObj']]) [i] <- tname

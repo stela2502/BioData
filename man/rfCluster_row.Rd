@@ -6,7 +6,7 @@
 \alias{'rfCluster_row,BioData-method}
 \title{rfCluster_row}
 \usage{
-rfCluster_row(x, rep = 5, SGE = F, email = "none", k = 16, slice = 30,
+rfCluster_row(x, rep = 1, SGE = F, email = "none", k = 16, slice = 4,
   subset = 200, nforest = 500, ntree = 500, name = "RFclust")
 }
 \arguments{
@@ -31,6 +31,8 @@ rfCluster_row(x, rep = 5, SGE = F, email = "none", k = 16, slice = 30,
 \item{name}{if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')}
 
 \item{bestColname}{the column name to store the results in}
+
+\item{settings}{slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend}
 }
 \value{
 a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)

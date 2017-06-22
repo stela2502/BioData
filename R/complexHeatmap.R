@@ -95,7 +95,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			data <- as.matrix(x$data)
 			data[is.na(data)] <- 0
-			brks <- unique(as.vector(c(minValueExpr(x),quantile(data[which(data!= minValueExpr(x))],seq(0,1,by=1/brks)),max(data))))
+			if ( length(brks) == 1 ){
+				brks <- unique(as.vector(c(minValueExpr(x),quantile(data[which(data!= minValueExpr(x))],seq(0,1,by=1/brks)),max(data))))
+			}
 			print (paste("I got these brks: ",paste(brks, collapse=", " )))
 			if ( ! is.null(ofile)){
 				if ( pdf ) {

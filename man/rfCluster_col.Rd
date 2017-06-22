@@ -6,8 +6,9 @@
 \alias{'rfCluster_col,BioData-method}
 \title{rfCluster_col}
 \usage{
-rfCluster_col(x, rep = 5, SGE = F, email = "none", k = 16, slice = 30,
-  subset = 200, nforest = 500, ntree = 500, name = "RFclust")
+rfCluster_col(x, rep = 1, SGE = F, email = "none", k = 16, slice = 4,
+  subset = 200, nforest = 500, ntree = 500, name = "RFclust",
+  settings = list())
 }
 \arguments{
 \item{x}{the single cells ngs object}
@@ -29,6 +30,8 @@ rfCluster_col(x, rep = 5, SGE = F, email = "none", k = 16, slice = 30,
 \item{ntree}{the numer of trees per forest (default = 500)}
 
 \item{name}{if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')}
+
+\item{settings}{slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend}
 
 \item{bestColname}{the column name to store the results in}
 }

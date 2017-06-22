@@ -96,6 +96,7 @@ my @files = grep !/^\./,  grep '*\.R$/', readdir($folder);
 my $className = "BioData";
 my $outpath = $plugin_path."/outpath";
 system( "mkdir -p $outpath") unless ( -d $outpath);
+system( "rm -f $outpath/*" );
 my $cmd;
 for my $file ( @files ) {
 	next unless ( $file =~ m/R$/ );
@@ -107,6 +108,7 @@ for my $file ( @files ) {
 	if ( $debug ) {
 		print $cmd."\n";
 	}else {
+		print "runnning $cmd\n";
 		system( $cmd );
 	}
 	## run convert_R_S4_FileMess_into_function.pl
@@ -116,6 +118,7 @@ for my $file ( @files ) {
 	if ( $debug ) {
 		print $cmd."\n";
 	}else {
+		print "runnning $cmd\n";
 		system( $cmd );
 	}
 }

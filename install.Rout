@@ -28,125 +28,64 @@ Bioconductor version 3.5 (BiocInstaller 1.26.0), ?biocLite for help
 > biocLite()
 BioC_mirror: https://bioconductor.org
 Using Bioconductor 3.5 (BiocInstaller 1.26.0), R 3.4.0 (2017-04-21).
-Old packages: 'devtools'
+installation path not writeable, unable to update packages: mapproj, maps,
+  RNetCDF, foreign
+Old packages: 'AnnotationDbi', 'backports', 'DBI', 'devtools', 'FactoMineR',
+  'gdata', 'irlba', 'jsonlite', 'knitr', 'MAST', 'R6', 'Rcpp', 'RSQLite',
+  'tibble', 'XML'
 > install()
 Installing BioData
-trying URL 'https://cran.rstudio.com/src/contrib/mclust_5.2.3.tar.gz'
-Content type 'application/x-gzip' length 2751646 bytes (2.6 MB)
-==================================================
-downloaded 2.6 MB
-
-Installing mclust
-'/usr/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore --quiet  \
-  CMD INSTALL '/tmp/Rtmp5ugzw5/devtools38aaa1bbe8/mclust'  \
-  --library='/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4' --install-tests 
-
-* installing *source* package ‘mclust’ ...
-** package ‘mclust’ successfully unpacked and MD5 sums checked
-** libs
-gcc -std=gnu99 -I/usr/share/R/include -DNDEBUG      -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c init.c -o init.o
-gfortran   -fpic  -g -O2 -fstack-protector-strong  -c mclust.f -o mclust.o
-gfortran   -fpic  -g -O2 -fstack-protector-strong  -c mclustaddson.f -o mclustaddson.o
-gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o mclust.so init.o mclust.o mclustaddson.o -llapack -lblas -lgfortran -lm -lquadmath -lgfortran -lm -lquadmath -L/usr/lib/R/lib -lR
-installing to /home/med-sal/R/x86_64-pc-linux-gnu-library/3.4/mclust/libs
-** R
-** data
-** inst
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded
-* DONE (mclust)
-trying URL 'https://cran.rstudio.com/src/contrib/weights_0.85.tar.gz'
-Content type 'application/x-gzip' length 27233 bytes (26 KB)
-==================================================
-downloaded 26 KB
-
-Installing weights
-trying URL 'https://cran.rstudio.com/src/contrib/mice_2.30.tar.gz'
-Content type 'application/x-gzip' length 648634 bytes (633 KB)
-==================================================
-downloaded 633 KB
-
-Installing mice
-'/usr/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore --quiet  \
-  CMD INSTALL '/tmp/Rtmp5ugzw5/devtools38aa28c382ea/mice'  \
-  --library='/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4' --install-tests 
-
-* installing *source* package ‘mice’ ...
-** package ‘mice’ successfully unpacked and MD5 sums checked
-** libs
-g++  -I/usr/share/R/include -DNDEBUG  -I"/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4/Rcpp/include"    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
-g++  -I/usr/share/R/include -DNDEBUG  -I"/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4/Rcpp/include"    -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c match.cpp -o match.o
-g++ -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o mice.so RcppExports.o match.o -L/usr/lib/R/lib -lR
-installing to /home/med-sal/R/x86_64-pc-linux-gnu-library/3.4/mice/libs
-** R
-** data
-*** moving datasets to lazyload DB
-** inst
-** preparing package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded
-* DONE (mice)
-'/usr/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore --quiet  \
-  CMD INSTALL '/tmp/Rtmp5ugzw5/devtools38aa4176390/weights'  \
-  --library='/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4' --install-tests 
-
-* installing *source* package ‘weights’ ...
-** package ‘weights’ successfully unpacked and MD5 sums checked
-** libs
-gcc -std=gnu99 -I/usr/share/R/include -DNDEBUG      -fpic  -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c wcorr.c -o wcorr.o
-gcc -std=gnu99 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o weights.so wcorr.o -L/usr/lib/R/lib -lR
-installing to /home/med-sal/R/x86_64-pc-linux-gnu-library/3.4/weights/libs
-** R
-** data
-** preparing package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** testing if installed package can be loaded
-* DONE (weights)
 '/usr/lib/R/bin/R' --no-site-file --no-environ --no-save --no-restore --quiet  \
   CMD INSTALL '/home/med-sal/git_Projects/BioData'  \
   --library='/home/med-sal/R/x86_64-pc-linux-gnu-library/3.4' --install-tests 
 
 * installing *source* package ‘BioData’ ...
 ** R
+** data
+*** moving datasets to lazyload DB
 ** tests
 ** preparing package for lazy loading
 in method for ‘saveObj’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘collaps’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘reorder.samples’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘reorder.genes’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘CodonHeatmap’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘Make3D4obj’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘Split4Geo’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘bestGrouping’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘clusters’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘collapse’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘collapse2codons’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘colors_4’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘complexHeatmap’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘createStats’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘createStats’ with signature ‘"MicroArray"’: no definition for class “MicroArray”
+in method for ‘dataframe2biodata’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘defineHeatmapColors’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘defineHeatmapColors’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘minValueExpr’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘minValueExpr’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘export.data’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘extractCodonInformation’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘force.numeric’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘logThis’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘mds’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘normalize’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘plotCodonUsage’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘plotLegend’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘preprocess’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘show’ with signature ‘object="BioData"’: no definition for class “BioData”
 in method for ‘reduceTo’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘renew’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘renew’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
+in method for ‘rfCluster_col’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘createRFgrouping_col’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘rfCluster_row’ with signature ‘"BioData"’: no definition for class “BioData”
+in method for ‘createRFgrouping_row’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘sampleCodonUsage’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘tRF.typeHeatmap’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘tRNA_stats’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
+in method for ‘transpose’ with signature ‘"BioData"’: no definition for class “BioData”
 in method for ‘z.score’ with signature ‘"tRNAMINT"’: no definition for class “tRNAMINT”
 in method for ‘z.score’ with signature ‘"BioData"’: no definition for class “BioData”
 ** help
@@ -157,4 +96,4 @@ in method for ‘z.score’ with signature ‘"BioData"’: no definition for cl
 > 
 > proc.time()
    user  system elapsed 
- 52.400   2.424  64.115 
+ 11.924   0.328  14.506 

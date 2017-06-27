@@ -14,7 +14,7 @@ setGeneric('dataframe2biodata', ## Name
 	}
 )
 
-setMethod('dataframe2biodata', signature = c ('BioData'),
+setMethod('dataframe2biodata', signature = c ('data.frame'),
 	definition = function (x, name="BioData") {
 	Samples <- data.frame( SampleName = colnames(x)[-1] )
 	ret <- BioData$new( dat=x, Sample=Samples, namecol='SampleName', namerow=  colnames(x)[1], outpath=pwd(), name=name)

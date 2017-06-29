@@ -22,6 +22,8 @@ biocViews:
 	RDRToolbox,
 	destiny,
 	DEseq2
+Remotes:
+	stela2502/RFclust.SGE
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

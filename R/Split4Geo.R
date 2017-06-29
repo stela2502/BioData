@@ -5,7 +5,6 @@
 #' @description This function will store each column in the data slot table as separate file rbound to the rownames of the data object.
 #' The name of the outfile will be the column name + .xls and it will be a tab separated table.
 #' An additional md5sums.txt file will be created containing all md5sums for the exported files.
-#' This function is linux specific as it calls 'touch' and 'md5sum' in a system call. 
 #' @param x the BioData object
 #' @param opath the outpath if different from x$outpath
 #' @title description of function Split4Geo

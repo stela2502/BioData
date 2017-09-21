@@ -99,13 +99,16 @@ setMethod('mds', signature = c ('BioData'),
 			
 		} else if ( mds.type == "DDRTree" ) {
 			
-			DDRTree_res <- DDRTree( tab, dimensions=3)
-			mds.proj <- t(DDRTree_res$Z)
-			rownames(mds.proj) <- colnames(tab)
-			
-			if ( genes ) {	
+			if ( genes ) {
+				DDRTree_res <- DDRTree( tab, dimensions=3)
+				mds.proj <- t(DDRTree_res$Z)
+				rownames(mds.proj) <- colnames(tab)
 				dataObj$usedObj$DRRTree.genes <- DDRTree_res
-			}else {
+			}
+			else {
+				DDRTree_res <- DDRTree( t(tab), dimensions=3)
+				mds.proj <- t(DDRTree_res$Z)
+				rownames(mds.proj) <- rownames(tab)
 				dataObj$usedObj$DRRTree <- DDRTree_res
 			}
 		}

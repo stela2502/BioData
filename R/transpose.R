@@ -29,6 +29,9 @@ setMethod('transpose', signature = c ('BioData'),
 			if ( ! is.null(x$raw) ) {
 				x$raw < - t(x$raw)
 			}
+			tmp = x$usedObj$MDS
+			x$usedObj$MDS = x$usedObj$MDSgenes
+			x$usedObj$MDSgenes = tmp
 			invisible(x)
 		} 
 )

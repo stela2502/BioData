@@ -16,7 +16,7 @@ setMethod('force.numeric', signature = c ('BioData'),
 	definition = function ( x ) {
 	for ( i in 1: ncol(x$data) ) {
 		if ( ! is.numeric(x$data[,i]) ) {
-			x$data[,i] <- as.numeric(x$data[,i])
+			x$data[,i] <- as.numeric(as.vector(x$data[,i]))
 		}
 	}
 	invisible(x)

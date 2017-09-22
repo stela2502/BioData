@@ -12,17 +12,18 @@
 #' @param names if true not dots, but the name in the samples table is plotted in 3D default=F
 #' @param opath create a webgl representation of the plot in a html page in this path (default = NULL) 
 #' @param main the title of the plot (default ='')
+#' @param genes use gene level MDS data not sample level (default = FALSE)
 #' @title description of function Make3D4obj
 #' @export 
 setGeneric('Make3D4obj', ## Name
-	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='' ) { ## Argumente der generischen Funktion
+	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),
-	definition = function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='' ) {
+	definition = function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) {
 
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {
@@ -35,8 +36,18 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 				legend(...)
 			} )
 		}
-		if ( is.null (x$usedObj$MDS[[mds.type]] )){
-			x <- mds(x, mds.type=mds.type)
+		if ( genes ) {
+			if ( is.null (x$usedObj$MDSgenes[[mds.type]] )){
+				x <- mds(x, mds.type=mds.type, genes=T)
+			}
+		}else {
+			if ( is.null (x$usedObj$MDS[[mds.type]] )){
+				x <- mds(x, mds.type=mds.type)
+			}
+		}
+		if ( genes ) {
+			x <- x$clone()
+			t <- transpose(x)
 		}
         if ( cut ) {
                 ## this is a gene expression value!

@@ -6,7 +6,8 @@
 \alias{mds,BioData-method}
 \title{description of function mds.and.clus}
 \usage{
-mds(dataObj, ..., mds.type = "PCA", onwhat = "Expression", genes = F)
+mds(dataObj, ..., mds.type = "PCA", onwhat = "Expression", genes = F,
+  LLEK = 2)
 }
 \arguments{
 \item{dataObj}{the BioData object}
@@ -16,6 +17,8 @@ mds(dataObj, ..., mds.type = "PCA", onwhat = "Expression", genes = F)
 \item{onwhat}{condense which dataset at the moment only Expression is supported default='expression'}
 
 \item{genes}{do it on genes not on samples (default = F)}
+
+\item{LLEK}{the neighbours in the LLE algorithm (default=2)}
 }
 \description{
 Calculates the MDS for a given MDS type and stores the 3 dimensions in the object for later use.

@@ -5,9 +5,6 @@
 \alias{renew}
 \alias{renew,BioData-method}
 \title{description of function renew}
-\usage{
-renew(x)
-}
 \arguments{
 \item{x}{the object you want to update}
 }

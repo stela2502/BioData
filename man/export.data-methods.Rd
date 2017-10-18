@@ -5,9 +5,6 @@
 \alias{export.data}
 \alias{export.data,BioData-method}
 \title{description of function write.data}
-\usage{
-export.data(x)
-}
 \arguments{
 \item{x}{the BioData object}
 }

@@ -5,9 +5,6 @@
 \alias{bestGrouping}
 \alias{'bestGrouping,BioData-method}
 \title{description of function randomForest}
-\usage{
-bestGrouping(x, group, bestColname = "QualifiedGrouping", cutoff = 0.5)
-}
 \arguments{
 \item{x}{the single cells ngs object}
 

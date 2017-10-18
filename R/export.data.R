@@ -6,11 +6,14 @@
 #' @param x the BioData object
 #' @title description of function write.data
 #' @export 
-setGeneric('export.data', ## Name
+if ( ! isGeneric('export.data') ){ setGeneric('export.data', ## Name
 		function ( x ) { ## Argumente der generischen Funktion
 			standardGeneric('export.data') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'export.data' already defined - no overloading here!")
+}
 
 setMethod('export.data', signature = c ( 'BioData') ,
 		definition = function ( x ) {

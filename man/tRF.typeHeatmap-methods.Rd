@@ -5,11 +5,6 @@
 \alias{tRF.typeHeatmap}
 \alias{tRF.typeHeatmap,tRNAMINT-method}
 \title{description of function heatmap}
-\usage{
-tRF.typeHeatmap(x, colGroup, norm.type = NULL, tRF.type = NULL,
-  fname = NULL, main = "Heatmap", fun = function(x) {    
-  collapse2codons(x) }, z.score = FALSE, brks = 10)
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

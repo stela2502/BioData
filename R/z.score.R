@@ -7,11 +7,14 @@
 #' @return the z scored matrix / BioData object
 #' @title description of function z.score
 #' @export 
-setGeneric('z.score', ## Name
+if ( ! isGeneric('z.score') ){ setGeneric('z.score', ## Name
 		function (m) { ## Argumente der generischen Funktion
 			standardGeneric('z.score') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'z.score' already defined - no overloading here!")
+}
 
 
 setMethod('z.score', signature = c ('tRNAMINT'),

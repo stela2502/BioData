@@ -5,15 +5,12 @@
 \alias{defineHeatmapColors}
 \alias{defineHeatmapColors,BioData-method}
 \title{description of function gg.heatmap.list}
-\usage{
-defineHeatmapColors(x, melted, ..., colrs = NULL, lowest = "gray")
-}
 \arguments{
+\item{merged}{the merged data object with the Expression column that should be colored}
+
 \item{colrs}{and optional colors vector( gray + bluered for data and rainbow for samples)}
 
 \item{lowest}{the lowest color in teh heatmap (gray by default)}
-
-\item{merged}{the merged data object with the Expression column that should be colored}
 }
 \value{
 a list with the modified merged table and the colors vector

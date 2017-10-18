@@ -12,6 +12,7 @@ setGeneric('pwd', ## Name
 	}
 )
 
+
 setMethod('pwd', signature = c () ,
 	definition = function ( a ) {
 		rm(a)

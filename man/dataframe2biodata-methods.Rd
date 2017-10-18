@@ -5,9 +5,6 @@
 \alias{dataframe2biodata}
 \alias{dataframe2biodata,BioData-method}
 \title{description of function dataframe2biodata}
-\usage{
-dataframe2biodata(x, name = "BioData")
-}
 \arguments{
 \item{x}{the data table}
 

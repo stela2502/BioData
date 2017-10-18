@@ -10,11 +10,14 @@
 #' @param copy create a copy of the data (default=F)
 #' @title description of function collaps
 #' @export 
-setGeneric('collaps', ## Name
+if ( ! isGeneric('collaps') ){ setGeneric('collaps', ## Name
 		function (dataObj, by=c('median','mean','sd','sum' ), groupCol='GroupID', copy=FALSE ) { ## Argumente der generischen Funktion
 			standardGeneric('collaps') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'collaps' already defined - no overloading here!")
+}
 
 setMethod('collaps', signature = c ('BioData'),
 		definition = function (dataObj, by=c('median','mean','sd','sum', 'var' ), groupCol='GroupID', copy=FALSE ) {

@@ -5,9 +5,6 @@
 \alias{stat_table}
 \alias{stat_table,tRNAMINT-method}
 \title{description of function stat_table}
-\usage{
-stat_table(l, padjMethod = "BH")
-}
 \arguments{
 \item{l}{the list to convert}
 

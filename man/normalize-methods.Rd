@@ -6,16 +6,18 @@
 \alias{normalize,BioData-method}
 \alias{normalize}
 \alias{normalize,NGSexpressionSet-method}
+\alias{normalize}
+\alias{normalize,BioData-method}
 \title{description of function normalize}
 \usage{
-normalize(object, ..., name = NULL)
+\S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
 
 \S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
 }
 \arguments{
-\item{name}{the new name of the object (deafule old name + normalized)}
-
 \item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
+
+\item{name}{the new name of the object (deafule old name + normalized)}
 
 \item{x}{The NGSexpressionSet}
 

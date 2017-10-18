@@ -5,10 +5,6 @@
 \alias{collapse}
 \alias{collapse,BioData-method}
 \title{description of function collapse}
-\usage{
-collapse(x, what = "row", group, fun = function(x) {     mean(x, na.rm =
-  TRUE) })
-}
 \arguments{
 \item{x}{the BioData object}
 

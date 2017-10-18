@@ -5,9 +5,6 @@
 \alias{loadObj}
 \alias{loadObj,BioData-method}
 \title{description of function loadObj}
-\usage{
-loadObj(file = NULL)
-}
 \arguments{
 \item{file}{the infile}
 }

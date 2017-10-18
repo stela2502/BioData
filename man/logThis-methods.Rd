@@ -5,9 +5,6 @@
 \alias{logThis}
 \alias{logThis,BioData-method}
 \title{description of function log}
-\usage{
-logThis(x)
-}
 \arguments{
 \item{x}{the biodata object}
 }

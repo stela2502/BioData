@@ -12,11 +12,14 @@
 #' @return the NGSexpressionSet with a set of ststs tables
 #' @title description of function createStats
 #' @export 
-setGeneric('createStats', ## Name
+if ( ! isGeneric('createStats') ){ setGeneric('createStats', ## Name
 	function (x, condition, files=F, A=NULL, B=NULL) { ## Argumente der generischen Funktion
 		standardGeneric('createStats') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'createStats' already defined - no overloading here!")
+}
 #
 setMethod('createStats', signature = c ('BioData'),
 	definition = function (x, condition, files=F, A=NULL, B=NULL) {

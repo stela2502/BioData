@@ -9,11 +9,14 @@
 #' @param name the name of the collapsed object default="collapsed"
 #' @title description of function collapse2codons
 #' @export 
-setGeneric('collapse2codons', ## Name
+if ( ! isGeneric('collapse2codons') ){ setGeneric('collapse2codons', ## Name
 	function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") { ## Argumente der generischen Funktion
 		standardGeneric('collapse2codons') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'collapse2codons' already defined - no overloading here!")
+}
 
 setMethod('collapse2codons', signature = c ('tRNAMINT'),
 	definition = function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") {

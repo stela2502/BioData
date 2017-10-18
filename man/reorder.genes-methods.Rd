@@ -5,9 +5,6 @@
 \alias{reorder.genes}
 \alias{reorder.genes,BioData-method}
 \title{description of function remove.genes}
-\usage{
-reorder.genes(x, column, ...)
-}
 \arguments{
 \item{x}{the BioData object}
 

@@ -5,35 +5,30 @@
 \alias{rfCluster_col}
 \alias{'rfCluster_col,BioData-method}
 \title{rfCluster_col}
-\usage{
-rfCluster_col(x, rep = 1, SGE = F, email = "none", k = 16, slice = 4,
-  subset = 200, nforest = 500, ntree = 500, name = "RFclust",
-  settings = list())
-}
 \arguments{
 \item{x}{the single cells ngs object}
 
-\item{rep}{how many repetitions for the random forest grouping should be run (default = 5)}
+\item{email}{your email to use together with the SGE option}
 
 \item{SGE}{whether to use the sun grid engine to calculate the rf grouping}
 
-\item{email}{your email to use together with the SGE option}
-
-\item{k}{the numer of expected clusters (metter more than to view)}
+\item{rep}{how many repetitions for the random forest grouping should be run (default = 5)}
 
 \item{slice}{how many processes should be started for each random forest clustering (default = 30)}
 
+\item{bestColname}{the column name to store the results in}
+
+\item{k}{the numer of expected clusters (metter more than to view)}
+
 \item{subset}{how many cells should be randomly selected for the unsupervised clustering (default = 200)}
+
+\item{name}{if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')}
 
 \item{nforest}{the numer of forests to grow for each rep (defualt = 500)}
 
 \item{ntree}{the numer of trees per forest (default = 500)}
 
-\item{name}{if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')}
-
 \item{settings}{slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend}
-
-\item{bestColname}{the column name to store the results in}
 }
 \value{
 a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)

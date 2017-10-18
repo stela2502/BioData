@@ -11,11 +11,14 @@
 #' @title description of function randomForest
 #' @return a distRF object to be analyzed by pamNew
 #' @export 
-setGeneric('bestGrouping',
+if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
 		function ( x, group , bestColname='QualifiedGrouping', cutoff=0.5){
 			standardGeneric('bestGrouping')
 		}
 )
+}else {
+	print ("Onload warn generic function 'bestGrouping' already defined - no overloading here!")
+}
 setMethod('bestGrouping', signature = c ('BioData'),
 		definition = function (x, group, bestColname='QualifiedGrouping' , cutoff=0.5) {
 			uObj <- paste( 'predictive RFobj', group )

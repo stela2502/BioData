@@ -5,9 +5,6 @@
 \alias{Split4Geo}
 \alias{Split4Geo,BioData-method}
 \title{description of function Split4Geo}
-\usage{
-Split4Geo(x, opath = x$outpath)
-}
 \arguments{
 \item{x}{the BioData object}
 

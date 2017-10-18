@@ -7,31 +7,42 @@
 #' @param mds.type Which MDS function should be called default="PCA"
 #' @param onwhat condense which dataset at the moment only Expression is supported default='expression'
 #' @param genes do it on genes not on samples (default = F)
+#' @param LLEK the neighbours in the LLE algorithm (default=2)
 #' @title description of function mds.and.clus
 #' @export 
-setGeneric('mds', ## Name
-	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F ) { ## Argumente der generischen Funktion
+if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
+	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2) { ## Argumente der generischen Funktion
 		standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'mds' already defined - no overloading here!")
+}
 
 setMethod('mds', signature = c ('BioData'),
-	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F ) {
+	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2 ) {
 	## the code is crap re-code!!
 	if(onwhat=="Expression"){
 		tab <- as.matrix(t(dataObj$data))
+		storage.mode(tab)  <- 'numeric' ## brute force, but unfortunately somtimes important..
 	} 
 	else {
 		stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 	}
 	if ( genes ) {
 		tab <- t(tab)
+		## define mds storage position
+		mds_store <- 'MDSgene'
 	}
+	else {
+		mds_store <- 'MDS'
+	}
+	
 	this.k <- paste(onwhat,mds.type)
-	if ( is.null( dataObj$usedObj$MDS) ) {
-		dataObj$usedObj$MDS = list()
+	if ( is.null( dataObj$usedObj[[mds_store]]) ) {
+		dataObj$usedObj[[mds_store]] = list()
 	}
-	if ( (is.null(dataObj$usedObj$MDS[[this.k]])) ||  all.equal( rownames(dataObj$usedObj$MDS[[this.k]]), colnames(dataObj$data) )==F ) {
+	if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$data) )==F ) {
 		mds.proj <- NULL
 		pr <- NULL
 		#system ( 'rm loadings.png' )
@@ -99,35 +110,19 @@ setMethod('mds', signature = c ('BioData'),
 			
 		} else if ( mds.type == "DDRTree" ) {
 			
-			DDRTree_res <- DDRTree( tab, dimensions=3)
+			DDRTree_res <- DDRTree( t(tab), dimensions=3)
 			mds.proj <- t(DDRTree_res$Z)
-			rownames(mds.proj) <- colnames(tab)
+			rownames(mds.proj) <- rownames(tab)
+			dataObj$usedObj$DRRTree.genes <- DDRTree_res
 			
-			if ( genes ) {	
-				dataObj$usedObj$DRRTree.genes <- DDRTree_res
-			}else {
-				dataObj$usedObj$DRRTree <- DDRTree_res
-			}
 		}
 		else {
 			print( paste("Sory I can not work on the mds.type option",mds.type) )
 		}
-		if ( genes ) {
-			if ( is.null(dataObj$usedObj$MDSgenes)){
-				dataObj$usedObj$MDSgenes <- list()
-			}
-			dataObj$usedObj$MDSgenes[[mds.type]] <- mds.proj
-		}else{
-			if ( is.null(dataObj$usedObj$MDS)){
-				dataObj$usedObj$MDS <- list()
-			}
-			dataObj$usedObj$MDS[[mds.type]] <- mds.proj
-		}
-		
-
+		dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 	}
 #	dataObj <- clusters ( dataObj, onwhat=onwhat, clusterby=clusterby, groups.n = groups.n,
 #			ctype = ctype, cmethod=cmethod, useGrouping=useGrouping )
 	
-	dataObj
+	invisible(dataObj)
 } )

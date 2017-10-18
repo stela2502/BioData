@@ -13,11 +13,14 @@
 #' @param fun multiple fragments are summed up for this analysis; this is the summing function: default=function(x) { sum(x, na.rm=TRUE) }
 #' @title description of function tRNA_stats
 #' @export 
-setGeneric('tRNA_stats', ## Name
+if ( ! isGeneric('tRNA_stats') ){ setGeneric('tRNA_stats', ## Name
 	function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) { ## Argumente der generischen Funktion
 		standardGeneric('tRNA_stats') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'tRNA_stats' already defined - no overloading here!")
+}
 
 setMethod('tRNA_stats', signature = c ('tRNAMINT'),
 	definition = function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) {

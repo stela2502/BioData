@@ -15,11 +15,14 @@
 #' @param fname the filename to plot to as png (default use x11 as plotting device)
 #' @title description of function plotCodonUsage
 #' @export 
-setGeneric('plotCodonUsage', ## Name
+if ( ! isGeneric('plotCodonUsage') ){ setGeneric('plotCodonUsage', ## Name
 	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) { ## Argumente der generischen Funktion
 		standardGeneric('plotCodonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'plotCodonUsage' already defined - no overloading here!")
+}
 
 setMethod('plotCodonUsage', signature = c ('BioData'),
 	definition = function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) {

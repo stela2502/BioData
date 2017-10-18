@@ -17,6 +17,7 @@ Depends:
     RFclust.SGE,
 	ggplot2,
 	mclust,
+	RDRToolbox,
 	DDRTree
 biocViews:
 	RDRToolbox,

@@ -8,11 +8,14 @@
 #' @param condition the column in the samples table to use as grouing variable
 #' @title description of function preprocess
 #' @export
-setGeneric('preprocess', ## Name
+if ( ! isGeneric('preprocess') ){ setGeneric('preprocess', ## Name
 		function (x, condition ) { ## Argumente der generischen Funktion
 			standardGeneric('preprocess') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'preprocess' already defined - no overloading here!")
+}
 
 setMethod('preprocess', signature = c ('BioData'),
 		definition = function (x, condition) {

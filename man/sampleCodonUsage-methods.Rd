@@ -5,10 +5,6 @@
 \alias{sampleCodonUsage}
 \alias{sampleCodonUsage,tRNAMINT-method}
 \title{description of function sampleCodonUsage}
-\usage{
-sampleCodonUsage(x, sname, codons = NULL, min_reads = 1,
-  tRF.reliability = NULL, tRF.type = NULL)
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

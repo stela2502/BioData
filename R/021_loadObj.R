@@ -7,11 +7,14 @@
 #' @param file the infile
 #' @title description of function loadObj
 #' @export 
-setGeneric('loadObj', ## Name
+if ( ! isGeneric('loadObj') ){ setGeneric('loadObj', ## Name
 		function ( file=NULL ){	## Argumente der generischen Funktion
 			standardGeneric('loadObj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'loadObj' already defined - no overloading here!")
+}
 
 setMethod('loadObj', signature = c ('character'),
 		definition = function ( file=NULL ){

@@ -7,11 +7,14 @@
 #' @param col the column conatining the codon information default= "Sequence.locations.in.tRNA.space..comma.deliminated."
 #' @title description of function extractCodonInformation
 #' @export 
-setGeneric('extractCodonInformation', ## Name
+if ( ! isGeneric('extractCodonInformation') ){ setGeneric('extractCodonInformation', ## Name
 		function ( x, col= "Sequence.locations.in.tRNA.space..comma.deliminated." ) { ## Argumente der generischen Funktion
 			standardGeneric('extractCodonInformation') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'extractCodonInformation' already defined - no overloading here!")
+}
 
 setMethod('extractCodonInformation', signature = c ('tRNAMINT'),
 		definition = function ( x, col= "Sequence.locations.in.tRNA.space..comma.deliminated." ) {

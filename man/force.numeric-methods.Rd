@@ -5,9 +5,6 @@
 \alias{force.numeric}
 \alias{force.numeric,BioData-method}
 \title{description of function force.numeric}
-\usage{
-force.numeric(x)
-}
 \arguments{
 \item{x}{the BioData object}
 }

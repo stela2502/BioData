@@ -5,9 +5,6 @@
 \alias{transpose}
 \alias{transpose,02_transpose-method}
 \title{description of function t}
-\usage{
-transpose(x)
-}
 \arguments{
 \item{x}{the BioData object}
 }

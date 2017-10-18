@@ -6,11 +6,14 @@
 #' @param x the biodata object
 #' @title description of function log
 #' @export 
-setGeneric('logThis', ## Name
+if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
 	function (x) { ## Argumente der generischen Funktion
 		standardGeneric('logThis') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'logThis' already defined - no overloading here!")
+}
 
 setMethod('logThis', signature = c ('BioData'),
 	definition = function (x) {

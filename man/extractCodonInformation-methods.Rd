@@ -5,10 +5,6 @@
 \alias{extractCodonInformation}
 \alias{extractCodonInformation,tRNAMINT-method}
 \title{description of function extractCodonInformation}
-\usage{
-extractCodonInformation(x,
-  col = "Sequence.locations.in.tRNA.space..comma.deliminated.")
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

@@ -5,11 +5,6 @@
 \alias{Make3D4obj}
 \alias{Make3D4obj,BioData-method}
 \title{description of function Make3D4obj}
-\usage{
-Make3D4obj(x, group, mds.type = "PCA", cex = 0.5, colFunc = function(x) { 
-     rainbow(x) }, cut = F, names = F, opath = NULL, main = "",
-  genes = F)
-}
 \arguments{
 \item{x}{the BioData object}
 

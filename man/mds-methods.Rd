@@ -5,10 +5,6 @@
 \alias{mds}
 \alias{mds,BioData-method}
 \title{description of function mds.and.clus}
-\usage{
-mds(dataObj, ..., mds.type = "PCA", onwhat = "Expression", genes = F,
-  LLEK = 2)
-}
 \arguments{
 \item{dataObj}{the BioData object}
 

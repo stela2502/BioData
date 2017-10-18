@@ -9,11 +9,14 @@
 #' @param opath the outpath if different from x$outpath
 #' @title description of function Split4Geo
 #' @export 
-setGeneric('Split4Geo', ## Name
+if ( ! isGeneric('Split4Geo') ){ setGeneric('Split4Geo', ## Name
 	function (x, opath = x$outpath ) { ## Argumente der generischen Funktion
 		standardGeneric('Split4Geo') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'Split4Geo' already defined - no overloading here!")
+}
 
 setMethod('Split4Geo', signature = c ('BioData'),
 	definition = function (x, opath = x$outpath ) {

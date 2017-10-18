@@ -5,10 +5,6 @@
 \alias{collapse2codons}
 \alias{collapse2codons,tRNAMINT-method}
 \title{description of function collapse2codons}
-\usage{
-collapse2codons(x, sum.fun = function(x) {     sum(x, na.rm = T) },
-  name = "collapsed")
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

@@ -5,11 +5,6 @@
 \alias{clusters}
 \alias{clusters,BioData-method}
 \title{description of function clusters}
-\usage{
-clusters(dataObj, clusterby = "raw", useGrouping = NULL, groups.n = 3,
-  ctype = "hierarchical clust", onwhat = "Expression",
-  cmethod = "ward.D2", name = NULL)
-}
 \arguments{
 \item{dataObj}{the BioData object}
 

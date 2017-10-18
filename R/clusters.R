@@ -13,12 +13,15 @@
 #' @param name the name for the new grouping (default = 'auto_clusters.1:n')
 #' @title description of function clusters
 #' @export 
-setGeneric('clusters', ## Name
+if ( ! isGeneric('clusters') ){ setGeneric('clusters', ## Name
 	function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3, 
 			ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {## Argumente der generischen Funktion
 		standardGeneric('clusters') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'clusters' already defined - no overloading here!")
+}
 
 setMethod('clusters', signature = c ('BioData'),
 	definition = function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3,
@@ -99,5 +102,5 @@ setMethod('clusters', signature = c ('BioData'),
 #			}
 			dataObj$usedObj[['clusters']] <- clusters
 			dataObj$usedObj[['hc']] <- hc
-			dataObj
+			invisible(dataObj)
 } )

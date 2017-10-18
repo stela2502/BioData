@@ -15,11 +15,14 @@
 #' @param genes use gene level MDS data not sample level (default = FALSE)
 #' @title description of function Make3D4obj
 #' @export 
-setGeneric('Make3D4obj', ## Name
+if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'Make3D4obj' already defined - no overloading here!")
+}
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),

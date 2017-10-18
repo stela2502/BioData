@@ -5,10 +5,6 @@
 \alias{createRFgrouping_row}
 \alias{createRFgrouping_row,BioData-method}
 \title{description of function createRFgrouping_row}
-\usage{
-createRFgrouping_row(x, RFname = "notExisting", k = 10,
-  single_res_row = paste("RFgrouping", RFname), colFunc = NULL)
-}
 \arguments{
 \item{x}{the BioData object}
 

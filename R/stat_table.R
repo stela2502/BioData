@@ -7,11 +7,14 @@
 #' @param padjMethod the method name for the p.adjust call (default = 'BH')
 #' @title description of function stat_table
 #' @export 
-setGeneric('stat_table', ## Name
+if ( ! isGeneric('stat_table') ){ setGeneric('stat_table', ## Name
 	function ( l, padjMethod='BH' ) { ## Argumente der generischen Funktion
 		standardGeneric('stat_table') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'stat_table' already defined - no overloading here!")
+}
 
 setMethod('stat_table', signature = c ('list'),
 	definition = function ( l, padjMethod='BH' ) {

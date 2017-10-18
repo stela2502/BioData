@@ -5,9 +5,6 @@
 \alias{preprocess}
 \alias{preprocess,BioData-method}
 \title{description of function preprocess}
-\usage{
-preprocess(x, condition)
-}
 \arguments{
 \item{x}{the BioData}
 

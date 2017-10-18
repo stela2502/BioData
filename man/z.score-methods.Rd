@@ -5,9 +5,6 @@
 \alias{z.score}
 \alias{z.score,BioData-method}
 \title{description of function z.score}
-\usage{
-z.score(m)
-}
 \arguments{
 \item{m}{the matrix of column = samples and rows = genes or a BioData object}
 }

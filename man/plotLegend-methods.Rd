@@ -5,10 +5,6 @@
 \alias{plotLegend}
 \alias{plotLegend,BioData-method}
 \title{description of function plot.legend}
-\usage{
-plotLegend(x, colname, file = NULL, svg = F, pdf = F, col = NULL,
-  X11type = "cairo")
-}
 \arguments{
 \item{x}{the StefansExpressionSet object}
 

@@ -114,6 +114,9 @@ BioData <- #withFormalClass(
 					self$sampleNamesCol <- namecol
 					self$force.numeric
 				},
+				force.numeric = function(...) {
+					storage.mode(self$data) <- 'numeric'
+				},
 				pwd = function () {
 					system( 'pwd > __pwd' )
 					t <- read.delim( file = '__pwd', header=F)

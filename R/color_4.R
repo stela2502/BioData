@@ -9,11 +9,14 @@
 #' @param force forcefully overwrite an existing color entry for this column (default FALSE)
 #' @title description of function createRFgrouping_col
 #' @export 
-setGeneric('colors_4', ## Name
+if ( ! isGeneric('colors_4') ){ setGeneric('colors_4', ## Name
 		function ( x, name,  colFunc = NULL, force=FALSE  ) { ## Argumente der generischen Funktion
 			standardGeneric('colors_4') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'colors_4' already defined - no overloading here!")
+}
 
 setMethod('colors_4', signature = c ('BioData'),
 		definition = function ( x, name, colFunc = NULL, force=FALSE  ) {

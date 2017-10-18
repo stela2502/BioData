@@ -5,9 +5,6 @@
 \alias{saveObj}
 \alias{saveObj,BioData-method}
 \title{description of function saveObj}
-\usage{
-saveObj(data, file = NULL)
-}
 \arguments{
 \item{data}{the BioData object}
 

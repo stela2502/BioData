@@ -5,9 +5,6 @@
 \alias{reduceTo}
 \alias{reduceTo,BioData-method}
 \title{description of function reduceTo}
-\usage{
-reduceTo(x, what = "row", to = NULL, ...)
-}
 \arguments{
 \item{x}{the NGScollation object}
 

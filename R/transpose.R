@@ -6,11 +6,14 @@
 #' @param x the BioData object
 #' @title description of function t
 #' @export 
-setGeneric('transpose', ## Name
+if ( ! isGeneric('transpose') ){ setGeneric('transpose', ## Name
 		function (x) { ## Argumente der generischen Funktion
 			standardGeneric('transpose') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'transpose' already defined - no overloading here!")
+}
 
 setMethod('transpose', signature = c ('BioData'),
 		definition = function (x) {

@@ -4,9 +4,6 @@
 \name{as_BioData}
 \alias{as_BioData}
 \title{description of function as_BioData}
-\usage{
-as_BioData(dat)
-}
 \arguments{
 \item{dat}{the counts list you get from Rsubread::featureCounts()}
 }

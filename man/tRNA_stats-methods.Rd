@@ -5,10 +5,6 @@
 \alias{tRNA_stats}
 \alias{tRNA_stats,tRNAMINT-method}
 \title{description of function tRNA_stats}
-\usage{
-tRNA_stats(x, acol, scol, norm.type = NULL, codon = NULL,
-  fun = function(x) {     x[is.na(x)] = 0     mean(x) })
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

@@ -5,10 +5,6 @@
 \alias{CodonHeatmap}
 \alias{CodonHeatmap,tRNAMINT-method}
 \title{description of function heatmap}
-\usage{
-CodonHeatmap(x, colGroup, rowGroup = c("tRF.type.s."), norm.type = NULL,
-  codon = NULL, fname = NULL, main = "Heatmap", fun = NULL)
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

@@ -8,11 +8,14 @@
 #' @param to select these names default=NULL
 #' @title description of function reduceTo
 #' @export 
-setGeneric('reduceTo', ## Name
+if ( ! isGeneric('reduceTo') ){ setGeneric('reduceTo', ## Name
 		function ( x, what='row', to=NULL, ... ) { ## Argumente der generischen Funktion
 			standardGeneric('reduceTo') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'reduceTo' already defined - no overloading here!")
+}
 
 setMethod('reduceTo', signature = c ('BioData'),
 		definition = function ( x, what='row', to=NULL, name='reducedTo', copy=FALSE ) {

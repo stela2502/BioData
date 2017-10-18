@@ -24,11 +24,14 @@
 #' @param settings slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
-setGeneric('rfCluster_row',
+if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
 		function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust', settings=list()){
 			standardGeneric('rfCluster_row')
 		}
 )
+}else {
+	print ("Onload warn generic function 'rfCluster_row' already defined - no overloading here!")
+}
 setMethod('rfCluster_row', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row', settings=list()) {
 			summaryCol=paste( 'All_groups', name,sep='_')
@@ -130,11 +133,14 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 #' @param colFunc a function giving the colours back for the grouping (gets the amount of groups) default = function(x){rainbow(x)}
 #' @title description of function createRFgrouping_row
 #' @export 
-setGeneric('createRFgrouping_row', ## Name
+if ( ! isGeneric('createRFgrouping_row') ){ setGeneric('createRFgrouping_row', ## Name
 		function ( x, RFname='notExisting', k=10, single_res_row = paste('RFgrouping',RFname), colFunc=NULL) { ## Argumente der generischen Funktion
 			standardGeneric('createRFgrouping_row') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'createRFgrouping_row' already defined - no overloading here!")
+}
 
 setMethod('createRFgrouping_row', signature = c ('BioData'),
 		definition = function ( x, RFname='notExisting', k=10, single_res_row = paste('RFgrouping',RFname), colFunc=NULL) {

@@ -5,10 +5,6 @@
 \alias{collaps}
 \alias{collaps,BioData-method}
 \title{description of function collaps}
-\usage{
-collaps(dataObj, by = c("median", "mean", "sd", "sum"),
-  groupCol = "GroupID", copy = FALSE)
-}
 \arguments{
 \item{dataObj}{the BioData}
 

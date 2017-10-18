@@ -9,11 +9,14 @@
 #' @title description of function gg.heatmap.list
 #' @return a list with the modified merged table and the colors vector
 #' @export 
-setGeneric('defineHeatmapColors', ## Name
+if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## Name
 		function (x, melted,..., colrs=NULL, lowest='gray') { ## Argumente der generischen Funktion
 			standardGeneric('defineHeatmapColors') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'defineHeatmapColors' already defined - no overloading here!")
+}
 
 setMethod('defineHeatmapColors', signature = c('tRNAMINT') ,
 		definition = function (x, melted, colrs=NULL, lowest='gray' ){
@@ -93,28 +96,3 @@ setMethod('defineHeatmapColors', signature = c('BioData') ,
 #' @title description of function gg.heatmap.list
 #' @return a list with the modified merged table and the colors vector
 #' @export
-setGeneric('minValueExpr', ## Name
-		function (x) { ## Argumente der generischen Funktion
-			standardGeneric('minValueExpr') ## der Aufruf von standardGeneric sorgt für das Dispatching
-		}
-)
-
-setMethod('minValueExpr', signature = c( 'tRNAMINT') ,
-		definition = function (x ){
-			x$data <- apply(x$data,2,function(a) { a[is.na(a)] <- 0 ; a})
-			m <- 0
-			if ( x$zscored ) {
-				m <- -324772345234# do not use!
-			}
-			m
-		}
-)
-setMethod('minValueExpr', signature = c( 'BioData') ,
-		definition = function (x ){
-			m <- 0
-			if ( x$zscored ) {
-				m <- -324772345234 # do not use!
-			}
-			m
-		}
-)

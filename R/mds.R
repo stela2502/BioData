@@ -10,11 +10,14 @@
 #' @param LLEK the neighbours in the LLE algorithm (default=2)
 #' @title description of function mds.and.clus
 #' @export 
-setGeneric('mds', ## Name
+if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
 	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2) { ## Argumente der generischen Funktion
 		standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'mds' already defined - no overloading here!")
+}
 
 setMethod('mds', signature = c ('BioData'),
 	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2 ) {

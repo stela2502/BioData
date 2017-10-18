@@ -11,11 +11,14 @@
 #' @param tRF.type MINT reports different types of tRNA fragments (3'-half, 5'-half, ...) default=NULL == use all
 #' @title description of function sampleCodonUsage
 #' @export 
-setGeneric('sampleCodonUsage', ## Name
+if ( ! isGeneric('sampleCodonUsage') ){ setGeneric('sampleCodonUsage', ## Name
 	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ) { ## Argumente der generischen Funktion
 		standardGeneric('sampleCodonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'sampleCodonUsage' already defined - no overloading here!")
+}
 
 setMethod('sampleCodonUsage', signature = c ('tRNAMINT'),
 	definition = function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ) {

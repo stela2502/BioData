@@ -7,11 +7,14 @@
 #' @param file the outfile default=paste(str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
 #' @title description of function saveObj
 #' @export 
-setGeneric('saveObj', ## Name
+if ( ! isGeneric('saveObj') ){ setGeneric('saveObj', ## Name
 		function ( data, file=NULL ){	## Argumente der generischen Funktion
 			standardGeneric('saveObj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
+}else {
+	print ("Onload warn generic function 'saveObj' already defined - no overloading here!")
+}
 
 setMethod('saveObj', signature = c ('BioData'),
 		definition = function ( data, file=NULL ){

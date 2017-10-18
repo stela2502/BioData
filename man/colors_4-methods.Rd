@@ -5,9 +5,6 @@
 \alias{colors_4}
 \alias{colors_4,BioData-method}
 \title{description of function createRFgrouping_col}
-\usage{
-colors_4(x, name, colFunc = NULL, force = FALSE)
-}
 \arguments{
 \item{x}{the BioData object}
 

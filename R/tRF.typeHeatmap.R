@@ -16,11 +16,14 @@
 #' function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}  
 #' @title description of function heatmap
 #' @export 
-setGeneric('tRF.typeHeatmap', ## Name
+if ( ! isGeneric('tRF.typeHeatmap') ){ setGeneric('tRF.typeHeatmap', ## Name
 	function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}, z.score=FALSE, brks=10) { ## Argumente der generischen Funktion
 		standardGeneric('tRF.typeHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'tRF.typeHeatmap' already defined - no overloading here!")
+}
 
 setMethod('tRF.typeHeatmap', signature = c ('tRNAMINT'),
 	definition = function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}, z.score=FALSE, brks=10) {

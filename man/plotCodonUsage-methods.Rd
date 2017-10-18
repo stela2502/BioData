@@ -5,11 +5,6 @@
 \alias{plotCodonUsage}
 \alias{plotCodonUsage,BioData-method}
 \title{description of function plotCodonUsage}
-\usage{
-plotCodonUsage(x, sname, codons = NULL, min_reads = 1,
-  tRF.reliability = NULL, tRF.type = NULL, main = "Pie Chart",
-  color = NULL, fname = NULL)
-}
 \arguments{
 \item{x}{the tRNAMINT object}
 

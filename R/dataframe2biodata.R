@@ -8,11 +8,14 @@
 #' @param name the name of the new BioData object
 #' @title description of function dataframe2biodata
 #' @export 
-setGeneric('dataframe2biodata', ## Name
+if ( ! isGeneric('dataframe2biodata') ){ setGeneric('dataframe2biodata', ## Name
 	function (x, name="BioData") { ## Argumente der generischen Funktion
 		standardGeneric('dataframe2biodata') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
+}else {
+	print ("Onload warn generic function 'dataframe2biodata' already defined - no overloading here!")
+}
 
 setMethod('dataframe2biodata', signature = c ('data.frame'),
 	definition = function (x, name="BioData") {

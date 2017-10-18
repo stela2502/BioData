@@ -5,10 +5,6 @@
 \alias{createRFgrouping_col}
 \alias{createRFgrouping_col,BioData-method}
 \title{description of function createRFgrouping_col}
-\usage{
-createRFgrouping_col(x, RFname, k = 10, single_res_col = paste("BioData",
-  RFname), colFunc = NULL)
-}
 \arguments{
 \item{x}{the BioData object}
 

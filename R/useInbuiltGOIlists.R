@@ -28,8 +28,8 @@ setMethod('useInbuiltGOIlists', signature = c ('BioData'),
 			}
 			
 			if ( name == "TFs" ){		
-				hum_t <- length(which(is.na(match(x$annoattion[,gene_col],human.tfs))==F))
-				mouse_t <- length(which(is.na(match( x$annoattion[,gene_col], mouse.tfs))==F))
+				hum_t <- length(which(is.na(match(x$annotation[,gene_col],human.tfs))==F))
+				mouse_t <- length(which(is.na(match( x$annotation[,gene_col], mouse.tfs))==F))
 				if (hum_t > mouse_t ){
 					x = defineGOIs( x, name, human.tfs, gene_col=gene_col )
 				}else if ( mouse_t > hum_t ){
@@ -41,8 +41,8 @@ setMethod('useInbuiltGOIlists', signature = c ('BioData'),
 			}
 			else if ( name == 'epigenetic' ) {
 				# register 'epigeneic'
-				hum_e <- length(which(is.na(match( x$annoattion[,gene_col],Epigenetic$HGNC_symbol))==F))
-				mouse_e <- length(which(is.na(match( x$annoattion[,gene_col],Epigenetic$MGI_symbol ))==F))
+				hum_e <- length(which(is.na(match( x$annotation[,gene_col],Epigenetic$HGNC_symbol))==F))
+				mouse_e <- length(which(is.na(match( x$annotation[,gene_col],Epigenetic$MGI_symbol ))==F))
 				if ( hum_e > mouse_e){
 					x = defineGOIs( x, name, Epigenetic$HGNC_symbol, Epigenetic$Target, gene_col=gene_col )
 				}else if ( mouse_e > hum_e ){
@@ -52,8 +52,8 @@ setMethod('useInbuiltGOIlists', signature = c ('BioData'),
 				}
 			}
 			else if ( name =="CellCycle" ) {
-				hum_e <- length(which(is.na(match( x$annoattion[,gene_col],CellCycle$Gene.Symbol))==F))
-				mouse_e <- length(which(is.na(match( x$annoattion[,gene_col],CellCycle$MouseGene ))==F))
+				hum_e <- length(which(is.na(match( x$annotation[,gene_col],CellCycle$Gene.Symbol))==F))
+				mouse_e <- length(which(is.na(match( x$annotation[,gene_col],CellCycle$MouseGene ))==F))
 				if ( hum_e > mouse_e){
 					x = defineGOIs( x, name, CellCycle$Gene.Symbol, CellCycle$X, gene_col=gene_col )
 				}else if ( mouse_e > hum_e ){
@@ -63,8 +63,8 @@ setMethod('useInbuiltGOIlists', signature = c ('BioData'),
 				}
 			}
 			else if ( name =="CellSurface" ) {
-				hum_e <- length(which(is.na(match( x$annoattion[,gene_col], human.CellSurface))==F))
-				mouse_e <- length(which(is.na(match( x$annoattion[,gene_col], mouse.CellSurface ))==F))
+				hum_e <- length(which(is.na(match( x$annotation[,gene_col], human.CellSurface))==F))
+				mouse_e <- length(which(is.na(match( x$annotation[,gene_col], mouse.CellSurface ))==F))
 				if ( hum_e > mouse_e){
 					x = defineGOIs( x, name, human.CellSurface, gene_col=gene_col )
 				}else if ( mouse_e > hum_e ){

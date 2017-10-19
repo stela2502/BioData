@@ -151,7 +151,8 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]$dat), colnames(x$data) ) ) {
+			browser()
+			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$data) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))

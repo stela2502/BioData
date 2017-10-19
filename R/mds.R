@@ -109,7 +109,6 @@ setMethod('mds', signature = c ('BioData'),
 			colnames(mds.proj) <- c( 'x','y','z')
 			
 		} else if ( mds.type == "DDRTree" ) {
-			
 			DDRTree_res <- DDRTree( t(tab), dimensions=3)
 			mds.proj <- t(DDRTree_res$Z)
 			rownames(mds.proj) <- rownames(tab)

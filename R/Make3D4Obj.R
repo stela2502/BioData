@@ -26,7 +26,7 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),
-	definition = function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) {
+	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) {
 
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {
@@ -39,15 +39,26 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 				legend(...)
 			} )
 		}
+		check_and_replace <- function( name, list) {
+			if ( length(grep(name, names(list) )) ==1 ){
+				name = names(list)[grep(name, names(list) )]
+			}
+			name
+		}
 		if ( genes ) {
+			mds.type = check_and_replace( mds.type, x$usedObj$MDSgenes )
 			if ( is.null (x$usedObj$MDSgenes[[mds.type]] )){
 				x <- mds(x, mds.type=mds.type, genes=T)
 			}
+			mds.type = check_and_replace( mds.type, x$usedObj$MDSgenes )
 		}else {
-			if ( is.null (x$usedObj$MDS[[mds.type]] )){
+			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
+			if ( is.null (x$usedObj$MDS[[mds.type]] )){		
 				x <- mds(x, mds.type=mds.type)
 			}
+			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
 		}
+		
 		if ( genes ) {
 			x <- x$clone()
 			t <- transpose(x)
@@ -75,7 +86,6 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		#bg3d(color='#4C4C4C') 
         if ( cut ) {
                 ## plot points!
-                print ( "Debug the gene plot" )
 				My.legend3d ("topright", legend = paste( brks ), pch=16, col= c('black', bluered(length(brks) -1  )), cex=1,inset =c(0.02))
                 rgl.points( x$usedObj$MDS[[mds.type]], col=col )
 

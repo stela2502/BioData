@@ -44,7 +44,7 @@ setMethod('clusters_gene', signature = c ('BioData'),
 			}
 			else if ( clusterby=="raw"){#...do mds on tab
 				if ( ctype=='hierarchical clust'){
-					hc <- hclust(as.dist( 1- cor(t(tab), method='pearson') ),method = cmethod)
+					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
 					clusters_gene <- cutree(hc,k=groups.n)
 				}else if (  ctype=='kmeans' ) {
 					hc <- hclust(as.dist( 1- cor(t(tab), method='pearson') ),method = cmethod)

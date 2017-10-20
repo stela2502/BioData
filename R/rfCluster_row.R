@@ -158,8 +158,8 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 			if ( all.equal( colnames(x$usedObj[['rfObj_row']][[RFname]]@dat), rownames(x$data) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){
-					x$annotation[, paste( single_res_col_row, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
-					x <- colors_4( x, paste( single_res_col_row, ' n=', k[id], sep="")  )
+					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
+					x <- colors_4( x, paste( single_res_row, ' n=', k[id], sep="")  )
 				}
 			}else {
 				#predict based on the RFdata
@@ -169,13 +169,13 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 								bestColname = paste('OptimalGrouping',m ,RFname)
 						)
 				
-				x$samples[, paste( single_res_col) ] <-
+				x$samples[, paste( single_res_row) ] <-
 						predict( 
 								x$usedObj[['rfExpressionSets_row']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], 
 								as.matrix(x$data)
 						)
-				x$annotation[, paste( single_res_col_row) ] <- factor( x$annotation[, paste( single_res_col_row) ], levels= 1:m )
-				x <- colors_4( x, single_res_col_row )
+				x$annotation[, paste( single_res_row) ] <- factor( x$annotation[, paste( single_res_row) ], levels= 1:m )
+				x <- colors_4( x, single_res_row )
 			}
 			invisible(x)
 		} 

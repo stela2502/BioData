@@ -99,10 +99,10 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					png( file=paste(file.path(x$outpath,ofile),'png',sep='.'), width=1600, height=800, type=X11type)
 				}
 				for ( v in colGroups ) {
-					plot.legend(x, file=paste(ofile, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(ofile, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
 				}
 				for ( v in rowGroups ) {
-					plot.legend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
 			heatmap.3(

@@ -91,8 +91,11 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			if ( ! is.null(ofile)){
 				if ( pdf ) {
 					width= ceiling(nrow(x$samples)/300) * 10
-					height = ceiling( nrow(x$annotation) / 100 ) * 8
-					pdf( file=paste(file.path(x$outpath,ofile),'pdf',sep='.'), width=10, height=8)
+					height = ceiling( nrow(x$annotation) / 100 ) * 10
+					if ( height < 8){
+						height = 8
+					}
+					pdf( file=paste(file.path(x$outpath,ofile),'pdf',sep='.'), width=10, height=height)
 				}else{
 					width= ceiling(nrow(x$samples)/300) * 1600
 					height = ceiling( nrow(x$annotation) / 100 ) *800

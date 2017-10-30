@@ -74,11 +74,11 @@ setMethod('clusters', signature = c ('BioData'),
 				## define the group name n and populate the samples table
 				if ( is.null(name)){
 					if(is.null(dataObj$usedObj[['auto_clusters']])){
-					dataObj$usedObj[['auto_clusters']] = 0
-				}
-				dataObj$usedObj[['auto_clusters']] <- dataObj$usedObj[['auto_clusters']] +1
-				name <- paste( 'auto_clusters', 
-						dataObj$usedObj[['auto_clusters']] ,sep='.')
+						dataObj$usedObj[['auto_clusters']] = 0
+					}
+					dataObj$usedObj[['auto_clusters']] <- dataObj$usedObj[['auto_clusters']] +1
+					name <- paste( 'auto_clusters', 
+							dataObj$usedObj[['auto_clusters']] ,sep='.')
 				}
 				dataObj$samples <- cbind ( dataObj$samples, clusters )
 				colnames(dataObj$samples)[ncol(dataObj$samples)] = name

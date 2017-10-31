@@ -46,6 +46,9 @@ setMethod('reduceTo', signature = c ('BioData'),
 						if ( ! is.null( x$raw) ) {
 							x$raw <- x$raw[useOnly,]
 						}
+						if ( ! is.null( x$zscored) ) {
+							x$zscored <- x$zscored[useOnly,]
+						}
 						if ( length(x$stats) > 0 ) {
 							lapply( names(x$stats) , function(name) {
 										x$stats[[name]] <- x$stats[[name]][match(tolower(to) ,tolower(x$stats[[name]][,1]) ),]
@@ -59,8 +62,8 @@ setMethod('reduceTo', signature = c ('BioData'),
 					
 				}else if ( what =="col" ) {
 					to <- tolower(make.names(to))
-					if ( length(which(is.na(match(to,tolower(colnames(x$data))))==F)) > 0 ) {
-						useOnly <- match(to, tolower(colnames(x$data)))
+					if ( length(which(is.na(match(tolower(to),tolower(colnames(x$dat))))==F)) > 0 ) {
+						useOnly <- match(to, tolower(colnames(x$dat)))
 						not.matched <- to[is.na(useOnly)]
 						if ( length(not.matched) > 0 ){
 							print (paste('Problematic samples:', paste(not.matched,sep=', ')))
@@ -75,11 +78,15 @@ setMethod('reduceTo', signature = c ('BioData'),
 								x$usedObj[[n]] <- NULL
 							}
 						}
-						x$data <- x$data[,useOnly]
+						
+						x$dat <- x$dat[,useOnly]
 						x$samples <- x$samples[useOnly,]
 						
 						if ( ! is.null( x$raw) ) {
 							x$raw <- x$raw[,useOnly]
+						}
+						if ( ! is.null( x$zscored) ) {
+							x$zscored <- x$zscored[,useOnly]
 						}
 						if ( length(x$stats) > 0 ) {
 							x$stats = list()
@@ -88,6 +95,8 @@ setMethod('reduceTo', signature = c ('BioData'),
 						
 					}else {
 						print (paste( "None of the names (to) matched the sample names in",x$name, "-> keep everything!"))
+						print (paste( "to =",paste(tolower(to), collapse=", ")))
+						print (paste( "match to =",paste(tolower(colnames(x$dat)), collapse=", ")))
 					}
 				}else {
 					stop(paste( "the option what='",what,"' is not supported!", sep="") )

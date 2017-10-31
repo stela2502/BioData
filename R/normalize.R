@@ -61,7 +61,7 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 #
 #
 #' @name normalize
-#' @aliases normalize,SingleCellsNGS-method
+#' @aliases normalize,SingleCells-method
 #' @rdname normalize-methods
 #' @docType methods
 #' @description  
@@ -72,20 +72,20 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 #' @return the normalized data set (original data stored in slot 'raw'
 #' @title description of function normalize
 #' @export 
-setMethod('normalize', signature = c ('BioData'),
+setMethod('normalize', signature = c ('SingleCells'),
 		definition = function (  object, ..., reads=600, name='normalized' ) {
 			if ( is.null( object$usedObj$snorm) ) {
 				object$usedObj$snorm = 0
 			}
 			if (  object$usedObj$snorm == 0 ) {
 			if ( length( object$samples$counts ) == 0 ) {
-				object$samples$counts <- apply( object$data, 2, sum)
+				object$samples$counts <- apply( object$dat, 2, sum)
 			}
 			object <- drop.samples( object, object$samples[which(object$samples$counts < reads), object$sampleNamesCol ] 
 					, name=name )
 			
 			if (  object$usedObj$snorm == 0){
-				object$raw <- object$data
+				object$raw <- object$dat
 			}
 			## resample the data
 			n <- nrow(object$raw)
@@ -93,11 +93,11 @@ setMethod('normalize', signature = c ('BioData'),
 			for ( i in 1:ncol(object$raw) ) {
 				d <- sample(rep ( 1:n, object$raw[,i]) , reads)
 				t <- table(d)
-				object$data[ as.numeric(names(t)),i] <- as.numeric(t)
+				object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
 			}
 			}
 			object$usedObj$snorm = 1
-			object
+			invisible(object)
 		}
 )
 
@@ -116,13 +116,13 @@ setMethod('normalize', signature = c ('BioData'),
 setMethod('normalize', signature = c ('BioData') ,
 	definition = function ( object , to=NULL, ..., name=NULL) {
 		if ( is.null(to) ) {
-			stop( "Sorry, but I need the to to be a numeric vector" )
+			stop( "Sorry, but to nees to to be a numeric vector" )
 		}
 		if ( is.null(object$raw) ){
-			object$raw = object$data
+			object$raw = object$dat
 		}
 		object$samples$norm_to <- to
-		object$data =  data.frame(t(apply(object$data,1, function(a) { a / to } ) ))
-		object
+		object$dat =  data.frame(t(apply(object$raw,1, function(a) { a / to } ) ))
+		invisible(object)
 })
 

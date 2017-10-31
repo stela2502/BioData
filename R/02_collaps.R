@@ -24,11 +24,6 @@ setMethod('collaps', signature = c ('BioData'),
 			if ( copy ) {
 				dataObj = dataObj$clone()
 			}
-			u <- unique(as.vector(dataObj$samples[,groupCol]))
-			m <- length(u)
-			mm <-  matrix ( rep(0,m * nrow(dataObj$data)), ncol=m)
-			colnames(mm) <- u
-			rownames(mm) <- rownames(dataObj$data)
 			f <- NULL
 			if ( is.function(by)){
 				f <- by
@@ -45,21 +40,54 @@ setMethod('collaps', signature = c ('BioData'),
 				stop("Please set what to one of 'median','mean','sd','sum'" )
 			}
 			new_samples <- NULL
-			for ( i in u ){
-				all <- which(as.vector(dataObj$samples[, groupCol]) == i )
-				new_samples <- rbind ( new_samples, dataObj$samples[all[1],] )
-				mm[,i] <- apply( dataObj$data[ , all],1,f)
+			
+			u <- unique(as.vector(dataObj$samples[,groupCol]))			
+			m <- length(u)
+			
+			merged_df <- function ( orig_df ){
+				mm <-  matrix ( rep(0,m * nrow(orig_df) ), ncol=m)
+				colnames(mm) <- u
+				rownames(mm) <- rownames(orig_df)
+				new_samples <- NULL
+				for ( i in u ){
+					all <- which(as.vector(dataObj$samples[, groupCol]) == i )
+					new_samples <- rbind ( new_samples, dataObj$samples[all[1],] )
+					mm[,i] <- apply( orig_df[ , all],1,f)
+				}
+				list( data.frame(mm), new_samples )
 			}
+			
+			mm <- merged_df( dataObj$dat )
+			new_samples <- mm[[2]]
+			mm <- mm[[1]]
+			mr <- NULL
+			mz <- NULL
+			if (! is.null( dataObj$raw ) ){
+				mr <- merged_df( dataObj$raw )
+				mr <- mr[[1]]
+			}
+			if ( ! is.null(dataObj$zscored)) {
+				mz <- merged_df( dataObj$zscored )
+				mz <- mz[[1]]
+			}
+			
 			name = paste( unlist(strsplit( paste( dataObj$name, groupCol, by, sep='_') , '\\s')) , collapse='_')
+			
 			try ( { reduceTo ( dataObj, what='col',
 					to = setdiff( 
-							dataObj$samples[,dataObj$sampleNamesCol] , 
-							new_samples[,dataObj$sampleNamesCol] 
+							as.character(dataObj$samples[,dataObj$sampleNamesCol] ), 
+							as.character(new_samples[,dataObj$sampleNamesCol] )
 					), 
 					name= name
 			) }, silent=TRUE )
 			colnames(mm) <- as.vector(new_samples[, dataObj$sampleNamesCol])
-			dataObj$data <- data.frame(mm)
+			dataObj$dat <- mm
+			if ( ! is.null(mr)){
+				dataObj$raw = mr
+			}
+			if ( ! is.null(mz)){
+				dataObj$zscored = mz
+			}
 			dataObj
 })
 

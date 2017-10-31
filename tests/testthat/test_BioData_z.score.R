@@ -7,15 +7,11 @@ samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 
 x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
-x$samples$group <- rep(c('A','B'), 5)
+expect_equal( class( x ), c('BioData', 'R6') )
 
-normalize(x, to=apply( x$dat,2, sum))
 z.score(x)
 
-a <- collaps( x, groupCol='group', by='median')
+expect_true( length( which( round(apply(x$zscored,1,mean),digits=10) != 0 )) == 0 ,"all means == 0" )
 
-expect_equal( dim(a$data()), c(100,2),info= "right drop" )
+expect_true( length( which( round(apply(x$zscored,1,sd),digits=10) != 1 )) == 0 ,"all sd's == 1" )
 
-expect_equal( colnames(a$data()), c('A','B'), info="colnames")
-
-## I am not going to check the data here - too much work for now.

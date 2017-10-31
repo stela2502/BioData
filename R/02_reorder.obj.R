@@ -20,8 +20,15 @@ if ( ! isGeneric('reorder.samples') ){
 
 setMethod('reorder.samples', signature = c ('BioData'),
 		definition = function ( x, column, ... ) {
-			x$data <- x$data[ , order( x$samples[,column])]
-			x$samples <- x$samples[order( x$samples[,column]),]
+			idx <-  order( x$samples[,column])
+			x$dat <- x$dat[ , idx ]
+			if( !is.null(x$zscored)) {
+				x$zscored <- x$zscored[ , idx]
+			}
+			if( !is.null(x$raw)) {
+				x$raw <- x$raw[ , idx]
+			}
+			x$samples <- x$samples[idx ,]
 			invisible(x)
 		}
 )
@@ -47,8 +54,15 @@ if ( ! isGeneric('reorder.genes') ){ setGeneric('reorder.genes', ## Name
 
 setMethod('reorder.genes', signature = c ('BioData'),
 		definition = function ( x, column, ... ) {
-			x$data <- x$data[ order( x$annotation[,column]),]
-			t <- x$annotation[order( x$annotation[,column]),]
+			idx <-  order( x$annotation[,column])
+			x$dat <- x$dat[ idx ,]
+			if( !is.null(x$zscored)) {
+				x$zscored <- x$zscored[ idx, ]
+			}
+			if( !is.null(x$raw)) {
+				x$raw <- x$raw[ idx, ]
+			}
+			t <- x$annotation[ idx,]
 			if ( class(t) == 'factor' ) {
 				t <- data.frame(t)
 				colnames(t) <- colnames(x$annotation)

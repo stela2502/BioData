@@ -20,9 +20,9 @@ if ( ! isGeneric('z.score') ){ setGeneric('z.score', ## Name
 setMethod('z.score', signature = c ('tRNAMINT'),
 		definition = function ( m ) {
 			
-			if ( ! m$zscored ) {
-				m$raw <- m$data
-				ma  <- as.matrix(m$data)
+			if ( is.null(m$zscored) ) {
+				#m$raw <- m$data
+				ma  <- as.matrix(m$dat)
 				i = 0
 				opts <- unique(as.character(m$samples$NormalizationMode))
 				
@@ -55,9 +55,8 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 						apply(ma,1, norm.name)
 				)
 				#ret[which(is.na(ret)==T)] <- -20
-				m$data <- data.frame(ret)
-				colnames(m$data)<- colnames(m$raw)
-				m$zscored = TRUE
+				m$zscored <- data.frame(ret)
+				colnames(m$zscored)<- colnames(m$data)
 			}
 			invisible(m)
 		})
@@ -75,11 +74,44 @@ setMethod('z.score', signature = c ('matrix'),
 
 setMethod('z.score',signature = c ('BioData'),
 		definition = function (m) {
-			if (! m$zscored ){
-				m$raw <- m$data
-				m$data <- data.frame(z.score( as.matrix( m$data )))
-				m$zscored = TRUE
+			if ( is.null( m$zscored ) ){
+				#m$raw <- m$data
+				m$zscored <- data.frame(z.score( as.matrix( m$dat )))
+
 			}
 			invisible(m)
+		})
+
+setMethod('z.score', signature = c ('SingleCells'),
+		definition = function ( m ) {
+			
+			if ( is.null(m$zscored) ) {
+				ma  <- as.matrix(m$dat)
+				i = 0
+				ret <- t(
+						apply(ma,1, function (x) {
+									i = i+1
+									n <- which(x==0)
+									if ( length(x) - length(n) > 1 ){
+										if (length(n) == 0 ){
+											x <-  scale(as.vector(t(x)))
+										}
+										else {
+											x[-n] <- scale(as.vector(t(x[-n])))
+											x[n] <- -20
+										}
+										
+									}
+									else {
+										x[] = -20
+									}
+									x}
+						)
+				)
+				ret[which(is.na(ret)==T)] <- -20
+				m$zscored <- data.frame(ret)
+				colnames(m$zscored)<- colnames(m$dat)
+			}
+			m
 		})
 

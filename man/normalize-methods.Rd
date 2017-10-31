@@ -10,14 +10,17 @@
 \alias{normalize,BioData-method}
 \title{description of function normalize}
 \usage{
-\S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
+\S4method{normalize}{SingleCells}(object, ..., reads = 600,
+  name = "normalized")
 
 \S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
 }
 \arguments{
-\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
+\item{reads}{the required read depth}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
+
+\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
 
 \item{x}{The NGSexpressionSet}
 
@@ -32,8 +35,6 @@
 \item{name}{the new name of the object (deafule old name + normalized)}
 
 \item{x}{The SingleCellsNGS object}
-
-\item{reads}{the required read depth}
 
 \item{name}{the name of the new object}
 

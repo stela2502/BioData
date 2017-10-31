@@ -28,123 +28,145 @@ require('R6')
 #' @export 
 BioData <- #withFormalClass(
 		R6Class(
-		'BioData',
-		class = TRUE,
-		public = list ( 
-				data=NULL,
-				raw=NULL,
-				samples=NULL,
-				annotation=NULL,
-				ranks=NULL,
-				logged=FALSE,
-				stats=NULL,
-				snorm=FALSE,
-				zscored=FALSE,
-				rownamescol=NULL,
-				sampleNamesCol=NULL,
-				outpath='../outpath/',
-				name='BioData',
-				usedObj = NULL,
-				drop=c('MDS'),
-				print = function (...) {
-					cat (paste("An object of class", paste(collapse="::",rev(class(self))),"\n" ) )
-					cat("named ",self$name,"\n")
-					cat (paste( 'with',nrow(self$data),'genes and', ncol(self$data),' samples.'),"\n")
-					cat (paste("Annotation datasets (",paste(dim(self$annotation),collapse=','),"): '",paste( colnames(self$annotation ), collapse="', '"),"'  ",sep='' ),"\n")
-					cat (paste("Sample annotation (",paste(dim(self$samples),collapse=','),"): '",paste( colnames(self$samples ), collapse="', '"),"'  ",sep='' ),"\n")
-					if ( length(names(self$stats)) > 0 ){
-						cat ( "P values were calculated for ", length(names(self$stats)) -1, " condition(s)\n")
-					}
-				},
-				initialize = function (dat,Samples, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
-					
-					S <- Samples
-					
-					if ( is.null(namecol)){
-						stop("Please specify the name of the sample name column (namecol)")
-					}
-					n <- make.names(as.vector(S[,namecol]))
-					mat <- match( as.vector(S[,namecol]), colnames(dat))
-					if ( sum(is.na(mat)) > 0 ) {
-						stop(paste( 'The samples', 
-										paste( as.vector(S[,namecol])[is.na(mat)], collapse=', '),
-										'Do not have a data column in the "dat" data.frame' ) 
-						)
-					}
-					
-					self$data =  dat[, mat ]
-					annotation <- dat[, is.na(match( colnames(dat), as.vector(S[,namecol]) ))==T ]
-
-					if ( class(annotation) == 'factor'){
-						annotation <- data.frame( annotation )
-						colnames(annotation) <- namerow
-					}
-					if ( class(annotation) == 'character'){
-						annotation <- data.frame( annotation )
-						colnames(annotation) <- namerow
-					}
-					
-					if ( outpath == '' ){
-						outpath = self$pwd()
-					}
-					if ( ! file.exists(outpath)){
-						dir.create( outpath )
-					}
-					
-					if ( is.null(dim(annotation))){
-						## this xcould be a problem... hope we at least have a vector
-						if ( length(annotation) == nrow(self$data)) {
-							rownames(self$data) <- annotation
-						}
-						else {
-							stop ( "Sorry, please cbind the rownames to the expression values before creating this object!")
-						}
-					}else{
-						rownames(self$data) <- annotation[,namerow]
-					}
-					self$samples <- S
-					self$name <- name
-					self$annotation <- annotation
-					self$rownamescol <- namerow
-					self$outpath <- outpath
-					self$usedObj <- list()
-					colnames(self$data) <- make.names(self$forceAbsoluteUniqueSample ( as.vector(S[, namecol]) ))
-					self$samples$samples <- colnames(self$data)
-					
-					self$sampleNamesCol <- namecol
-					self$force.numeric
-				},
-				force.numeric = function(...) {
-					storage.mode(self$data) <- 'numeric'
-				},
-				pwd = function () {
-					system( 'pwd > __pwd' )
-					t <- read.delim( file = '__pwd', header=F)
-					t <- as.vector(t[1,1])
-					t <- paste(t,"/",sep='')
-					unlink( '__pwd')
-					t
-				},
-				forceAbsoluteUniqueSample = function( x ,separator='_') {
-					last = ''
-					ret <- vector(length=length(x))
-					for ( i in 1:length(x) ){
-						if ( is.null(ret) ){
-							last = x[i]
-							ret[i] <- last
-						}
-						else{
-							last = x[i]
-							if ( ! is.na(match( last, ret )) ){
-								last <- paste(last,separator,sum( ! is.na(match( x[1:i], last )))-1, sep = '')
+				'BioData',
+				class = TRUE,
+				public = list ( 
+						dat=NULL,
+						raw=NULL,
+						zscored=NULL,
+						samples=NULL,
+						annotation=NULL,
+						ranks=NULL,
+						logged=FALSE,
+						stats=NULL,
+						snorm=FALSE,
+						rownamescol=NULL,
+						sampleNamesCol=NULL,
+						outpath='../outpath/',
+						name='BioData',
+						usedObj = NULL,
+						drop=c('MDS'),
+						print = function (...) {
+							cat (paste("An object of class", paste(collapse="::",rev(class(self))),"\n" ) )
+							cat("named ",self$name,"\n")
+							cat (paste( 'with',nrow(self$dat),'genes and', ncol(self$dat),' samples.'),"\n")
+							if ( ! is.null(self$raw) ){
+								cat ( "raw ")
+								if ( !is.null(self$zscored)) {
+									cat( " - and z.scored")
+								}
+								cat (" data is also stored\n")
 							}
-							ret[i] <- last
+							else if ( ! is.null(self$zscored)){
+								cat( "z.scored data is also stored\n")
+							}
+							cat (paste("Annotation datasets (",paste(dim(self$annotation),collapse=','),"): '",paste( colnames(self$annotation ), collapse="', '"),"'  ",sep='' ),"\n")
+							cat (paste("Sample annotation (",paste(dim(self$samples),collapse=','),"): '",paste( colnames(self$samples ), collapse="', '"),"'  ",sep='' ),"\n")
+							if ( length(names(self$stats)) > 0 ){
+								cat ( "P values were calculated for ", length(names(self$stats)) -1, " condition(s)\n")
+							}
+						},
+						initialize = function (dat,Samples, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
+							
+							S <- Samples
+							
+							
+							
+							if ( is.null(namecol)){
+								stop("Please specify the name of the sample name column (namecol)")
+							}
+							n <- make.names(as.vector(S[,namecol]))
+							mat <- match( as.vector(S[,namecol]), colnames(dat))
+							if ( sum(is.na(mat)) > 0 ) {
+								stop(paste( 'The samples', 
+												paste( as.vector(S[,namecol])[is.na(mat)], collapse=', '),
+												'Do not have a data column in the "dat" data.frame' ) 
+								)
+							}
+							
+							self$dat =  dat[, mat ]
+							annotation <- dat[, is.na(match( colnames(dat), as.vector(S[,namecol]) ))==T ]
+							
+							if ( class(annotation) == 'factor'){
+								annotation <- data.frame( annotation )
+								colnames(annotation) <- namerow
+							}
+							if ( class(annotation) == 'character'){
+								annotation <- data.frame( annotation )
+								colnames(annotation) <- namerow
+							}
+							
+							if ( outpath == '' ){
+								outpath = self$pwd()
+							}
+							if ( ! file.exists(outpath)){
+								dir.create( outpath )
+							}
+							
+							if ( is.null(dim(annotation))){
+								## this xcould be a problem... hope we at least have a vector
+								if ( length(annotation) == nrow(self$data)) {
+									rownames(self$data) <- annotation
+								}
+								else {
+									stop ( "Sorry, please cbind the rownames to the expression values before creating this object!")
+								}
+							}else{
+								rownames(self$dat) <- annotation[,namerow]
+							}
+							self$samples <- S
+							self$name <- name
+							self$annotation <- annotation
+							self$rownamescol <- namerow
+							self$outpath <- outpath
+							self$usedObj <- list()
+							colnames(self$dat) <- make.names(self$forceAbsoluteUniqueSample ( as.vector(S[, namecol]) ))
+							self$samples$samples <- colnames(self$dat)
+							
+							self$sampleNamesCol <- namecol
+							self$force.numeric()
+						},
+						data = function(...){
+							if ( is.null(self$zscored)){
+								self$dat
+							}else {
+								self$zscored
+							}
+						},
+						force.numeric = function(...) {
+							lapply(colnames(self$dat), function(x) 
+									{
+										self$dat[,x] = as.numeric(as.character(self$dat[,x]))
+									})
+						},
+						pwd = function () {
+							system( 'pwd > __pwd' )
+							t <- read.delim( file = '__pwd', header=F)
+							t <- as.vector(t[1,1])
+							t <- paste(t,"/",sep='')
+							unlink( '__pwd')
+							t
+						},
+						forceAbsoluteUniqueSample = function( x ,separator='_') {
+							last = ''
+							ret <- vector(length=length(x))
+							for ( i in 1:length(x) ){
+								if ( is.null(ret) ){
+									last = x[i]
+									ret[i] <- last
+								}
+								else{
+									last = x[i]
+									if ( ! is.na(match( last, ret )) ){
+										last <- paste(last,separator,sum( ! is.na(match( x[1:i], last )))-1, sep = '')
+									}
+									ret[i] <- last
+								}
+							}
+							ret
 						}
-					}
-					ret
-				}
-	)
-)
+				)
+		)
 
 #' Class interface for the MINT output
 #'
@@ -170,9 +192,47 @@ BioData <- #withFormalClass(
 #' @export tRNAMINT
 tRNAMINT <-
 		R6Class( 'tRNAMINT',
-		inherit = BioData,
-		class = TRUE
-)
+				inherit = BioData,
+				class = TRUE
+		)
+
+#' Class interface for single cell data
+#'
+#' @docType class
+#' @importFrom R6 R6Class
+#' @export
+#' @keywords single cell, NGS
+#' @return Object of \code{\link{R6Class}} to store single cell data.
+#' @format \code{\link{R6Class}} object.
+#' @examples
+#' set.seed(1)
+#' dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
+#' colnames(dat) <- paste('Sample', 1:10)
+#' rownames(dat) <- paste( 'gene', 1:100)
+#' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
+#' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
+#' x <- SingleCells$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' @field data the numerical data as data.frame
+#' @field samples the sample annotation as data.frame
+#' @field annotation the row annotation as data.frame
+#' @field usedObj a multi purpose list to store whichever ananlyis results do not fit in the stats list
+#' @field stats all stats with one result for each data row
+#' @export SingleCells
+SingleCells <-
+		R6Class( 'SingleCells',
+				inherit = BioData,
+				class = TRUE,
+				public = list ( 
+						force.numeric = function(...) {
+							## check if all data is int
+							if ( length(which(apply(self$dat,1,function(a) { all.equal(a, round(a)) == T } ) == F )) != 0 ){
+								stop( "A SingleCells object can only be created from raw count data (integers).")
+							}
+							super$force.numeric()
+						}
+				)
+		)
+
 
 #' Class interface for two coor microarray data
 #'
@@ -209,6 +269,7 @@ MicroArray <-
 	where <- as.environment("package:BioData")
 	clss <- list(
 			c("BioData", "R6"),
+			c("SingleCells", "BioData"),
 			c("tRNAMINT", "BioData"),
 			c("MicroArray", "BioData")
 	)

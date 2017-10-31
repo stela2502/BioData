@@ -8,7 +8,7 @@
 #' @param lowest the lowest color in teh heatmap (gray by default)
 #' @title description of function gg.heatmap.list
 #' @return a list with the modified merged table and the colors vector
-#' @export 
+#' @export defineHeatmapColors
 if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## Name
 		function (x, melted,..., colrs=NULL, lowest='gray') { ## Argumente der generischen Funktion
 			standardGeneric('defineHeatmapColors') ## der Aufruf von standardGeneric sorgt für das Dispatching

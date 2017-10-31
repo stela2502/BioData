@@ -2,14 +2,16 @@
 #' @rdname defineHeatmapColors-methods
 #' @docType methods
 #' @description  uses ggplot2 to plot heatmaps
-#' @param merged the merged data object with the Expression column that should be colored
+#' @param x the BioData object
+#' @param melted the merged data object with the Expression column that should be colored
 #' @param colrs and optional colors vector( gray + bluered for data and rainbow for samples)
-#' @param lowest the lowest color in teh heatmap (gray by default)
-#' @title description of function gg.heatmap.list
+#' @param lowest the lowest color in the heatmap (gray by default)
+#' @title description of function defineHeatmapColors
 #' @return a list with the modified merged table and the colors vector
 #' @export defineHeatmapColors
+
 if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## Name
-		function (x, melted,..., colrs=NULL, lowest='gray') { ## Argumente der generischen Funktion
+		function (x, melted, colrs=NULL, lowest='gray',...) { ## Argumente der generischen Funktion
 			standardGeneric('defineHeatmapColors') ## der Aufruf von standardGeneric sorgt für das Dispatching
 		}
 )
@@ -18,7 +20,7 @@ if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## 
 }
 
 setMethod('defineHeatmapColors', signature = c('tRNAMINT') ,
-		definition = function (x, melted, colrs=NULL, lowest='gray' ){
+		definition = function (x, melted,colrs=NULL, lowest='gray', ... ){
 			if ( ! is.null(lowest) ) {
 				colors= c(
 						lowest, 
@@ -55,7 +57,7 @@ setMethod('defineHeatmapColors', signature = c('tRNAMINT') ,
 
 
 setMethod('defineHeatmapColors', signature = c('BioData') ,
-		definition = function (x, melted, colrs=NULL ){
+		definition = function (x, melted, colrs=NULL, lowest='gray' ){
 			if ( is.factor( melted$Expression )) {
 				## here might be some row grouping going on!
 				d <- levels(melted$Expression)[melted$Expression]
@@ -78,7 +80,7 @@ setMethod('defineHeatmapColors', signature = c('BioData') ,
 				melted$Expression <- factor( brks [cut( n, breaks= brks)] , levels= c(brks) )
 				
 				colors= c(
-						'gray', 
+						lowest, 
 						gplots::bluered(length(brks) -2  ) ## the expression
 				)
 			}

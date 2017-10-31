@@ -18,7 +18,7 @@
 
 \item{bestColname}{the column name to store the results in}
 
-\item{k}{the numer of expected clusters (metter more than to view)}
+\item{k}{the numer of expected clusters (better more than to view)}
 
 \item{subset}{how many cells should be randomly selected for the unsupervised clustering (default = 200)}
 

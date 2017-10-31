@@ -17,14 +17,26 @@ if ( ! isGeneric('renew') ){ setGeneric('renew', ## Name
 
 setMethod('renew', signature = c ('BioData'),
 	definition = function ( x ) {
-	ret <- BioData$new( 
-			dat = cbind(x$data, x$annotation), 
-			Samples = x$samples, 
-			name=x$name, 
-			namecol=x$sampleNamesCol, 
-			namerow= x$rownamescol, 
-			outpath=x$outpath 
-	)
+		if ( is.function(x$data) ){
+			ret <- BioData$new( 
+					dat = cbind(x$dat, x$annotation), 
+					Samples = x$samples, 
+					name=x$name, 
+					namecol=x$sampleNamesCol, 
+					namerow= x$rownamescol, 
+					outpath=x$outpath 
+			)
+		}else {
+			ret <- BioData$new( 
+				dat = cbind(x$data, x$annotation), 
+				Samples = x$samples, 
+				name=x$name, 
+				namecol=x$sampleNamesCol, 
+				namerow= x$rownamescol, 
+				outpath=x$outpath 
+			)
+		}
+		ret$raw <- x$raw
 	ret$usedObj <- x$usedObj
 	ret$stats <- x$stats
 	ret$snorm <- x$snorm

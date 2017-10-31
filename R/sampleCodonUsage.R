@@ -35,7 +35,7 @@ setMethod('sampleCodonUsage', signature = c ('tRNAMINT'),
 		codons = x$usedObj$Codons
 	}
 	
-	u <- intersect ( u, which(x$data[,sname] >= min_reads) )
+	u <- intersect ( u, which(x$data()[,sname] >= min_reads) )
 	
 	if ( length(u) == 0 ) {
 		stop ("Sorry, but I could not find any read that matches your specification" )

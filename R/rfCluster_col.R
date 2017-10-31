@@ -59,7 +59,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}else {
 						dir.create( opath )
 					}
-					total <- ncol(x$data)
+					total <- ncol(x$dat)
 					if ( total-subset <= 20  && rep > 1) {
 						stop( paste( 'You have only', total, 'samples in this dataset and request to draw random',subset, "samples, which leaves less than 20 cells to draw on random!") )
 					}
@@ -72,7 +72,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$data)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
+						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
 						}else {
@@ -152,7 +152,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			m <- max(k)
 			## create the predictive random forest object
 			browser()
-			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$data) ) == TRUE ) {
+			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$dat) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
@@ -164,7 +164,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 						bestGrouping( x$usedObj[['rfExpressionSets']][[RFname]], group=paste('group n=', m), bestColname = paste('OptimalGrouping',m ,RFname))
 				
 				x$samples[, paste( single_res_col) ] <-
-						predict( x$usedObj[['rfExpressionSets']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], t(as.matrix(x$data)) )
+						predict( x$usedObj[['rfExpressionSets']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], t(as.matrix(x$data())) )
 				x$samples[, paste( single_res_col) ] <- factor( x$samples[, paste( single_res_col) ], levels= 1:m )
 				x <- colors_4( x, single_res_col )
 			}

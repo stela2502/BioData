@@ -25,7 +25,7 @@ setMethod('createStats', signature = c ('BioData'),
 	definition = function (x, condition, files=F, A=NULL, B=NULL) {
 		#stop( "Not implemented / broken!")
 		
-		if ( nrow(x$data) < 1e+3 ) {
+		if ( nrow(x$data()) < 1e+3 ) {
 			stop ( "Please calculate the statistics only for the whole dataset!" )
 		}
 		if ( is.na( match ( condition, colnames(x$samples))) ) {
@@ -104,8 +104,8 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			
 			for ( i in cmps ) {
 				x$stats[[i]] <- limma::toptable(fit2, coef = i, adjust='fdr',number=1000000)
-				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data),rownames(x$stats[[i]])) ,]
-				x$stats[[i]] <- cbind( rownames(x$data), x$stats[[i]] )
+				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data()),rownames(x$stats[[i]])) ,]
+				x$stats[[i]] <- cbind( rownames(x$data()), x$stats[[i]] )
 			}
 			invisible(x)
 		})
@@ -118,7 +118,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 #						call. = FALSE)
 #			}
 #			toM <- function (x) {
-#				d <- as.matrix(x$data)
+#				d <- as.matrix(x$data())
 #				d[which(d==-20)] <- NA
 #				d[is.na(d)] <- 0
 #				d
@@ -132,7 +132,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 #			}else {
 #				keep <- which( x$samples[,condition] ==A | x$samples[,condition] == B)
 #				name = paste ("SingleCellAssay",condition, A, B)
-#				a <- drop.samples ( x, colnames(x$data)[-keep], name=name)
+#				a <- drop.samples ( x, colnames(x$data())[-keep], name=name)
 #			}
 #			d <- toM(a)
 #			sca <- MAST::FromMatrix(class='SingleCellAssay', 

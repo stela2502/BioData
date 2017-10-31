@@ -56,7 +56,7 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 				)
 				#ret[which(is.na(ret)==T)] <- -20
 				m$zscored <- data.frame(ret)
-				colnames(m$zscored)<- colnames(m$data)
+				colnames(m$zscored)<- colnames(m$dat)
 			}
 			invisible(m)
 		})

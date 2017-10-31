@@ -23,19 +23,19 @@ setMethod('defineGOIs', signature = c ('BioData'),
 			lables = rep(name, length(genes))
 		}
 		if ( ! is.null(gene_col)) {
-			genes = rownames(x$data)[ match(genes, x$annotation[,gene_col]) ]
+			genes = rownames(x$dat)[ match(genes, x$annotation[,gene_col]) ]
 		}
 		if (nrow(x$annotation)==0) {
-			x$annotation <- matrix(ncol=2, c(rownames(x$data), rep( 0, nrow(x$data)) ) )
+			x$annotation <- matrix(ncol=2, c(rownames(x$dat), rep( 0, nrow(x$dat)) ) )
 			colnames(x$annotation) = c('Gene Symbol', 'useless')
-			rownames(x$annotation) = rownames(x$data)
+			rownames(x$annotation) = rownames(x$dat)
 		}
 		if ( ! is.na( match(name, colnames(x$annotation)))) {
 			stop( "Sorry, but this GIO list has already been defined" )
 		}
 		
 		#OK <- which(is.na(match( rownames(x$data), genes)) == F)
-		OK_genes <- match( genes, rownames(x$data) )
+		OK_genes <- match( genes, rownames(x$dat) )
 		OK <- OK_genes[which(is.na(OK_genes) ==F)]
 		n = rep(NA, nrow(x$annotation))
 		#browser()

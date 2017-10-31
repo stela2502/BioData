@@ -60,7 +60,7 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					}else {
 						dir.create( opath )
 					}
-					total <- nrow(x$data)
+					total <- nrow(x$dat)
 					if ( total-subset <= 20  && rep > 1) {
 						stop( paste( 'You have only', total, 'samples in this dataset and request to draw random',subset, "samples, which leaves less than 20 cells to draw on random!") )
 					}
@@ -73,7 +73,7 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					}
 					
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
-						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$data)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
+						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
 						if ( length(settings) > 0 ) {
 							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
 						}else {
@@ -155,7 +155,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			if ( all.equal( colnames(x$usedObj[['rfObj_row']][[RFname]]@dat), rownames(x$data) ) == TRUE ) {
+			if ( all.equal( colnames(x$usedObj[['rfObj_row']][[RFname]]@dat), rownames(x$dat) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){
 					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
@@ -172,7 +172,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				x$samples[, paste( single_res_row) ] <-
 						predict( 
 								x$usedObj[['rfExpressionSets_row']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], 
-								as.matrix(x$data)
+								as.matrix(x$data())
 						)
 				x$annotation[, paste( single_res_row) ] <- factor( x$annotation[, paste( single_res_row) ], levels= 1:m )
 				x <- colors_4( x, single_res_row )

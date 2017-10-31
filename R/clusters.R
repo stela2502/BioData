@@ -30,7 +30,7 @@ setMethod('clusters', signature = c ('BioData'),
 			clusters <- NULL
 			hc <- NULL
 			if(onwhat=="Expression"){
-				tab <- dataObj$data
+				tab <- dataObj$data()
 			}
 			else {
 				stop( paste("Sorry, the data type",mds.type,"is not supported") )

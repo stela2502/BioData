@@ -24,8 +24,8 @@ setMethod('reduceTo', signature = c ('BioData'),
 			}
 			if ( ! is.null(to)) {
 				if ( what =="row") {
-					if ( length(which(is.na(match(to,rownames(x$data)))==F)) > 0 ) {
-						useOnly <- match(to, rownames(x$data))
+					if ( length(which(is.na(match(to,rownames(x$dat)))==F)) > 0 ) {
+						useOnly <- match(to, rownames(x$dat))
 						not.matched <- to[is.na(useOnly)]
 						if ( length(not.matched) > 0 ){
 							print (paste('Problematic genes:', paste(not.matched,sep=', ')))
@@ -40,7 +40,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 								x$usedObj[[n]] <- NULL
 							}
 						}
-						x$data <- x$data[useOnly,]
+						x$dat <- x$dat[useOnly,]
 						x$annotation <- x$annotation[useOnly,]
 						
 						if ( ! is.null( x$raw) ) {

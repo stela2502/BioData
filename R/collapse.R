@@ -20,8 +20,9 @@ if ( ! isGeneric('collapse') ){ setGeneric('collapse', ## Name
 
 setMethod('collapse', signature = c ('BioData'),
 	definition = function ( x, what='row', group, fun = function(x){ mean(x, na.rm=TRUE)} ) {
+		stop( "Broken function - use collaps instead of collapse!")
 		if ( is.null(x$raw) ) {
-			x$raw <- x$data
+			x$raw <- x$dat
 		}
 	if ( what == 'row') {
 		if ( is.null( x$annotation[[group]]) ) {
@@ -29,7 +30,7 @@ setMethod('collapse', signature = c ('BioData'),
 		}
 		print ("the annotation data will be corruped as I only use the first row that matches to the grouping data in the new table!" )
 		x$usedObj$tmp = data.frame()
-		x$data <- t(sapply( unique( as.character(x$annotation[,group])), function( name ){
+		x$dat <- t(sapply( unique( as.character(x$annotation[,group])), function( name ){
 			ids <- which(x$annotation[,group] == name)
 			x$usedObj$tmp <- rbind(x$usedObj$tmp, x$annotation[ids[1],])
 			red <- x$data[ids,]

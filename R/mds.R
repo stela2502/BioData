@@ -23,7 +23,7 @@ setMethod('mds', signature = c ('BioData'),
 	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2 ) {
 	## the code is crap re-code!!
 	if(onwhat=="Expression"){
-		tab <- as.matrix(t(dataObj$data))
+		tab <- as.matrix(t(dataObj$data()))
 		storage.mode(tab)  <- 'numeric' ## brute force, but unfortunately somtimes important..
 	} 
 	else {
@@ -42,7 +42,7 @@ setMethod('mds', signature = c ('BioData'),
 	if ( is.null( dataObj$usedObj[[mds_store]]) ) {
 		dataObj$usedObj[[mds_store]] = list()
 	}
-	if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$data) )==F ) {
+	if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$dat) )==F ) {
 		mds.proj <- NULL
 		pr <- NULL
 		#system ( 'rm loadings.png' )

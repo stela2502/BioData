@@ -28,7 +28,7 @@ setMethod('preprocess', signature = c ('BioData'),
 				if ( nrow(x$raw) > 0 ) {
 					t <- as.matrix(x$raw)
 				}else {
-					t <- as.matrix(x$data)
+					t <- as.matrix(x$dat)
 				}
 				#colnames( t ) <- x$samples[,condition]
 				colnames( t ) <- make.names(colnames( t ))

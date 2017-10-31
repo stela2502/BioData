@@ -89,7 +89,7 @@ setMethod('normalize', signature = c ('SingleCells'),
 			}
 			## resample the data
 			n <- nrow(object$raw)
-			object$data[] <- 0
+			object$dat[] <- 0
 			for ( i in 1:ncol(object$raw) ) {
 				d <- sample(rep ( 1:n, object$raw[,i]) , reads)
 				t <- table(d)

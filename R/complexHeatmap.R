@@ -85,9 +85,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}else {
 				## probably calculate the clustering??
 			}
-			data <- as.matrix(x$data)
+			data <- as.matrix(x$data())
 			
-			brks <- unique(as.vector(c(min(x$data),quantile(data[which(data!= min(x$data))],seq(0,1,by=1/brks)),max(data))))
+			brks <- unique(as.vector(c(min(data),quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
 			if ( ! is.null(ofile)){
 				if ( pdf ) {
 					width= ceiling(nrow(x$samples)/300) * 10

@@ -32,10 +32,10 @@ setMethod('tRF.typeHeatmap', signature = c ('tRNAMINT'),
 	colors_4(x,'tRF.type.s.') # just make sure they are defined globaly
 	x <- x$clone() ## I might drop a lot...
 	if ( !is.null(norm.type) ) {
-		reduceTo(x,what='col', colnames(x$data)[ grep( norm.type, x$samples$NormalizationMode ) ] )
+		reduceTo(x,what='col', colnames(x$dat)[ grep( norm.type, x$samples$NormalizationMode ) ] )
 	}
 	if ( ! is.null(tRF.type) ) {
-		reduceTo(x,what='row', rownames(x$data)[ which( x$annotation$tRF.type.s. == tRF.type ) ] )
+		reduceTo(x,what='row', rownames(x$dat)[ which( x$annotation$tRF.type.s. == tRF.type ) ] )
 	}
 	if ( ! is.null(fun)){
 		x = fun(x)

@@ -20,9 +20,9 @@ setGeneric('simpleAnova', ## Name
 setMethod('simpleAnova', signature = c ( 'BioData') ,
 		definition = function ( x, groupCol='GroupName', padjMethod='BH' ) {
 			x <- normalize(x)
-			significants <- apply ( x$data ,1, function(a) { anova( lm (a ~ x$samples[,groupCol ]))$"Pr(>F)"[1] } )
+			significants <- apply ( x$data() ,1, function(a) { anova( lm (a ~ x$samples[,groupCol ]))$"Pr(>F)"[1] } )
 			adj.p <- p.adjust( significants, method = padjMethod)
-			res <- data.frame( genes= rownames(x$data), pvalue= significants,  adj.p )
+			res <- data.frame( genes= rownames(x$dat), pvalue= significants,  adj.p )
 			colnames(res)[3] <- paste('padj',padjMethod)
 			if ( length (x$stats) == 0 ){
 				x$stats <- list ( 'simpleAnova' = res )

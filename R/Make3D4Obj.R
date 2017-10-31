@@ -65,7 +65,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		}
         if ( cut ) {
                 ## this is a gene expression value!
-                n <- as.numeric(x$data[group,] )
+                n <- as.numeric(x$data()[group,] )
                 m <- min( n )
                 brks= c( (m-.1),m ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
                 brks = unique(as.numeric(sprintf("%2.6e", brks)))

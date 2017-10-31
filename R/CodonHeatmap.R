@@ -30,10 +30,10 @@ setMethod('CodonHeatmap', signature = c ('tRNAMINT'),
 	colors_4(x,'tRF.type.s.') # just make sure they are defined globaly
 	x <- x$clone() ## I might drop a lot...
 	if ( !is.null(norm.type) ) {
-		reduceTo(x,what='col', colnames(x$data)[ grep( norm.type, x$samples$NormalizationMode ) ] )
+		reduceTo(x,what='col', colnames(x$dat)[ grep( norm.type, x$samples$NormalizationMode ) ] )
 	}
 	if ( ! is.null(codon) ) {
-		reduceTo(x,what='row', rownames(x$data)[ which( x$annotation[,codon] == 1 ) ] )
+		reduceTo(x,what='row', rownames(x$dat)[ which( x$annotation[,codon] == 1 ) ] )
 	}
 	if ( ! is.null(collapse)){
 		fun(x)

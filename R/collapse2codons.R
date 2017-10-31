@@ -20,16 +20,16 @@ if ( ! isGeneric('collapse2codons') ){ setGeneric('collapse2codons', ## Name
 
 setMethod('collapse2codons', signature = c ('tRNAMINT'),
 	definition = function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") {
-	
+	print ( "please doublecheck this function - not changed in the data to dat conversion!!!!!")
 	dat = NULL
 	for ( codon in x$usedObj$Codons ) {
 		a <- x$clone()
-		reduceTo(a,'row', rownames(a$data)[which(a$annotation[,codon] == 1)] )
+		reduceTo(a,'row', rownames(a$dat)[which(a$annotation[,codon] == 1)] )
 		if ( class(a$data) == 'numeric') {
-			dat <- rbind( dat, a$data )
-			a$data <- t(data.frame(a$data))
+			dat <- rbind( dat, a$dat )
+			a$data <- t(data.frame(a$dat))
 		}else {
-			dat <- rbind( dat, apply( a$data,2,sum.fun))
+			dat <- rbind( dat, apply( a$dat,2,sum.fun))
 		}
 	}
 	dat <- data.frame(dat)

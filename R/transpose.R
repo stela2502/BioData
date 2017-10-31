@@ -25,12 +25,15 @@ setMethod('transpose', signature = c ('BioData'),
 			tmp <- x$annotation
 			x$annotation <- x$samples
 			x$samples <- tmp
-			x$data <- t(x$data)
+			x$dat <- t(x$dat)
 			tmp <- x$sampleNamesCol
 			x$sampleNamesCol <- x$rownamescol
 			x$rownamescol <- tmp
 			if ( ! is.null(x$raw) ) {
 				x$raw < - t(x$raw)
+			}
+			if ( ! is.null(x$zscored) ) {
+				x$zscored < - t(x$zscored)
 			}
 			tmp = x$usedObj$MDS
 			x$usedObj$MDS = x$usedObj$MDSgenes

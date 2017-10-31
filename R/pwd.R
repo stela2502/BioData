@@ -16,11 +16,6 @@ setGeneric('pwd', ## Name
 setMethod('pwd', signature = c () ,
 	definition = function ( a ) {
 		rm(a)
-	system( 'pwd > __pwd' )
-	t <- read.delim( file = '__pwd', header=F)
-	t <- as.vector(t[1,1])
-	t <- paste(t,"/",sep='')
-	unlink( '__pwd')
-	t
+	getwd()
 })
 

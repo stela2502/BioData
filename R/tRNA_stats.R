@@ -31,20 +31,20 @@ setMethod('tRNA_stats', signature = c ('tRNAMINT'),
 		stop( "Sorry you can only get this statistics on exactly two sample groups")
 	}
 	if ( !is.null(norm.type) ) {
-		reduceTo(b,what='col', colnames(x$data)[ grep( norm.type, b$samples$NormalizationMode ) ] )
+		reduceTo(b,what='col', colnames(x$dat)[ grep( norm.type, b$samples$NormalizationMode ) ] )
 	}else {
 		norm.type= "All"
 	}
 	if ( ! is.null(codon) ) {
-		reduceTo(b,what='row', rownames(b$data)[ which( b$annotation[,codon] == 1 ) ] )
+		reduceTo(b,what='row', rownames(b$dat)[ which( b$annotation[,codon] == 1 ) ] )
 	}else {
 		codon = "all codons"
 	}
 	return.val <- list()
 	for ( name in unique(b$annotation[,acol])) {
 		a <- b$clone()
-		reduceTo( a, what='row', to= rownames(a$data)[which(a$annotation[,acol] == name)])
-		if ( class(a$data) !=  "matrix" & class(a$data) !=  "data.frame" ) {
+		reduceTo( a, what='row', to= rownames(a$dat)[which(a$annotation[,acol] == name)])
+		if ( class(a$dat) !=  "matrix" & class(a$dat) !=  "data.frame" ) {
 			next ## useless as we have less than 2 values for this
 		}
 		collapse(a,what='col',group=scol, fun = fun )
@@ -52,20 +52,20 @@ setMethod('tRNA_stats', signature = c ('tRNAMINT'),
 		return.val[[paste(codon, name)]] <- a
 		## now I have two columns of mean values for one state in the table
 		## therefore I can add exactly one stat entry
-		if ( class(a$data) == 'numeric' || nrow(a$data) < 2){
+		if ( class(a$dat) == 'numeric' || nrow(a$dat) < 2){
 			ret <- rbind( ret, c(name, rep( NA, 8) ) )
 		}else {
-			if ( nrow(a$data) > 2 ) {
+			if ( nrow(a$dat) > 2 ) {
 				#t <- cor.test( as.vector(a$data[,1]),as.vector(a$data[,2])) # this is a naive test! useless!
 				#t <- wtd.t.test( x= a$data[,1], y=a$data[,2], weight= apply(a$data, 1,sum) ,samedata=TRUE )
-				t <- t.test(x= a$data[,1], y=a$data[,2], paired=T)
-				t$foldChange <- mean(apply(a$data,1,function(x) { x[1] / x[2]} ) )
+				t <- t.test(x= a$data()[,1], y=a$data()[,2], paired=T)
+				t$foldChange <- mean(apply(a$data(),1,function(x) { x[1] / x[2]} ) )
 				#ret <- rbind( ret, c( name, nrow(a$data), as.numeric(t(unlist(t))[1:4]) ) )
 				#ret <- rbind( ret, c( name, t$coefficients,t$additional ) )
-				ret <- rbind( ret, c( name, nrow(a$data), t$statistic,t$parameter, t$p.value, t$alternative, t$method, t$estimate, t$foldChange) )
+				ret <- rbind( ret, c( name, nrow(a$data()), t$statistic,t$parameter, t$p.value, t$alternative, t$method, t$estimate, t$foldChange) )
 				
 			}else {
-				ret <- rbind( ret, c( name, nrow(a$data), rep(NA,7) ) )
+				ret <- rbind( ret, c( name, nrow(a$data()), rep(NA,7) ) )
 			}
 		}
 	}

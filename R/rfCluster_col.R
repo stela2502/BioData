@@ -34,6 +34,7 @@ if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
 }
 setMethod('rfCluster_col', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list()) {
+			x$name <- str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
@@ -74,9 +75,9 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
 						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
-							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
+							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
 						}else {
-							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
 						}
 					}
 					names(x$usedObj[['rfExpressionSets']]) [i] <- tname

@@ -34,6 +34,7 @@ if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
 }
 setMethod('rfCluster_row', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row', settings=list()) {
+			x$name <- str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
@@ -48,7 +49,6 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 			single_res_row <- paste('RFgrouping',name)
 			for ( i in 1:rep) {
 				tname = paste(n,i,sep='_')
-				
 				if ( is.null(x$usedObj[['rfExpressionSets_row']][[tname]]) ){
 					i <- length(x$usedObj$rfObj_row)+i
 					## start the calculations!
@@ -75,9 +75,9 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
 						if ( length(settings) > 0 ) {
-							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, settings=settings )
 						}else {
-							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
 						}
 					}
 					names(x$usedObj[['rfExpressionSets_row']])[i] <- tname

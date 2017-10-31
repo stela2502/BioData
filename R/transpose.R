@@ -30,10 +30,10 @@ setMethod('transpose', signature = c ('BioData'),
 			x$sampleNamesCol <- x$rownamescol
 			x$rownamescol <- tmp
 			if ( ! is.null(x$raw) ) {
-				x$raw < - t(x$raw)
+				x$raw <- t(x$raw)
 			}
 			if ( ! is.null(x$zscored) ) {
-				x$zscored < - t(x$zscored)
+				x$zscored <- t(x$zscored)
 			}
 			tmp = x$usedObj$MDS
 			x$usedObj$MDS = x$usedObj$MDSgenes

@@ -77,21 +77,22 @@ setMethod('normalize', signature = c ('SingleCells'),
 			if ( is.null( object$usedObj$snorm) ) {
 				object$usedObj$snorm = 0
 			}
+			reads <- round(reads)
 			if (  object$usedObj$snorm == 0 ) {
 			if ( length( object$samples$counts ) == 0 ) {
 				object$samples$counts <- apply( object$dat, 2, sum)
 			}
-			object <- drop.samples( object, object$samples[which(object$samples$counts < reads), object$sampleNamesCol ] 
+			object <- reduceTo( object, what="col", to=object$samples[which(object$samples$counts >= reads), object$sampleNamesCol ] 
 					, name=name )
 			
-			if (  object$usedObj$snorm == 0){
+			if ( is.null(object$raw) ){
 				object$raw <- object$dat
 			}
 			## resample the data
 			n <- nrow(object$raw)
 			object$dat[] <- 0
 			for ( i in 1:ncol(object$raw) ) {
-				d <- sample(rep ( 1:n, object$raw[,i]) , reads)
+				d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
 				t <- table(d)
 				object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
 			}

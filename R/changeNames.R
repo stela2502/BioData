@@ -1,10 +1,27 @@
-changeNames <- function( x, what='row', colname ) {
+#' @name changeNames
+#' @aliases changeNames,BioData-method
+#' @rdname changeNames-methods
+#' @docType methods
+#' @description rename row- or colnames of the data tables
+#' @param x the BioData object
+#' @param what which dimension names to change ('row' or 'col'; default='row')
+#' @param colname a colname in the annotaion or samples table
+#' @title description of function changeNames
+#' @export 
+setGeneric('changeNames', ## Name
+	function ( x, what='row', colname ) { ## Argumente der generischen Funktion
+		standardGeneric('changeNames') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	}
+)
+
+setMethod('changeNames', signature = c ('BioData'),
+	definition = function ( x, what='row', colname ) {
 	if ( what=='row' ) {
 		id = match(colname, colnames(x$annotation) )
-		if ( length(id) == 0 ){
+		if ( is.na(id) ){
 			stop( paste( "The colname", colname,"can not be found in the annotation table") )
 		}
-		if ( length(which(table(as.character(x$annotation[,colname] ) )) ) > 1 ){
+		if ( length(which(table(as.character(x$annotation[,colname] ) ) > 1 ) ) > 0 ){
 			x$rownamescol <- paste(colname, 'unique', sep='.' )
 			x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( as.character(x$annotation[,colname] ) )
 		}else {
@@ -20,10 +37,10 @@ changeNames <- function( x, what='row', colname ) {
 	}
 	else if ( what == 'col') {
 		id = match(colname, colnames(x$samples) )
-		if ( length(id) == 0 ){
+		if ( is.na(id) ){
 			stop( paste( "The colname", colname,"can not be found in the samples table") )
 		}
-		if ( length(which(table(as.character(x$samples[,colname] ) )) ) > 1 ){
+		if ( length(which(table(as.character(x$samples[,colname] ) ) > 1 ) ) > 0 ){
 			x$sampleNamesCol <- paste(colname, 'unique', sep='.' )
 			x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniqueSample( as.character(x$samples[,colname] ) )
 		}else {
@@ -38,5 +55,4 @@ changeNames <- function( x, what='row', colname ) {
 		}
 	}
 	invisible(x)
-}
-
+} )

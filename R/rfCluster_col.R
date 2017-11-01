@@ -75,7 +75,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
 						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
-							browser()
+							#browser()
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, settings=settings, slurm=T )
 						}else {
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )

@@ -28,6 +28,11 @@ x <- SingleCells$new( cbind(annotation,dat), Samples=samples, name="testObject",
 
 expect_equal( class( x ), c( "SingleCells", 'BioData', 'R6') )
 
+## test the renew
+x <- renew(x)
+
+expect_equal( class( x ), c( "SingleCells", 'BioData', 'R6') , info="class OK after renew")
+
 expect_equal( x$data(),x$dat, info ="the data accessory function is OK" ) 
 ## z.score 
 

@@ -123,7 +123,7 @@ BioData <- #withFormalClass(
 							colnames(self$dat) <- make.names(self$forceAbsoluteUniqueSample ( as.vector(S[, namecol]) ))
 							self$samples$samples <- colnames(self$dat)
 							
-							self$sampleNamesCol <- namecol
+							self$sampleNamesCol <- 'samples'
 							self$force.numeric()
 						},
 						data = function(...){

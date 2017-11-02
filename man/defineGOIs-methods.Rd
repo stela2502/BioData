@@ -13,12 +13,12 @@ defineGOIs(x, name, genes, lables = NULL, ...)
 
 \item{name}{the name of the GIO list (eg TFs or epigenetic)}
 
-\item{genes}{a list of gene symbols that match to the $data rownames}
+\item{genes}{a list of gene symbols that match to the $dat rownames}
 
 \item{lables}{a list of lables for the GIO column (default NULL)}
 
 \item{gene_col}{which column in the annotation data contains the IDs you give me
-default == rownames(x$data)}
+default == rownames(x$dat)}
 }
 \description{
 Allows the user to define (G)enes (O)f (I)nterest lists in the object

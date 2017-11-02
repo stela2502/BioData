@@ -83,7 +83,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			Factor=x$samples[,condition]
 			design <- model.matrix( ~ -1+ Factor )
 			colnames(design) <- str_replace_all( colnames(design), 'Factor', '' )
-			fit <- limma::lm.series(data$data, design)
+			fit <- limma::lm.series(data$data(), design)
 			contr <- list()
 			i=1
 			str = levels(x$samples[,condition])

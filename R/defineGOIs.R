@@ -5,10 +5,10 @@
 #' @description  Allows the user to define (G)enes (O)f (I)nterest lists in the object
 #' @param x A BioData object
 #' @param name the name of the GIO list (eg TFs or epigenetic)
-#' @param genes a list of gene symbols that match to the $data rownames
+#' @param genes a list of gene symbols that match to the $dat rownames
 #' @param lables a list of lables for the GIO column (default NULL)
 #' @param gene_col which column in the annotation data contains the IDs you give me
-#' default == rownames(x$data)
+#' default == rownames(x$dat)
 #' @title description of function defineGOIs
 #' @export defineGOIs
 setGeneric('defineGOIs', ## Name
@@ -34,7 +34,7 @@ setMethod('defineGOIs', signature = c ('BioData'),
 			stop( "Sorry, but this GIO list has already been defined" )
 		}
 		
-		#OK <- which(is.na(match( rownames(x$data), genes)) == F)
+		#OK <- which(is.na(match( rownames(x$dat), genes)) == F)
 		OK_genes <- match( genes, rownames(x$dat) )
 		OK <- OK_genes[which(is.na(OK_genes) ==F)]
 		n = rep(NA, nrow(x$annotation))

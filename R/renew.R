@@ -17,6 +17,7 @@ if ( ! isGeneric('renew') ){ setGeneric('renew', ## Name
 
 setMethod('renew', signature = c ('BioData'),
 	definition = function ( x ) {
+		oldClass <- class(x)
 		if ( is.function(x$data) ){
 			ret <- BioData$new( 
 					dat = cbind(x$dat, x$annotation), 
@@ -42,23 +43,6 @@ setMethod('renew', signature = c ('BioData'),
 	ret$snorm <- x$snorm
 	ret$zscored <- x$zscored
 	x <- ret
+	class(x) <- oldClass
 	invisible(x)
 } )
-
-setMethod('renew', signature = c ('tRNAMINT'),
-		definition = function ( x ) {
-			ret <- tRNAMINT$new( 
-					dat = cbind(x$data, x$annotation), 
-					Samples = x$samples, 
-					name=x$name, 
-					namecol=x$sampleNamesCol, 
-					namerow= x$rownamescol, 
-					outpath=x$outpath 
-			)
-			ret$usedObj <- x$usedObj
-			ret$stats <- x$stats
-			ret$snorm <- x$snorm
-			ret$zscored <- x$zscored
-			x <- ret
-			invisible(x)
-		} )

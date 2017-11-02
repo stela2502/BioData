@@ -24,7 +24,7 @@ setMethod('bestGrouping', signature = c ('BioData'),
 			uObj <- paste( 'predictive RFobj', group )
 			rf <- NULL
 			if (  is.null( x$usedObj[[uObj]])){
-				x$usedObj[[uObj]] <- randomForest( x= t(as.matrix(x$data)), y=factor(x$samples[, group]),ntree=2000 )
+				x$usedObj[[uObj]] <- randomForest( x= t(as.matrix(x$data())), y=factor(x$samples[, group]),ntree=2000 )
 			}
 			x
 		}

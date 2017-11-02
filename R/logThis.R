@@ -18,7 +18,7 @@ if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
 setMethod('logThis', signature = c ('BioData'),
 	definition = function (x) {
 	if ( ! x$logged ) {
-		x$data <- apply( x$data, 2, function(x){ log(x+1) } )
+		x$dat <- apply( x$dat, 2, function(x){ log(x+1) } )
 		x$logged = TRUE
 	}
 	invisible(x)

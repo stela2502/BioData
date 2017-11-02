@@ -105,8 +105,8 @@ BioData <- #withFormalClass(
 							
 							if ( is.null(dim(annotation))){
 								## this xcould be a problem... hope we at least have a vector
-								if ( length(annotation) == nrow(self$data)) {
-									rownames(self$data) <- annotation
+								if ( length(annotation) == nrow(self$dat)) {
+									rownames(self$dat) <- annotation
 								}
 								else {
 									stop ( "Sorry, please cbind the rownames to the expression values before creating this object!")

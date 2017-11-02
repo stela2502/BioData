@@ -33,7 +33,7 @@ setMethod('collapse', signature = c ('BioData'),
 		x$dat <- t(sapply( unique( as.character(x$annotation[,group])), function( name ){
 			ids <- which(x$annotation[,group] == name)
 			x$usedObj$tmp <- rbind(x$usedObj$tmp, x$annotation[ids[1],])
-			red <- x$data[ids,]
+			red <- x$dat[ids,]
 			apply( red,2,fun )
 				} ))
 		x$annotation <- x$usedObj$tmp
@@ -45,10 +45,10 @@ setMethod('collapse', signature = c ('BioData'),
 		}
 		print ("the samples data will be corruped as I only use the first row that matches to the grouping data in the new table!" )
 		x$usedObj$tmp = data.frame()
-		x$data <- sapply( unique( as.character(x$samples[,group])), function( name ){
+		x$dat <- sapply( unique( as.character(x$samples[,group])), function( name ){
 							ids <- which(x$samples[,group] == name)
 							x$usedObj$tmp <- rbind(x$usedObj$tmp, x$samples[ids[1],])
-							red <- x$data[,ids]
+							red <- x$dat[,ids]
 							apply( red,1,fun )
 						} )
 		x$samples <- x$usedObj$tmp

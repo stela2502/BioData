@@ -134,7 +134,24 @@ setMethod('as_BioData', signature = c ('seurat'),
 					samples[,namecol] <- make.names(samples[,namecol])
 					ret <- BioData$new( d, Samples=samples, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 					ret$zscored <- as.data.frame(as.matrix(dat@scale.data))
-					ret$raw <- as.data.frame(as.matrix(dat@raw.data))
+					m <- match(colnames(dat@data), colnames(dat@raw.data))
+					ret$raw <- as.data.frame(as.matrix(dat@raw.data))[,m]
+					## now I need to manually remove unreliable data from the zscored information (set to -20)
+					d <- function( i, obj) {
+						drop <- which(obj$raw[,i] == 0)
+						if ( length(drop) > 0 ){
+							ret$zscored[drop,i] = -20
+						}
+						0
+					}
+					lapply(  1:ncol(ret$dat), d, ret)
+					for ( i in 1:nrow(ret$dat) ) {
+						drop <- which(ret$raw[i,] == 0)
+						if ( length(drop) > 0 ){
+							ret$zscored[i, drop] = -20
+						}
+					}
+					
 					#ret$usedObj <- dat$usedObj
 					ret
 				}  

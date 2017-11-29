@@ -9,7 +9,6 @@
 #' @title description of function defineHeatmapColors
 #' @return a list with the modified merged table and the colors vector
 #' @export defineHeatmapColors
-
 if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## Name
 		function (x, melted, colrs=NULL, lowest='gray',...) { ## Argumente der generischen Funktion
 			standardGeneric('defineHeatmapColors') ## der Aufruf von standardGeneric sorgt für das Dispatching

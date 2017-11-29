@@ -71,9 +71,10 @@ setMethod('Make3D4obj', signature = c ('BioData'),
                 brks = unique(as.numeric(sprintf("%2.6e", brks)))
                 d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
                 col = c('black', bluered(length(brks) -1  ))[d]
-        }
-		colors_4(x, group, colFunc=colFunc )
-		col <- x$usedObj$colorRange[[group]][x$samples[,group]]
+        }else {
+			colors_4(x, group, colFunc=colFunc )
+			col <- x$usedObj$colorRange[[group]][x$samples[,group]]
+		}
 		#18 105 762 810
 		rgl.open()
 		par3d(windowRect = c(18,105, 762, 810))

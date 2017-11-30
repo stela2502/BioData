@@ -102,5 +102,6 @@ setMethod('reduceTo', signature = c ('BioData'),
 					stop(paste( "the option what='",what,"' is not supported!", sep="") )
 				}
 			}
+			gc(FALSE)
 			invisible(x)
 		} )

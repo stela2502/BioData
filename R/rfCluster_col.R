@@ -13,9 +13,8 @@
 #' @param x the single cells ngs object
 #' @param email your email to use together with the SGE option
 #' @param SGE whether to use the sun grid engine to calculate the rf grouping
-#' @param rep how many repetitions for the random forest grouping should be run (default = 5)
-#' @param slice how many processes should be started for each random forest clustering (default = 30)
-#' @param bestColname the column name to store the results in
+#' @param rep how many repetitions for the random forest grouping should be run (default = 1)
+#' @param slice how many processes should be started for each random forest clustering (default = 4)
 #' @param k the numer of expected clusters (better more than to view)
 #' @param subset how many cells should be randomly selected for the unsupervised clustering (default = 200)
 #' @param name if you want to run multiple RFclusterings on e.g. using different input genes you need to specify a name (default ='RFclust')
@@ -73,7 +72,8 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
+						browser()
+						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
 							#browser()
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, settings=settings, slurm=T )
@@ -153,7 +153,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			browser()
+			#browser()
 			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$dat) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){

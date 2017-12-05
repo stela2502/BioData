@@ -82,13 +82,77 @@ setMethod('as_BioData', signature = c ('cellexalvr'),
 			ret <- BioData$new( d, Samples=samples, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 			ret$usedObj <- dat$usedObj
 			ret
-		}  )
+		}
+		
+)
 
 
-#' @name as_cellexalvr
-#' @rdname as_cellexalvr-methods
-#' @docType methods
-#' @description create a cellexalvr object from a BioData object
-#' @param dat the BioData object
-#' @title description of function as_cellexalvr
-#' @export as_cellexalvr
+setMethod('as_BioData', signature = c ('seurat'),
+				definition = function ( dat ) {
+					#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
+					ok = which(lapply(colnames(dat@meta.data) , function(x) { all.equal( as.character(as.vector(dat@meta.data[,x])), colnames(dat@data)) == T } )==T)
+					if ( length(ok) == 0) {
+						if (all.equal( rownames(dat@meta.data), colnames(dat@data)) ){
+							dat@meta.data = cbind( cell.name = colnames(dat@data), dat@meta.data)
+							namecol = 'cell.name'
+						}
+					}
+					else {
+						namecol = colnames(dat@meta.data)[ok]
+						namecol = namecol[1]
+					}
+					namerow = NULL
+					if (nrow(dat@hvg.info)==0) {
+						dat@hvg.info <- matrix(ncol=2, c(rownames(dat@data), rep( 0, nrow(dat@data)) ) )
+						colnames(dat@hvg.info) = c('Gene.Symbol', 'useless')
+						rownames(dat@hvg.info) = rownames(x@data)
+						namerow = 'Gene.Symbol'
+					}else {
+						ok = which(lapply(colnames(dat@hvg.info) , function(x) { all.equal( as.character(as.vector(dat@hvg.info[,x])), rownames(dat@data)) == T } )==T)
+						if ( length(ok) == 0) {
+							if (all.equal( rownames(dat@hvg.info), rownames(dat@data)) == TRUE ){
+								dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info)
+								namerow = 'gene.name'
+							}else {
+								m <- match( rownames(dat@hvg.info), rownames(dat@data))
+								dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info[order(m),])
+								namerow = 'gene.name'
+							}
+						}
+						else {
+							namerow = colnames(dat@hvg.info)[ok]
+							namerow = make.names(namerow[1])
+							## now cast the hvg.info into the same order as the data object.
+							m <- match( rownames(dat@hvg.info), rownames(dat@data))
+							dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info[order(m),])
+						}
+					}
+					#storage.mode(dat$data) <- 'numeric'
+					d <- data.frame(cbind( dat@hvg.info, as.matrix(dat@data)))				
+					samples <- data.frame(as.matrix(dat@meta.data))
+					
+					samples[,namecol] <- make.names(samples[,namecol])
+					ret <- BioData$new( d, Samples=samples, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
+					ret$zscored <- as.data.frame(as.matrix(dat@scale.data))
+					m <- match(colnames(dat@data), colnames(dat@raw.data))
+					ret$raw <- as.data.frame(as.matrix(dat@raw.data))[,m]
+					## now I need to manually remove unreliable data from the zscored information (set to -20)
+					d <- function( i, obj) {
+						drop <- which(obj$raw[,i] == 0)
+						if ( length(drop) > 0 ){
+							ret$zscored[drop,i] = -20
+						}
+						0
+					}
+					lapply(  1:ncol(ret$dat), d, ret)
+					for ( i in 1:nrow(ret$dat) ) {
+						drop <- which(ret$raw[i,] == 0)
+						if ( length(drop) > 0 ){
+							ret$zscored[i, drop] = -20
+						}
+					}
+					
+					#ret$usedObj <- dat$usedObj
+					ret
+				}  
+)

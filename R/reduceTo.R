@@ -51,7 +51,12 @@ setMethod('reduceTo', signature = c ('BioData'),
 						}
 						if ( length(x$stats) > 0 ) {
 							lapply( names(x$stats) , function(name) {
-										x$stats[[name]] <- x$stats[[name]][match(tolower(to) ,tolower(x$stats[[name]][,1]) ),]
+										statIDs <- match(tolower(to) ,tolower(x$stats[[name]][,1]) )
+										if ( length(which(is.na(statIDs))) > 0 ){
+											statIDs <- match(tolower(to) ,tolower(rownames(x$stats[[name]]) ) )
+										}
+										add_to_stat( x, x$stats[[name]][statIDs,] , name )
+										#x$stats[[name]] <- x$stats[[name]][statIDs,]
 									} )
 						}
 						x$name = name
@@ -102,5 +107,6 @@ setMethod('reduceTo', signature = c ('BioData'),
 					stop(paste( "the option what='",what,"' is not supported!", sep="") )
 				}
 			}
+			gc(FALSE)
 			invisible(x)
 		} )

@@ -28,10 +28,15 @@ setMethod('reorder.samples', signature = c ('BioData'),
 			if( !is.null(x$raw)) {
 				x$raw <- x$raw[ , idx]
 			}
+			lapply( names(x$usedObj$MDS),reorder.mds, idx, x, 'MDS')
 			x$samples <- x$samples[idx ,]
 			invisible(x)
 		}
 )
+
+reorder.mds <- function ( mds.name, idx, obj, mds.type) {
+	obj$usedObj[[mds.type]][[mds.name]] <- obj$usedObj[[mds.type]][[mds.name]][ idx, ]
+}
 
 #' @name reorder.genes
 #' @aliases reorder.genes,BioData-method
@@ -67,6 +72,7 @@ setMethod('reorder.genes', signature = c ('BioData'),
 				t <- data.frame(t)
 				colnames(t) <- colnames(x$annotation)
 			}
+			lapply( names(x$usedObj$MDSgene),reorder.mds, idx, x, 'MDSgene')
 			x$annotation <- t
 			invisible(x)
 		}

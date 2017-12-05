@@ -110,40 +110,61 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			invisible(x)
 		})
 
-#
-#setMethod('createStats', signature = c ( 'SingleCellsNGS') ,
-#		definition = function ( x, condition, files=F, A=NULL, B=NULL ) {
-#			if (!requireNamespace("MAST", quietly = TRUE)) {
-#				stop("MAST needed for this function to work. Please install it.",
-#						call. = FALSE)
-#			}
-#			toM <- function (x) {
-#				d <- as.matrix(x$data())
-#				d[which(d==-20)] <- NA
-#				d[is.na(d)] <- 0
-#				d
-#			}
-#			if ( is.null(x$samples[,condition]) ) {
-#				stop( paste("the condition",condition, "is not defined in the samples table!"))
-#			}
-#			if ( is.null(A) ) {
-#				name = paste ("SingleCellAssay",condition)
-#				a <- x
-#			}else {
-#				keep <- which( x$samples[,condition] ==A | x$samples[,condition] == B)
-#				name = paste ("SingleCellAssay",condition, A, B)
-#				a <- drop.samples ( x, colnames(x$data())[-keep], name=name)
-#			}
-#			d <- toM(a)
-#			sca <- MAST::FromMatrix(class='SingleCellAssay', 
-#					exprsArray=d, 
-#					data.frame(wellKey=colnames(d), GroupName = a$samples[,condition]), 
-#					data.frame(primerid=rownames(d)))
-#			
-#			groups <- MAST::colData(sca)$GroupName <- a$samples[,condition]
-#			zlm.output <- MAST::zlm.SingleCellAssay(~ GroupName, sca, method='glm', ebayes=T)
-#			zlm.lr <- MAST::lrTest(zlm.output,'GroupName')
-#			x <- add_to_stat ( x, zlm.lr[,,'Pr(>Chisq)'], name )
-#			x
-#			
-#		})
+
+setMethod('createStats', signature = c ( 'SingleCells') ,
+		definition = function ( x, condition, files=F, A=NULL, B=NULL ) {
+			if (!requireNamespace("MAST", quietly = TRUE)) {
+				stop("MAST needed for this function to work. Please install it.",
+						call. = FALSE)
+			}
+			toM <- function (x) {
+				d <- as.matrix(x$dat)
+				d[which(d==-20)] <- NA
+				d[is.na(d)] <- 0
+				d
+			}
+			if ( is.null(x$samples[,condition]) ) {
+				stop( paste("the condition",condition, "is not defined in the samples table!"))
+			}
+			if ( is.null(A) ) {
+				name = paste ("SingleCellAssay",condition)
+				a <- x
+			}else {
+				keep <- which( x$samples[,condition] ==A | x$samples[,condition] == B)
+				name = paste ("SingleCellAssay",condition, A, B)
+				a <- reduceTo( x, what='col',to= colnames(x$data())[keep], name=name)
+			}
+			d <- toM(a)
+			sca <- MAST::FromMatrix(class='SingleCellAssay', 
+					exprsArray=t(d), 
+					cData=data.frame(wellKey=colnames(d), GroupName = a$samples[,condition]), 
+					fData=data.frame(primerid=rownames(d)))
+			
+			groups <- MAST::cData(sca)$GroupName <- a$samples[,condition]
+			zlm.output <- MAST::zlm.SingleCellAssay(~ GroupName, sca, method='glm', ebayes=T)
+			zlm.lr <- MAST::lrTest(zlm.output,'GroupName')
+			
+			x <- add_to_stat ( x, zlm.lr[,,'Pr(>Chisq)'], name )
+
+			rm(sca)
+			rm(zlm.output)
+			rm(zlm.lr)
+			gc(FALSE)
+			invisible(x)
+			
+		}
+)
+
+
+add_to_stat <- function( x, stat, name ) {
+	if ( length( match('p.adj BF',colnames(stat) )) == 0 & length( match('hurdle',colnames(stat) ))) {
+		stat = cbind( stat, 'p.adj BF' = p.adjust(stat[,'hurdle'], method='bonferroni') )
+	}
+	if ( ! is.na( match( name, names(x$stats)))){
+		x$stats[[ match( name, names(x$stats)) ]] <- stat
+	}else {
+		x$stats[[ length( x$stats ) +1 ]] <- stat
+		names(x$stats)[length(x$stats) ] <- name
+	}
+	invisible(x)
+}

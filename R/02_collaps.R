@@ -27,6 +27,7 @@ setMethod('collaps', signature = c ('BioData'),
 			f <- NULL
 			if ( is.function(by)){
 				f <- by
+				by = "user_function"
 			}else {
 			switch( by,
 					median = f<- function (x ) { median(x) },

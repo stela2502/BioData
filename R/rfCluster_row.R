@@ -39,11 +39,17 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
 			m <- max(k)
-			OPATH <- paste( x$outpath,"/",str_replace( x$name, '\\s', '_'), sep='')
-			opath = paste( OPATH,"/RFclust.mp",sep='' )
+			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
+			opath = file.path( OPATH,name,"RFclust.mp" )
 			
 			if ( ! dir.exists(OPATH)){
 				dir.create( OPATH )
+			}
+			if ( ! dir.exists(file.path(OPATH, name )) ){
+				dir.create(file.path(OPATH, name ) )
+			}
+			if ( ! dir.exists(file.path(OPATH, name, "RFclust.mp")) ){
+				dir.create(file.path(OPATH, name,"RFclust.mp" ) )
 			}
 			processed = FALSE
 			single_res_row <- paste('RFgrouping',name)
@@ -176,7 +182,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 								bestColname = paste('OptimalGrouping',m ,RFname)
 						)
 				
-				x$samples[, paste( single_res_row) ] <-
+				x$annotation[, paste( single_res_row) ] <-
 						predict( 
 								x$usedObj[['rfExpressionSets_row']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], 
 								as.matrix(x$data())

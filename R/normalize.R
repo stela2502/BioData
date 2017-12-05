@@ -11,7 +11,7 @@
 #' @title description of function normalize
 #' @export 
 if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
-	function ( object , ..., name=NULL) { ## Argumente der generischen Funktion
+	function ( object, ... , name=NULL) { ## Argumente der generischen Funktion
 		standardGeneric('normalize') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -69,33 +69,37 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 #' @param x The SingleCellsNGS object
 #' @param reads the required read depth
 #' @param name the name of the new object
+#' @param  force re-normalize this object (default FALSE)
 #' @return the normalized data set (original data stored in slot 'raw'
 #' @title description of function normalize
 #' @export 
 setMethod('normalize', signature = c ('SingleCells'),
-		definition = function (  object, ..., reads=600, name='normalized' ) {
+		definition = function (  object, ..., reads=600, force=FALSE , name='normalized') {
 			if ( is.null( object$usedObj$snorm) ) {
 				object$usedObj$snorm = 0
 			}
 			reads <- round(reads)
-			if (  object$usedObj$snorm == 0 ) {
-			if ( length( object$samples$counts ) == 0 ) {
-				object$samples$counts <- apply( object$dat, 2, sum)
+			if ( force | object$usedObj$snorm == 0 ) {
+				if ( length( object$samples$counts ) == 0 ) {
+					object$samples$counts <- apply( object$dat, 2, sum)
+				}
+				object <- reduceTo( object, what="col", to=as.character(object$samples[which(object$samples$counts >= reads), object$sampleNamesCol ]) 
+						, name=name )
+				
+				if ( is.null(object$raw) ){
+					object$raw <- object$dat
+				}
+				## resample the data
+				n <- nrow(object$raw)
+				object$dat[] <- 0
+				for ( i in 1:ncol(object$raw) ) {
+					d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
+					t <- table(d)
+					object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
+				}
 			}
-			object <- reduceTo( object, what="col", to=object$samples[which(object$samples$counts >= reads), object$sampleNamesCol ] 
-					, name=name )
-			
-			if ( is.null(object$raw) ){
-				object$raw <- object$dat
-			}
-			## resample the data
-			n <- nrow(object$raw)
-			object$dat[] <- 0
-			for ( i in 1:ncol(object$raw) ) {
-				d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
-				t <- table(d)
-				object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
-			}
+			else {
+				print ("Data was already normalized - skipped")
 			}
 			object$usedObj$snorm = 1
 			invisible(object)

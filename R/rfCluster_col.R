@@ -39,11 +39,17 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
 			m <- max(k)
-			OPATH <- paste( x$outpath,"/",str_replace( x$name, '\\s', '_'), sep='')
-			opath = paste( OPATH,"/RFclust.mp",sep='' )
+			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
+			opath = file.path( OPATH,name,"RFclust.mp" )
 			
 			if ( ! dir.exists(OPATH)){
 				dir.create( OPATH )
+			}
+			if ( ! dir.exists(file.path(OPATH, name )) ){
+				dir.create(file.path(OPATH, name ) )
+			}
+			if ( ! dir.exists(file.path(OPATH, name, "RFclust.mp")) ){
+				dir.create(file.path(OPATH, name,"RFclust.mp" ) )
 			}
 			processed = FALSE
 			single_res_col <- paste('RFgrouping',name)
@@ -160,7 +166,6 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			browser()
 			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$dat) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){

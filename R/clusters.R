@@ -33,7 +33,7 @@ setMethod('clusters', signature = c ('BioData'),
 				tab <- dataObj$data()
 			}
 			else {
-				stop( paste("Sorry, the data type",mds.type,"is not supported") )
+				stop( paste("Sorry, the data type onwhat = ",onwhat," is not supported", sep="'") )
 			}
 			if ( ! is.null(useGrouping) ) {
 				clusters <- dataObj$samples[,useGrouping]
@@ -55,8 +55,14 @@ setMethod('clusters', signature = c ('BioData'),
 				}
 				else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			}else { ## now the clusterby is a MDS algorithm name / MDS dataset name
-				if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
+				cn <- names(dataObj$usedObj$MDS)
+				if ( length(grep(clusterby, cn  )) == 0) {
+				#if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
 					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
+				}else if (length(grep(clusterby, cn  )) > 1 ) {
+					stop( paste("Sorry, but I have more than one MDS type like = '",clusterby,"' :",paste(sep=",",cn[grep(clusterby, cn  )] ), sep="") )
+				}else {
+					clusterby = cn[grep(clusterby, cn  )]
 				}
 				if ( ctype=='hierarchical clust'){
 					hc <- hclust(dist( dataObj$usedObj$MDS[[clusterby]] ),method = cmethod)

@@ -55,6 +55,15 @@ setMethod('clusters_gene', signature = c ('BioData'),
 				}
 				else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			}else { ## now the clusterby is a MDS algorithm name / MDS dataset name
+				cn <- names(dataObj$usedObj$MDSgenes)
+				if ( length(grep(clusterby, cn  )) == 0) {
+					#if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
+					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
+				}else if (length(grep(clusterby, cn  )) > 1 ) {
+					stop( paste("Sorry, but I have more than one MDS type like = '",clusterby,"' :",paste(sep=",",cn[grep(clusterby, cn  )] ), sep="") )
+				}else {
+					clusterby = cn[grep(clusterby, cn  )]
+				}
 				if ( is.null( dataObj$usedObj$MDSgenes[[clusterby]] ) ) {
 					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby, genes=T)
 				}

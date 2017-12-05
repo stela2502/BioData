@@ -75,9 +75,16 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
 						if ( length(settings) > 0 ) {
-							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), SGE=F, slices=slice, email=email, tmp.path=opath, name= tname, slurm=T, A=settings$A, t=settings$t )
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
+									dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), 
+									SGE=F, slices=slice, email=email, tmp.path=opath, 
+									name= tname, slurm=T,settings=settings 
+							)
 						}else {
-							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname )
+							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
+									dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), 
+									SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname 
+							)
 						}
 					}
 					names(x$usedObj[['rfExpressionSets_row']])[i] <- tname

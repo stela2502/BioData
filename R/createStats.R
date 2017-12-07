@@ -136,11 +136,11 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			}
 			d <- toM(a)
 			sca <- MAST::FromMatrix(class='SingleCellAssay', 
-					exprsArray=t(d), 
+					exprsArray=d, 
 					cData=data.frame(wellKey=colnames(d), GroupName = a$samples[,condition]), 
 					fData=data.frame(primerid=rownames(d)))
 			
-			groups <- MAST::cData(sca)$GroupName <- a$samples[,condition]
+			#groups <- sca@elementMetadata$GroupName <- a$samples[,condition]
 			zlm.output <- MAST::zlm.SingleCellAssay(~ GroupName, sca, method='glm', ebayes=T)
 			zlm.lr <- MAST::lrTest(zlm.output,'GroupName')
 			

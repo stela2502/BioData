@@ -162,7 +162,6 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 			if ( is.na( match( RFname, names(x$usedObj[['rfObj_row']])))){
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj_row']]), collapse=" ",sep=', ') ) )
 			}
-			browser()
 			groups <- createGroups( x$usedObj[['rfObj_row']][[RFname]], k=k, name=RFname )
 			x$usedObj[['rfExpressionSets_row']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets_row']][[RFname]]$samples, groups[,3:(2+length(k))] )

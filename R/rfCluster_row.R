@@ -77,7 +77,6 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 						x$usedObj[['rfExpressionSets_row']] <- list()
 						x$usedObj[['rfObj_row']] <- list()
 					}
-					
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
 						if ( length(settings) > 0 ) {
@@ -95,7 +94,12 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					}
 					names(x$usedObj[['rfExpressionSets_row']])[i] <- tname
 					names(x$usedObj[['rfObj_row']])[i] <- tname
-					x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::runRFclust ( x$usedObj[['rfObj_row']][[ i ]] , nforest=nforest, ntree=ntree, name=tname )
+					x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::runRFclust ( 
+							x$usedObj[['rfObj_row']][[ i ]] , 
+							nforest=nforest,
+							ntree=ntree,
+							name=tname 
+					)
 					if ( SGE){
 						print ( "You should wait some time now to let the calculation finish! check: system('qstat -f') -> re-run the function")
 					}
@@ -115,15 +119,12 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 						stop( "please re-run this function later - the clustring process has not finished!")
 					}
 					for ( a in k ){
-						x$usedObj[["rfExpressionSets_row"]][[i]]$annotation <- 
-								x$usedObj[["rfExpressionSets_row"]][[i]]$annotation[ ,
-										is.na(match ( colnames(x$usedObj[["rfExpressionSets_row"]][[i]]$annotation), paste('group n=',a) ))==T 
-								]
+						# remember the x$usedObj[["rfExpressionSets_row"]][[i]] object is transposed!
+						createRFgrouping_row( x, RFname=tname,  k=a, single_res_row = paste( single_res_row, a) )
+						print ( paste("Done with cluster n=",a))
 					}
-					
-					createRFgrouping_row( x, RFname=tname,  k=k, single_res_row = paste( single_res_row, i) )
-					
-					print ( paste("Done with cluster",i))
+										
+					print ( paste("Done with RF clustering"))
 					processed = TRUE
 				}
 			}
@@ -168,13 +169,15 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			if ( all.equal( colnames(x$usedObj[['rfObj_row']][[RFname]]@dat), rownames(x$dat) ) == TRUE ) {
+			if ( all.equal( sort(colnames(x$usedObj[['rfObj_row']][[RFname]]@dat)), sort(rownames(x$dat)) ) == TRUE ) {
 				## use the column in grouping
 				for ( id in 1:length(k) ){
-					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
-					x <- colors_4( x, paste( single_res_row, ' n=', k[id], sep="")  )
+					mat <- match(rownames(x$dat), colnames(x$usedObj[['rfObj_row']][[RFname]]@dat))
+					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
+					x <- colors_4( x, paste( single_res_row, ' n=', k[id], sep="")  )	
 				}
-			}else {
+			}
+			else {
 				#predict based on the RFdata
 				x$usedObj[['rfExpressionSets_row']][[RFname]] <- 
 						bestGrouping( x$usedObj[['rfExpressionSets_row']][[RFname]], 

@@ -79,7 +79,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),total-subset)], name=tname, copy=TRUE )
+						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
 							#browser()
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
@@ -166,10 +166,11 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			if ( all.equal( colnames(x$usedObj[['rfObj']][[RFname]]@dat), colnames(x$dat) ) == TRUE ) {
+			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
+				mat <- match(rownames(x$dat), rownames(x$usedObj[['rfObj_row']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
-					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[,2+id], levels=c(1:k[id]))
+					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
 					x <- colors_4( x, paste( single_res_col, ' n=', k[id], sep="")  )
 				}
 			}else {

@@ -94,7 +94,6 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					}
 					names(x$usedObj[['rfExpressionSets_row']])[i] <- tname
 					names(x$usedObj[['rfObj_row']])[i] <- tname
-					browser()
 					x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::runRFclust ( 
 							x$usedObj[['rfObj_row']][[ i ]] , 
 							nforest=nforest,

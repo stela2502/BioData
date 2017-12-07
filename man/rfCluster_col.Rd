@@ -12,11 +12,9 @@
 
 \item{SGE}{whether to use the sun grid engine to calculate the rf grouping}
 
-\item{rep}{how many repetitions for the random forest grouping should be run (default = 5)}
+\item{rep}{how many repetitions for the random forest grouping should be run (default = 1)}
 
-\item{slice}{how many processes should be started for each random forest clustering (default = 30)}
-
-\item{bestColname}{the column name to store the results in}
+\item{slice}{how many processes should be started for each random forest clustering (default = 4)}
 
 \item{k}{the numer of expected clusters (better more than to view)}
 

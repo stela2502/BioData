@@ -53,12 +53,20 @@ setMethod('collaps', signature = c ('BioData'),
 				for ( i in u ){
 					all <- which(as.vector(dataObj$samples[, groupCol]) == i )
 					new_samples <- rbind ( new_samples, dataObj$samples[all[1],] )
-					mm[,i] <- apply( orig_df[ , all],1,f)
+					if ( length(all) == 1 ) {
+						mm[,i] <- orig_df[ , all]
+					}else if (  length(all) > 1) {
+						mm[,i] <- apply( orig_df[ , all],1,f)
+					}else {
+						stop( paste( "The entry", i, "has no column in the data - please fix that!"))
+					}
+					
 				}
-				list( data.frame(mm), new_samples )
+				list( df = data.frame(mm), new_sample = new_samples )
 			}
 			
 			mm <- merged_df( dataObj$dat )
+			
 			new_samples <- mm[[2]]
 			mm <- mm[[1]]
 			mr <- NULL
@@ -74,22 +82,24 @@ setMethod('collaps', signature = c ('BioData'),
 			
 			name = paste( unlist(strsplit( paste( dataObj$name, groupCol, by, sep='_') , '\\s')) , collapse='_')
 			
+			browser()
 			try ( { reduceTo ( dataObj, what='col',
-					to = setdiff( 
-							as.character(dataObj$samples[,dataObj$sampleNamesCol] ), 
-							as.character(new_samples[,dataObj$sampleNamesCol] )
-					), 
+					to = as.character(new_samples[,dataObj$sampleNamesCol] ), 
 					name= name
 			) }, silent=TRUE )
+			dataObj$samples = new_samples	
 			colnames(mm) <- as.vector(new_samples[, dataObj$sampleNamesCol])
 			dataObj$dat <- mm
 			if ( ! is.null(mr)){
+				colnames(mr) <- as.vector(new_samples[, dataObj$sampleNamesCol])
 				dataObj$raw = mr
 			}
 			if ( ! is.null(mz)){
+				colnames(mz) <- as.vector(new_samples[, dataObj$sampleNamesCol])
 				dataObj$zscored = mz
 			}
-			dataObj
+			changeNames(dataObj, what='col',colname= groupCol )
+			invisible(dataObj)
 })
 
 

@@ -118,6 +118,12 @@ setMethod('mds', signature = c ('BioData'),
 		else {
 			print( paste("Sory I can not work on the mds.type option",mds.type) )
 		}
+		if ( genes ) {
+			rownames(mds.proj) <- rownames(dataObj$dat)
+		}else{
+			rownames(mds.proj) <- make.names(colnames(dataObj$dat))
+		}
+		
 		dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 	}
 #	dataObj <- clusters ( dataObj, onwhat=onwhat, clusterby=clusterby, groups.n = groups.n,

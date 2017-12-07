@@ -109,7 +109,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				}
 			}
 			heatmap.3(
-					data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv=F, Colv = F,  key=F, symkey=FALSE,
+					data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv= is.null(RowSideColors), Colv = is.null(ColSideColors),  key=F, symkey=FALSE,
 					trace='none', 
 					ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
 					RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 

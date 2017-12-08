@@ -78,10 +78,6 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					}
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-<<<<<<< HEAD
-=======
-						browser()
->>>>>>> branch 'testing' of git@gitlab:stefanlang/BioData.git
 						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
 						if ( length(settings) > 0 ) {
 							#browser()

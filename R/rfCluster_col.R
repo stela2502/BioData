@@ -167,6 +167,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			## create the predictive random forest object
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
+				print ( "using the caclualted grouping")
 				mat <- match(rownames(x$dat), rownames(x$usedObj[['rfObj_row']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
@@ -174,9 +175,10 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				}
 			}else {
 				#predict based on the RFdata
+				print ( "predicting on the calculated grouping" )
 				x$usedObj[['rfExpressionSets']][[RFname]] <- 
 						bestGrouping( x$usedObj[['rfExpressionSets']][[RFname]], group=paste('group n=', m), bestColname = paste('OptimalGrouping',m ,RFname))
-				
+				print( "rf predict")
 				x$samples[, paste( single_res_col) ] <-
 						predict( x$usedObj[['rfExpressionSets']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], t(as.matrix(x$data())) )
 				x$samples[, paste( single_res_col) ] <- factor( x$samples[, paste( single_res_col) ], levels= 1:m )

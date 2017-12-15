@@ -82,7 +82,6 @@ setMethod('collaps', signature = c ('BioData'),
 			
 			name = paste( unlist(strsplit( paste( dataObj$name, groupCol, by, sep='_') , '\\s')) , collapse='_')
 			
-			browser()
 			try ( { reduceTo ( dataObj, what='col',
 					to = as.character(new_samples[,dataObj$sampleNamesCol] ), 
 					name= name

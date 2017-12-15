@@ -157,6 +157,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			if ( is.na( match( RFname, names(x$usedObj[['rfObj']])))){
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj']]), collapse=" ",sep=', ') ) )
 			}
+			browser()
 			groups <- createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
 			x$usedObj[['rfExpressionSets']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets']][[RFname]]$samples, groups[,3:(2+length(k))] )
@@ -168,7 +169,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
 				print ( "using the caclualted grouping")
-				mat <- match(rownames(x$dat), rownames(x$usedObj[['rfObj_row']][[RFname]]@dat))
+				mat <- match(rownames(x$dat), rownames(x$usedObj[['rfObj']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
 					x <- colors_4( x, paste( single_res_col, ' n=', k[id], sep="")  )

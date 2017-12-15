@@ -185,7 +185,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				x$samples[, paste( single_res_col) ] <- factor( x$samples[, paste( single_res_col) ], levels= 1:m )
 				x <- colors_4( x, single_res_col )
 			}
-			x
+			invisible(x)
 		} 
 )
 

@@ -172,7 +172,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				for ( id in 1:length(k) ){
 					#browser()
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
-					x <- colors_4( x, paste( single_res_col, ' n=', k[id], sep="")  )
+					lapply( paste( single_res_col, ' n=', k[id], sep=""), function( n ) { colors_4(x,n) }) 
 				}
 			}else {
 				#predict based on the RFdata

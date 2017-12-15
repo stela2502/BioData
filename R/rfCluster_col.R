@@ -168,8 +168,9 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
 				print ( "using the caclualted grouping")
-				mat <- match(rownames(x$dat), rownames(x$usedObj[['rfObj']][[RFname]]@dat))
+				mat <- match(colnames(x$dat), colnames(x$usedObj[['rfObj']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
+					#browser()
 					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
 					x <- colors_4( x, paste( single_res_col, ' n=', k[id], sep="")  )
 				}

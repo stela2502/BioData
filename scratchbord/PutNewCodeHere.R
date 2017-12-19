@@ -1,42 +1,4 @@
-changeNames <- function( x, what='row', colname ) {
-	if ( what=='row' ) {
-		id = match(colname, colnames(x$annotation) )
-		if ( length(id) == 0 ){
-			stop( paste( "The colname", colname,"can not be found in the annotation table") )
-		}
-		if ( length(which(table(as.character(x$annotation[,colname] ) )) ) > 1 ){
-			x$rownamescol <- paste(colname, 'unique', sep='.' )
-			x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( as.character(x$annotation[,colname] ) )
-		}else {
-			x$rownamescol = colname
-		}
-		rownames(x$dat) <- as.character(x$annotation[ , x$rownamescol ]) 
-		if ( ! is.null(x$raw) ) {
-			rownames(x$raw) <- as.character(x$annotation[ , x$rownamescol ]) 
-		}
-		if ( ! is.null(x$zscored) ) {
-			rownames(x$zscored) <- as.character(x$annotation[ , x$rownamescol ]) 
-		}
-	}
-	else if ( what == 'col') {
-		id = match(colname, colnames(x$samples) )
-		if ( length(id) == 0 ){
-			stop( paste( "The colname", colname,"can not be found in the samples table") )
-		}
-		if ( length(which(table(as.character(x$samples[,colname] ) )) ) > 1 ){
-			x$sampleNamesCol <- paste(colname, 'unique', sep='.' )
-			x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniqueSample( as.character(x$samples[,colname] ) )
-		}else {
-			x$sampleNamesCol = colname
-		}
-		colnames(x$dat) <- as.character(x$samples[ , x$sampleNamesCol ]) 
-		if ( ! is.null(x$raw) ) {
-			colnames(x$raw) <- as.character(x$samples[ , x$sampleNamesCol ]) 
-		}
-		if ( ! is.null(x$zscored) ) {
-			colnames(x$zscored) <- as.character(x$samples[ , x$sampleNamesCol ]) 
-		}
-	}
-	invisible(x)
+IdenifyMarkerGenes <- function( x, gname ){
+	
 }
 

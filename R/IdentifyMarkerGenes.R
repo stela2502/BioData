@@ -22,6 +22,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 			tmp$stats <- NULL
 			gc(FALSE)
 			new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
+			print (paste( "Processing:", new_g ))
 			g <- rep('rest', ncol(x$dat) )
 			g[which(tmp$samples[,gname] == n )] = n
 			tmp$samples[,new_g] <- factor( g, levels= c( n, 'rest') ) 

@@ -61,7 +61,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					dendrogram= 'none'
 				}
 			}else {
-				## probably calculate the clustering??
+				dendrogram='col'
 			}
 			if ( ! is.null(rowGroups) ) {
 				RowSideColorsSize <- length(rowGroups)
@@ -83,7 +83,11 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					dendrogram= 'none'
 				}
 			}else {
-				## probably calculate the clustering??
+				if ( dendrogram== 'col') {
+					dendrogram= 'both'
+				}else {
+					dendrogram= 'row'
+				}
 			}
 			data <- as.matrix(x$data())
 			

@@ -72,6 +72,9 @@ setMethod('reorder.genes', signature = c ('BioData'),
 				t <- data.frame(t)
 				colnames(t) <- colnames(x$annotation)
 			}
+			if ( ! is.null(x$stats)) {
+				lapply( names(x$stats), function(n) { x$stats[[n]] <-x$stats[[n]][idx,] })
+			}
 			lapply( names(x$usedObj$MDSgene),reorder.mds, idx, x, 'MDSgene')
 			x$annotation <- t
 			invisible(x)

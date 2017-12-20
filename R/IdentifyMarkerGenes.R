@@ -27,13 +27,13 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				fileConn<-file( ofile )
 				writeLines ( c( 'library(BioData)', 
 								'library(RFclust.SGE)',
-								paste('set.lock("',Rdata,'")',sep=''),
-								'load("IdentifyMarkerGenes_tmp.RData")' ,
+								paste('set.lock("',file.path(opath,Rdata),'")',sep=''),
+								paste(sep="",'load("',file.path(opath,IdentifyMarkerGenes_tmp.RData),'")' ) ,
 								'#reads object x',
 								paste(sep="",'IdentifyMarkerGenes( data, "',n,'" )'),
 								"stat = data$stats[[1]]",
-								paste(sep="",'save(stat, file="',Rdata,'")'),
-								paste('release.lock("',Rdata,'")',sep='')
+								paste(sep="",'save(stat, file="',file.path(opath,Rdata),'")'),
+								paste('release.lock("',file.path(opath,Rdata),'")',sep='')
 						), con=fileConn )
 				close(fileConn)
 				cmd <- paste('R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 --', ofile )
@@ -98,10 +98,11 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				}
 			}else { # ! is.null(x$usedObj$IdentifyMarkerGenes) 
 				for ( n in names(x$usedObj$IdentifyMarkerGenes)) {
-					if ( locked(x$usedObj$IdentifyMarkerGenes[[n]]) ) {
+					browser()
+					if ( locked(file.path(opath, x$usedObj$IdentifyMarkerGenes[[n]])) ) {
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}
-					load(x$usedObj$IdentifyMarkerGenes[[n]])
+					load(file.path(opath,x$usedObj$IdentifyMarkerGenes[[n]]))
 					x$stats[[n]] <- stats
 				}
 			}

@@ -90,7 +90,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				tmp$outpath = opath
 				tmp$name = "IdentifyMarkerGenes_tmp"
 				saveObj(tmp)
-				rfObj@debug=TRUE ## for now
+				#rfObj@debug=TRUE ## for now
 				for ( n in groups ) {
 					cmd = putScript( n ,file.path(tmp$outpath, paste(sep=".",n,"R") ) )
 					RFclust.SGE::writeSLURMscript(rfObj, n , cmd )
@@ -102,6 +102,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}
 					load(x$usedObj$IdentifyMarkerGenes[[n]])
+					x$usedObj$IdentifyMarkerGenes[[n]] <- NULL
 					x$stats[[n]] <- stat
 				}
 			}

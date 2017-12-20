@@ -16,31 +16,12 @@ setGeneric('IdentifyMarkerGenes', ## Name
 	}
 )
 
-setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
-	definition = function ( x, gname ) {
-		tmp <- x$clone()
-		for ( n in unique(tmp$samples[,gname])) {
-			tmp$stats <- NULL
-			gc(FALSE)
-			new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
-			print (paste( "Processing:", new_g ))
-			g <- rep('rest', ncol(x$dat) )
-			g[which(tmp$samples[,gname] == n )] = n
-			tmp$samples[,new_g] <- factor( g, levels= c( n, 'rest') ) 
-			createStats( tmp, new_g)
-			x$stats[[new_g]] = tmp$stats[[1]]
-		}
-		rm(tmp)
-		gc(FALSE)
-		invisible(x)
-} )
-
 
 setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 		definition = function ( x, gname, settings=list() ) {
 			x$name <- str_replace_all( x$name, '\\s+', '_')
 			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
-			opath = file.path( OPATH,name,"RFclust.mp" )
+			opath = file.path( OPATH,gname,"RFclust.mp" )
 			putScript <- function( n, ofile ) {
 				Rdata = paste(n,'RData', sep='.')
 				fileConn<-file( ofile )
@@ -62,14 +43,27 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 			if ( ! dir.exists(OPATH)){
 				dir.create( OPATH )
 			}
-			if ( ! dir.exists(file.path(OPATH, name )) ){
-				dir.create(file.path(OPATH, name ) )
+			if ( ! dir.exists(file.path(OPATH, gname )) ){
+				dir.create(file.path(OPATH, gname ) )
 			}
-			if ( ! dir.exists(file.path(OPATH, name, "RFclust.mp")) ){
-				dir.create(file.path(OPATH, name,"RFclust.mp" ) )
+			if ( ! dir.exists(file.path(OPATH, gname, "RFclust.mp")) ){
+				dir.create(file.path(OPATH, gname,"RFclust.mp" ) )
 			}
 			if ( length(names(settings)) == 0){
-				return (IdentifyMarkerGenes(x, gname))
+				tmp <- x$clone()
+				for ( n in unique(tmp$samples[,gname])) {
+					tmp$stats <- NULL
+					gc(FALSE)
+					new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
+					print (paste( "Processing:", new_g ))
+					g <- rep('rest', ncol(x$dat) )
+					g[which(tmp$samples[,gname] == n )] = n
+					tmp$samples[,new_g] <- factor( g, levels= c( n, 'rest') ) 
+					createStats( tmp, new_g)
+					x$stats[[new_g]] = tmp$stats[[1]]
+				}
+				rm(tmp)
+				gc(FALSE)
 			}else if ( is.null(x$usedObj$IdentifyMarkerGenes) ) {
 				x$usedObj$IdentifyMarkerGenes <- list()
 				tmp <- x$clone()

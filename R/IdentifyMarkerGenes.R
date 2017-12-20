@@ -98,7 +98,6 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				}
 			}else { # ! is.null(x$usedObj$IdentifyMarkerGenes) 
 				for ( n in names(x$usedObj$IdentifyMarkerGenes)) {
-					browser()
 					if ( locked(file.path(opath, x$usedObj$IdentifyMarkerGenes[[n]])) ) {
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}

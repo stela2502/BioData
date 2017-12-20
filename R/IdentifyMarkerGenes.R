@@ -37,7 +37,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 						), con=fileConn )
 				close(fileConn)
 				cmd <- paste('R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 --', ofile )
-				x$usedObj$IdentifyMarkerGenes[[n]] <- Rdata
+				x$usedObj$IdentifyMarkerGenes[[n]] <- file.path(opath,Rdata)
 				cmd
 			} 
 			if ( ! dir.exists(OPATH)){
@@ -98,10 +98,10 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				}
 			}else { # ! is.null(x$usedObj$IdentifyMarkerGenes) 
 				for ( n in names(x$usedObj$IdentifyMarkerGenes)) {
-					if ( locked(file.path(opath, x$usedObj$IdentifyMarkerGenes[[n]])) ) {
+					if ( locked(x$usedObj$IdentifyMarkerGenes[[n]]) ) {
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}
-					load(file.path(opath,x$usedObj$IdentifyMarkerGenes[[n]]))
+					load(x$usedObj$IdentifyMarkerGenes[[n]])
 					x$stats[[n]] <- stat
 				}
 			}

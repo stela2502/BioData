@@ -102,7 +102,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}
 					load(file.path(opath,x$usedObj$IdentifyMarkerGenes[[n]]))
-					x$stats[[n]] <- stats
+					x$stats[[n]] <- stat
 				}
 			}
 			invisible(x)

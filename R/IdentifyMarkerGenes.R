@@ -52,6 +52,9 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 			if ( length(names(settings)) == 0){
 				tmp <- x$clone()
 				for ( n in unique(tmp$samples[,gname])) {
+					if ( n == 'rest') {
+						next
+					}
 					tmp$stats <- NULL
 					gc(FALSE)
 					new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
@@ -64,6 +67,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				}
 				rm(tmp)
 				gc(FALSE)
+				return ( invisible(x) )
 			}else if ( is.null(x$usedObj$IdentifyMarkerGenes) ) {
 				x$usedObj$IdentifyMarkerGenes <- list()
 				tmp <- x$clone()

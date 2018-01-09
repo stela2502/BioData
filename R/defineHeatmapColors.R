@@ -1,3 +1,4 @@
+#' @name defineHeatmapColors
 #' @aliases defineHeatmapColors,BioData-method
 #' @rdname defineHeatmapColors-methods
 #' @docType methods

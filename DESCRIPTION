@@ -22,7 +22,11 @@ Depends:
 biocViews:
 	RDRToolbox,
 	destiny,
-	DEseq2
+	DEseq2,
+	org.Mm.egGO2EG,
+	org.Hs.egGO2EG,
+	org.Mm.egENSEMBL2EG,
+	org.Hs.egENSEMBL2EG
 Remotes:
 	stela2502/RFclust.SGE
 License: GPL-3

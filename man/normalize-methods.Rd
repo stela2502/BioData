@@ -10,13 +10,15 @@
 \alias{normalize,BioData-method}
 \title{description of function normalize}
 \usage{
-\S4method{normalize}{SingleCells}(object, ..., reads = 600,
+\S4method{normalize}{SingleCells}(object, ..., reads = 600, force = FALSE,
   name = "normalized")
 
 \S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
 }
 \arguments{
 \item{reads}{the required read depth}
+
+\item{force}{re-normalize this object (default FALSE)}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
 

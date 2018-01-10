@@ -20,6 +20,9 @@ if ( ! isGeneric('colors_4') ){ setGeneric('colors_4', ## Name
 
 setMethod('colors_4', signature = c ('BioData'),
 		definition = function ( x, name, colFunc = NULL, force=FALSE  ) {
+			if ( length(name) > 1 ) {
+				lapply( name, function(n) { colors_4 (x, n, colFunc,force ) } )
+			}else {
 			if ( is.null(x$usedObj[['colorRange']])){
 				x$usedObj[['colorRange']] = list()
 			}
@@ -66,8 +69,9 @@ setMethod('colors_4', signature = c ('BioData'),
 					)
 				}
 				else {
-					stop( "Sorry this column is nether defined in the samples nor in the annotation table!" )
+					stop(paste( "Sorry the column '",name,"' is nether defined in the samples nor in the annotation table!", sep="") )
 				}
+			}
 			}
 			invisible(x)
 		}

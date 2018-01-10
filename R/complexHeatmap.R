@@ -93,23 +93,33 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			
 			brks <- unique(as.vector(c(min(data),quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
 			if ( ! is.null(ofile)){
+				## here I need more magic
+				x$name = paste( collapse='_',unlist(strsplit( x$name, '\\s+', perl=T)))
+				if ( length(grep(.Platform$file.sep, ofile)) == 0 ) {
+					ofile <- file.path(x$outpath,ofile) ## you can also put it specifily somewhere else.
+				}else {
+					x$outpath <- dirname(ofile) ## in case output should go somewhere else
+				}
+				if ( length(grep( x$name, ofile) ) == 0 ) {
+					ofile = file.path( dirname(ofile), paste(x$name, basename(ofile), sep="_") )
+				}
 				if ( pdf ) {
 					width= ceiling(nrow(x$samples)/300) * 10
 					height = ceiling( nrow(x$annotation) / 100 ) * 10
 					if ( height < 8){
 						height = 8
 					}
-					pdf( file=paste(file.path(x$outpath,ofile),'pdf',sep='.'), width=10, height=height)
+					pdf( file=paste(ofile ,'pdf',sep='.'), width=10, height=height)
 				}else{
 					width= ceiling(nrow(x$samples)/300) * 1600
 					height = ceiling( nrow(x$annotation) / 100 ) *800
-					png( file=paste(file.path(x$outpath,ofile),'png',sep='.'), width=1600, height=800, type=X11type)
+					png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type)
 				}
 				for ( v in colGroups ) {
-					plotLegend(x, file=paste(ofile, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
 				}
 				for ( v in rowGroups ) {
-					plotLegend(x, file=paste(ofile, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
 			heatmap.3(

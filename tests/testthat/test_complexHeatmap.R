@@ -15,10 +15,10 @@ complexHeatmap( x, colGroup=c('Cgroup') , rowGroup=c('Rgroup'),ofile="Test2", pd
 
 complexHeatmap( x, colGroup=c('Cgroup') ,ofile="Test3", pdf=T )
 
-
+complexHeatmap( x, ofile="Test4", pdf=T )
 
 files <- c( 'testObject/Test1.png', 'testObject/testObject_col_Cgroup.pdf', 'testObject/testObject._legend_values.pdf',
-'testObject/Test2.pdf','testObject/Test3.pdf', 'testObject/testObject_col_Cgroup.png', 'testObject/testObject_row_Rgroup.pdf' )
+'testObject/Test2.pdf','testObject/Test3.pdf', 'testObject/Test4.pdf', 'testObject/testObject_col_Cgroup.png', 'testObject/testObject_row_Rgroup.pdf' )
 for ( f in  files ) {
 	expect_true( file.exists(f), f)
 	if (file.exists(f) ) { file.remove( f ) }

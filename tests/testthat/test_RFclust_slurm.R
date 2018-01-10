@@ -10,5 +10,6 @@ x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",name
 
 rfCluster_row( x, subset=79, rep=1, slice=1,k=3, nforest=50, ntree=50, settings = list( 'A' = "lsens2017-3-2", t="00:20:00" ,p="dell" ) )
 
+Sys.sleep( 5 )
 
 rfCluster_col( x, subset=10, rep=1, slice=1,k=3, nforest=50, ntree=50, settings = list( 'A' = "lsens2017-3-2", t="00:20:00" ,p="dell" ) )

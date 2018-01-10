@@ -19,7 +19,7 @@ expect_equal( names(x$usedObj$rfObj_row), c('testObject_RFclust_row_1'))
 z.score(x)
 
 rfCluster_row( x, subset=79, rep=1, slice=1,k=3, nforest=50, ntree=50 , name="try2" )
-
+Sys.sleep( 5 )
 rfCluster_row( x, subset=79, rep=1, slice=1,k=3, nforest=50, ntree=50 , name="try2" )
 
 
@@ -28,7 +28,7 @@ expect_equal(colnames(x$annotation), c('GeneID', 'Start', 'RFgrouping RFclust_ro
 
 
 rfCluster_col( x, subset=10, rep=1, slice=1,k=3, nforest=50, ntree=50 )
-
+Sys.sleep( 5 )
 rfCluster_col( x, subset=10, rep=1, slice=1,k=3, nforest=50, ntree=50 )
 	
 

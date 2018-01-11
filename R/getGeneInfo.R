@@ -80,6 +80,7 @@ setMethod('getGeneInfo', signature = c ('character'),
 		))
 		}
 	}
+	
 	result_tab
 	}
 	
@@ -98,6 +99,10 @@ setMethod('getGeneInfo', signature = c ('character'),
 	}
 	select_result <- paste( "select", what,"from", get_table(what, what_tab), "where _id IN (",select_id,")")
 	
-	as.vector(t(dbGetQuery(con, select_result)))
-
+	result = as.vector(t(dbGetQuery(con, select_result)))
+	if ( length(result) == 0 ) {
+		print ( "something did not work as expected - please check manually" )
+		browser()
+	}
+	result
 } )

@@ -31,6 +31,10 @@ setMethod('convert_to', signature = c ('BioData'),
 		)
 	}
 	if ( type== "scran" ) {
+		if (!requireNamespace("scran", quietly = TRUE)) {
+			stop("scran needed for this function to work. Please install it.",
+					call. = FALSE)
+		}
 		if ( is.null(species) ) {
 			stop ( "to convert to scran I need a species or AnnotationDbi object" )
 		}
@@ -42,15 +46,17 @@ setMethod('convert_to', signature = c ('BioData'),
 			x$annotation$ensembl_id = getGeneInfo( as.vector(x$annotation$gene.name), 
 					species = species, from = "symbol", what='ensembl_id', what_tab="ensembl")
 		}
-		x <- x$clone()
-		not_OK <- which(is.na(x$annotation$ensembl_id))
-		
+		x <- x$clone()		
 		changeNames(x, 'row', 'ensembl_id')
 		rownames(x$annotation) <- rownames(x$dat)
 		rownames(x$samples) <- colnames(x$dat)
-		ret <- scran::SingleCellExperiment(list(counts=x$raw))
-		colData(ret) <- x$samples
-		rowData(ret) <- x$annotation
+		ret <- SingleCellExperiment(list(counts=as.matrix(x$raw)))
+		rowData(ret) <- as.matrix(x$annotation)
+		colData(ret) <- DataFrame(x$samples)
+		if ( ! is.null(x$annotation$gene.name) ) {
+			rowData(ret)$gene.symbol <- rowData(ret)$gene.name
+			rowData(ret)$gene.name <- rowData(ret)$ensembl_id.unique
+		}
 	}
 	ret
 } )

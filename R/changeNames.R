@@ -19,7 +19,7 @@ setMethod('changeNames', signature = c ('BioData'),
 		rep_missing <- function ( v ) {
 			notOK <- which(is.na(v))
 			if ( length(notOK) > 0) {
-				v[notOK] <- sprintf( paste("---%0",nchar(max(notOK)),"d",sep=""),1:length(notOK))
+				v[notOK] <- sprintf( paste("No--%0",nchar(max(notOK)),"d",sep=""),1:length(notOK))
 			}
 			v
 		}

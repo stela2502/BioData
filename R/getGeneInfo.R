@@ -93,8 +93,16 @@ setMethod('getGeneInfo', signature = c ('character'),
 	}
 	select_id <- paste("select _id, ", from, " from ",tab," where ",from, " IN ('", paste(x, collapse="', '"),"')",  sep="")
 	t <- dbGetQuery(con, select_id )
-	m <- match(x,t[,2])
-	notOK <- which(is.na(m))
+	if ( length(x) == 1 ) {
+		m <- which( ! is.na( match(t[,2],x)) )
+		notOK <- which(is.na(m))
+	}else {
+		m <- match(x,t[,2])
+		notOK <- which(is.na(m))
+	}
+	
+	
+	#notOK <- which(is.na(m))
 	ret <- cbind('source' = x, ids = t[m,1] ) # working! checked
 	
 	tab =  get_table(what, what_tab)

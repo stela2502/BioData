@@ -9,7 +9,8 @@
 #' @param from the column that corresponds to the x values
 #' @param from_tab if the column is defined in more thanone table the specififc table name
 #' @param what which column do you want to get (only one)
-#' @param what_tab analogue to the from_tab the table name containing the colmn if more than one table contains the info 
+#' @param what_tab analogue to the from_tab the table name containing the colmn if more than one table contains the info
+#' @param tab_res return all results as table (to check the results; default = FALSE) 
 #' @return A vector of ids
 #' @usage libraray(BioData)
 #' CellCycle_gene_symbols <- getGeneInfo(
@@ -22,13 +23,13 @@
 #' 			'04610', species = 'Hs', from = 'path_id', what= 'symbol' )
 #' @export 
 setGeneric('getGeneInfo', ## Name
-	function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL) { ## Argumente der generischen Funktion
+	function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL, tab.res=FALSE) { ## Argumente der generischen Funktion
 		standardGeneric('getGeneInfo') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('getGeneInfo', signature = c ('character'),
-	definition = function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL ) {
+	definition = function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL, tab.res=FALSE ) {
 	if(!(species %in%c('mMus','Hs'))){stop("'species' needs to be either 'mMus' or 'Hs'")}
 	
 	if(species=='mMus'){
@@ -90,19 +91,27 @@ setMethod('getGeneInfo', signature = c ('character'),
 		print ( paste("Sorry, the column", from, "could not be identified in only one table") )
 		return (available)
 	}
-	select_id <- paste("select _id from ",tab," where ",from, " IN ('", paste(x, collapse="', '"),"')",  sep="")
+	select_id <- paste("select _id, ", from, " from ",tab," where ",from, " IN ('", paste(x, collapse="', '"),"')",  sep="")
+	t <- dbGetQuery(con, select_id )
+	m <- match(x,t[,2])
+	notOK <- which(is.na(m))
+	ret <- cbind('source' = x, ids = t[m,1] ) # working! checked
 	
 	tab =  get_table(what, what_tab)
 	if ( class(tab) == "list") {
 		print ( paste("Sorry, the column", what, "could not be identified in only one table") )
 		return (available)
 	}
-	select_result <- paste( "select", what,"from", get_table(what, what_tab), "where _id IN (",select_id,")")
-	
-	result = as.vector(t(dbGetQuery(con, select_result)))
-	if ( length(result) == 0 ) {
+	select_result <- paste( "select _id,", what,"from", get_table(what, what_tab), "where _id IN (", paste(t[,1], collapse=", "),")")
+	t <- dbGetQuery(con, select_result)
+	m <- match(ret[,2],t[,1])
+	ret <- cbind(ret, result = t[m,2] ) 
+	if ( nrow(t) == 0 ) {
 		print ( "something did not work as expected - please check manually" )
 		browser()
 	}
-	result
+	if ( tab.res ){
+		return ( ret)
+	}
+	as.vector(t(ret[,3]))
 } )

@@ -11,8 +11,8 @@ Depends:
     RSvgDevice,
     gplots,
     weights,
-    reshape2, 
-	rgl, 
+    reshape2,
+	rgl,
 	gplots,
     RFclust.SGE,
     RSQLite,
@@ -24,10 +24,8 @@ biocViews:
 	RDRToolbox,
 	destiny,
 	DEseq2,
-	org.Mm.egGO2EG,
-	org.Hs.egGO2EG,
-	org.Mm.egENSEMBL2EG,
-	org.Hs.egENSEMBL2EG
+	org.Mm.eg.db,
+	org.Hs.eg.db
 Remotes:
 	stela2502/RFclust.SGE
 License: GPL-3

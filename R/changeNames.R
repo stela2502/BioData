@@ -16,6 +16,13 @@ setGeneric('changeNames', ## Name
 
 setMethod('changeNames', signature = c ('BioData'),
 	definition = function ( x, what='row', colname ) {
+		rep_missing <- function ( v ) {
+			notOK <- which(is.na(v))
+			if ( length(notOK) > 0) {
+				v[notOK] <- sprintf( paste("---%0",nchar(max(notOK)),"d",sep=""),1:length(notOK))
+			}
+			v
+		}
 	if ( what=='row' ) {
 		id = match(colname, colnames(x$annotation) )
 		if ( is.na(id) ){
@@ -23,7 +30,7 @@ setMethod('changeNames', signature = c ('BioData'),
 		}
 		if ( length(which(table(as.character(x$annotation[,colname] ) ) > 1 ) ) > 0 ){
 			x$rownamescol <- paste(colname, 'unique', sep='.' )
-			x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( as.character(x$annotation[,colname] ) )
+			x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( rep_missing(as.character(x$annotation[,colname] )) )
 		}else {
 			x$rownamescol = colname
 		}
@@ -42,7 +49,7 @@ setMethod('changeNames', signature = c ('BioData'),
 		}
 		if ( length(which(table(as.character(x$samples[,colname] ) ) > 1 ) ) > 0 ){
 			x$sampleNamesCol <- paste(colname, 'unique', sep='.' )
-			x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniqueSample( as.character(x$samples[,colname] ) )
+			x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniquerep_missing(Sample( as.character(x$samples[,colname] )) )
 		}else {
 			x$sampleNamesCol = colname
 		}

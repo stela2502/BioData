@@ -29,25 +29,28 @@ setMethod('convert_to', signature = c ('BioData'),
 				toM(x$raw),
 				x$samples
 		)
-	}else if ( type== "MAST" ) {
+	}
+	if ( type== "scran" ) {
 		if ( is.null(species) ) {
 			stop ( "to convert to scran I need a species or AnnotationDbi object" )
-			## so now I need to get the ensembl ids into this crappy object
-			if ( is.na( match( 'ensembl_id', colnames(x$annotation))) ) {
-				if ( is.na( match( 'gene symbol', colnames(x$annotation)))) {
-					stop( "I need either a ensemb_id or a 'gene symbol' annotation column in order to convert to scran")
-				}
-				x$annotation$ensembl_id = getGeneInfo( x$annotation$'gene symbol', 
-						species = species, from = "symbol", what='ensembl_id', what_tab="ensembl")
-			}
-			x <- x$clone()
-			changeNames(x, 'row', 'ensembl_id')
-			rownames(x$annotation) <- rownames(x$dat)
-			rownames(x$samples) <- colnames(x$dat)
-			ret <- scran::SingleCellExperiment(list(counts=x$raw))
-			colData(ret) <- x$samples
-			rowData(ret) <- x$annotation
 		}
+			## so now I need to get the ensembl ids into this crappy object
+		if ( is.na( match( 'ensembl_id', colnames(x$annotation))) ) {
+			if ( is.na( match( 'gene.name', colnames(x$annotation)))) {
+				stop( "I need either a ensembl_id or a 'gene.name' annotation column in order to convert to scran")
+			}
+			x$annotation$ensembl_id = getGeneInfo( as.vector(x$annotation$gene.name), 
+					species = species, from = "symbol", what='ensembl_id', what_tab="ensembl")
+		}
+		x <- x$clone()
+		not_OK <- which(is.na(x$annotation$ensembl_id))
+		
+		changeNames(x, 'row', 'ensembl_id')
+		rownames(x$annotation) <- rownames(x$dat)
+		rownames(x$samples) <- colnames(x$dat)
+		ret <- scran::SingleCellExperiment(list(counts=x$raw))
+		colData(ret) <- x$samples
+		rowData(ret) <- x$annotation
 	}
 	ret
 } )

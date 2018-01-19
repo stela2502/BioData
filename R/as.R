@@ -6,7 +6,7 @@
 #' @title description of function as_BioData
 #' @export 
 if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
-	function ( dat ) { ## Argumente der generischen Funktion
+	function ( dat, ... ) { ## Argumente der generischen Funktion
 		standardGeneric('as_BioData') ## der Aufruf von standardGeneric sorgt für das_BioData Dispatching
 	}
 )
@@ -155,4 +155,137 @@ setMethod('as_BioData', signature = c ('seurat'),
 					#ret$usedObj <- dat$usedObj
 					ret
 				}  
+)
+fetch_first <- function ( sth ) {
+	ret <- RSQLite::fetch(sth)
+	if (RSQLite::dbHasCompleted(sth)) {
+		RSQLite::dbClearResult(sth)
+		rm(sth)
+	}
+	else {
+		warn ("query was not finished")
+		RSQLite::dbClearResult(sth)
+		rm(sth)
+	}
+	ret
+}
+
+
+SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
+	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
+	
+	ncol=as.numeric( fetch_first( dbSendQuery(dbh,  "select max(id) from samples" ) ) )
+	if ( ! is.null(useS) ) {
+		ncol = length(useS)
+	}
+	nrow=as.numeric( fetch_first( dbSendQuery(dbh,  "select max(id) from genes" ) ) )
+	if ( ! is.null(useG) ) {
+		ncol = length(useG)
+	}
+	
+	ret <- matrix( 0, nrow=nrow, ncol=ncol )
+	
+	q = "select gene_id, sample_id, value from datavalues where sample_id = :x"
+	
+	if ( ! is.null(useG) ) {
+		q = paste( q, "and gene_id  IN ( ", paste( collapse=", ", useG),")" )
+	}
+	sth <- RSQLite::dbSendQuery(dbh, q )
+	if(is.null(useS)){
+		useS = 1:ncol(ret)
+	}
+	id = 1
+	if (  is.null(useG) ){
+		useG = 1:nrow(ret)
+	}
+	
+	
+	steps = ceiling(useS/100)
+	pb <- progress_estimated(100)
+	print ( "populating the matrix" )
+	for ( i in  useS ) {
+		RSQLite::dbBind(sth, param = list(x = i))
+		t <- RSQLite::dbFetch(sth)
+		
+		m <- match( t$gene_id, useG )
+		ret[m, id] <- t$value
+		
+		if ( id %% 100 == 0 ) {
+			pb$tick()$print()
+			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
+		}
+		id = id +1
+	}
+	print ( "adding gene and sample names")
+	RSQLite::dbClearResult(sth)
+	rm(sth)
+	q <- "select gname from genes"
+	if ( ! is.null(useG) ) {
+		q <- paste( q, "where id IN (", paste(collapse=", ", useG),")")
+	}
+	sth <- RSQLite::dbSendQuery(dbh,q)
+	rownames(ret) <- as.character(t(dbFetch(sth)))
+	RSQLite::dbClearResult(sth)
+	rm(sth)
+	
+	q <- "select sname from samples"
+	if ( ! is.null(useS) ) {
+		q <- paste( q, "where id IN (", paste(collapse=", ", useS),")")
+	}
+	sth <- RSQLite::dbSendQuery(dbh, q )
+	colnames(ret) <- as.character(t(dbFetch(sth)))
+	RSQLite::dbClearResult(sth)
+	RSQLite::dbDisconnect(dbh)
+	print ( "done creating the matrix")
+	ret
+}
+
+SQLite_ExpressionSummary <- function (fname ) {
+	
+	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
+	sth <- RSQLite::dbSendQuery(dbh, paste(  
+					"SELECT gene_id , avg( value), count(value), gname" ,
+					"from  datavalues left join genes on gene_id = genes.id",
+					"where sample_id IN (select id from samples where sname not like '%spliced%')",  
+					"GROUP by gene_id"
+			)
+	)
+	ret <- RSQLite::dbFetch(sth)
+	ret
+}
+
+SQLite_SampleSummary <- function (fname ) {
+	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
+	sth <- RSQLite::dbSendQuery(dbh, paste(  
+					"SELECT sample_id , sum(value) as reads, count(value) as count, sname" ,
+					"from  datavalues left join samples on sample_id = samples.id",
+					#"where sample_id IN (select id from samples where sname not like '%spliced%')",  
+					"GROUP by sample_id"
+			)
+	)
+	ret <- RSQLite::dbFetch(sth)
+	ret
+}
+
+setMethod('as_BioData', signature = c ('character'),
+		definition = function ( dat, minUMI=100, minGexpr=NULL ) {
+			path = dat
+			if ( ! file.exists( path ) ) {
+				stop( "please - I need an existsing sqlite db at start up!")
+			}
+			print ( "Obtaining the sample UMI summary")
+			sample_UMIs <- SQLite_SampleSummary( dat )
+			useS = sample_UMIs$sample_id[which(sample_UMIs$count > minUMI ) ]
+			
+			useG = NULL
+			if ( ! is.null(minGexpr)) {
+				gene_UMI <- SQLite_ExpressionSummary( dat )
+				useG = gene_UMI$gene_id[which(gene_UMI$'count(value)' > minGexpr )]
+			}
+			mat = SQLite_2_matrix ( dat, useS = useS, useG = useG )
+			print ( "creating the BioData object" )
+			ret <- BioData$new( data.frame(cbind(genes, as.matrix(mat))) ,
+					Samples= data.frame( 'cell_id' = cells ), namecol='cell_id', namerow= 'ensembl_id', name='from.cellranger' )
+			ret
+		}
 )

@@ -108,8 +108,8 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			}
 			grid3d(c("x", "y", "z"))
 			axis3d(c("x+"),col="black",xlab="Component 1")
-			axis3d(c("y+"),col="black",xlab="Component 2")
-			axis3d(c("z+"),col="black",xlab="Component 3")
+			axis3d(c("y+"),col="black")
+			axis3d(c("z+"),col="black")
 			
 		}
 } )

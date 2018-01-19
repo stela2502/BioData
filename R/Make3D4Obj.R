@@ -13,10 +13,11 @@
 #' @param opath create a webgl representation of the plot in a html page in this path (default = NULL) 
 #' @param main the title of the plot (default ='')
 #' @param genes use gene level MDS data not sample level (default = FALSE)
+#' @param plotType choose one [1,2] and check whether you like it ;-) default=1 
 #' @title description of function Make3D4obj
 #' @export 
 if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
-	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) { ## Argumente der generischen Funktion
+	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F, plotType=1 ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -26,7 +27,7 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),
-	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F ) {
+	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1 ) {
 
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {
@@ -80,6 +81,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		par3d(windowRect = c(18,105, 762, 810))
 		Sys.sleep(1)
 		#bg3d(color='#4C4C4C') 
+		if ( plotType == 1) {
         if ( cut ) {
                 ## plot points!
 				My.legend3d ("topright", legend = paste( brks ), pch=16, col= c('black', bluered(length(brks) -1  )), cex=1,inset =c(0.02))
@@ -87,15 +89,29 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 
         }
         else {
-                if ( names) {
+                if ( names ) {
+						My.legend3d ("topright", legend = paste( unique(as.character(x$samples[,group]))  ), pch = 16, col = unique(col), cex=1, inset=c(0.02))
                         rgl.texts( x$usedObj$MDS[[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
-                        My.legend3d ("topright", legend = paste( unique(as.character(x$samples[,group]))  ), pch = 16, col = unique(col), cex=1, inset=c(0.02))
                 }
                 else {
-                        rgl.points( x$usedObj$MDS[[mds.type]], col=col )
                         My.legend3d ("topright", legend = paste( unique(as.character(x$samples[,group]))  ), pch = 16, col = unique(col), cex=1, inset=c(0.02))
+						rgl.points( x$usedObj$MDS[[mds.type]], col=col )
+						
                 }
         }
+		}else if ( plotType == 2) {
+			bg3d("white")
+			if ( names) {
+				rgl.texts( x$usedObj$MDS[[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
+			}else {
+				rgl.points( x$usedObj$MDS[[mds.type]], col=col )
+			}
+			grid3d(c("x", "y", "z"))
+			axis3d(c("x+"),col="black",xlab="Component 1")
+			axis3d(c("y+"),col="black",xlab="Component 2")
+			axis3d(c("z+"),col="black",xlab="Component 3")
+			
+		}
 } )
 
 

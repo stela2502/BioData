@@ -19,47 +19,51 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
 }
 
-##' @name normalize
-##' @aliases normalize,NGSexpressionSet-method
-##' @rdname normalize-methods
-##' @docType methods
-##' @description  normalize the expression data (sample wise)
-##' @param x The NGSexpressionSet
-##' @param readCounts The number of reads from each bam file or another value you want to normalize the data to
-##' @param to_gene_length FALSE whether or not to normalize the data to gene length
-##' @param geneLengthCol the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)
-##' @param name the new name of the object (deafule old name + normalized)
-##' @return the normalized data set (original data stored in NGS$raw
-##' @title description of function normalize
-##' @export 
-#setMethod('normalize', signature = c ('NGSexpressionSet'),
-#		definition = function (  object, ..., readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', name=NULL ) {
-#			if ( ! object$snorm ){
-#				browser()
-#				if ( is.null( readCounts ) ) {
-#					readCounts <- as.vector( DESeq::estimateSizeFactorsForMatrix ( as.matrix(object$data)) )
-#				}
-#				object$samples$SizeFactor <- readCounts
-#				object$raw <- object$data
-#				object$data =  data.frame(t(apply(object$data,1, function(a) { a / readCounts } ) ))
-#				colnames(object$data) = colnames(object$raw)
-#				rownames(object$data) = rownames(object$raw)
-#				if (to_gene_length){
-#					for ( i in 1:nrow(object$data)) {
-#						object$data[i,] <- object$data[i,]/ (object$annotation[i,geneLengthCol ] / 1000)
-#					}
-#				}
-#				
-#				object$snorm=TRUE
-#				if(is.null(name)){
-#					name = paste( object$name ,'normalized' )
-#				}
-#				object$name = name
-#			}
-#			object
-#		})
-#
-#
+#' @name normalize
+#' @aliases normalize,NGSexpressionSet-method
+#' @rdname normalize-methods
+#' @docType methods
+#' @description  normalize the expression data (sample wise)
+#' @param x The NGSexpressionSet
+#' @param readCounts The number of reads from each bam file or another value you want to normalize the data to
+#' @param to_gene_length FALSE whether or not to normalize the data to gene length
+#' @param geneLengthCol the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)
+#' @param name the new name of the object (deafule old name + normalized)
+#' @param forec replace old norm data (FALSE)
+#' @return the normalized data set (original data stored in NGS$raw
+#' @title description of function normalize
+#' @export 
+setMethod('normalize', signature = c ('BioData'),
+		definition = function (  object, ..., readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
+			if ( ! object$snorm ){
+				object$samples$SizeFactor <- readCounts
+				if ( is.null(object$raw) ){
+					object$raw <- object$dat
+				}else {
+					object$dat <- object$raw ## regen if e.g. force is used ;-)
+				}
+				if ( is.null( readCounts ) ) {
+					readCounts <- as.vector( DESeq2::estimateSizeFactorsForMatrix ( as.matrix(object$raw)) )
+				}
+				object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
+				colnames(object$dat) = colnames(object$raw)
+				rownames(object$dat) = rownames(object$raw)
+				if (to_gene_length){
+					for ( i in 1:nrow(object$dat)) {
+						object$dat[i,] <- object$dat[i,]/ (object$annotation[i,geneLengthCol ] / 1000)
+					}
+				}
+				
+				object$snorm=TRUE
+				if(is.null(name)){
+					name = paste( object$name ,'normalized' )
+				}
+				object$name = name
+			}
+			object
+		})
+
+
 #' @name normalize
 #' @aliases normalize,SingleCells-method
 #' @rdname normalize-methods

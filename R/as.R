@@ -152,7 +152,6 @@ setMethod('as_BioData', signature = c ('seurat'),
 						}
 					}
 					
-					#ret$usedObj <- dat$usedObj
 					ret
 				}  
 )
@@ -203,6 +202,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	steps = ceiling(useS/100)
 	pb <- progress_estimated(100)
 	print ( "populating the matrix" )
+	
 	for ( i in  useS ) {
 		RSQLite::dbBind(sth, param = list(x = i))
 		t <- RSQLite::dbFetch(sth)
@@ -216,6 +216,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		}
 		id = id +1
 	}
+	browser()
 	print ( "adding gene and sample names")
 	RSQLite::dbClearResult(sth)
 	rm(sth)
@@ -246,7 +247,7 @@ SQLite_ExpressionSummary <- function (fname ) {
 	sth <- RSQLite::dbSendQuery(dbh, paste(  
 					"SELECT gene_id , avg( value), count(value), gname" ,
 					"from  datavalues left join genes on gene_id = genes.id",
-					"where sample_id IN (select id from samples where sname not like '%spliced%')",  
+		#			"where sample_id IN (select id from samples where sname not like '%spliced%')",  
 					"GROUP by gene_id"
 			)
 	)
@@ -278,14 +279,19 @@ setMethod('as_BioData', signature = c ('character'),
 			useS = sample_UMIs$sample_id[which(sample_UMIs$count > minUMI ) ]
 			
 			useG = NULL
+			gene_UMI <- SQLite_ExpressionSummary( dat )
 			if ( ! is.null(minGexpr)) {
-				gene_UMI <- SQLite_ExpressionSummary( dat )
-				useG = gene_UMI$gene_id[which(gene_UMI$'count(value)' > minGexpr )]
+				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr )]
+				useG = gene_UMI$gene_id
 			}
 			mat = SQLite_2_matrix ( dat, useS = useS, useG = useG )
 			print ( "creating the BioData object" )
-			ret <- BioData$new( data.frame(cbind(genes, as.matrix(mat))) ,
-					Samples= data.frame( 'cell_id' = cells ), namecol='cell_id', namerow= 'ensembl_id', name='from.cellranger' )
+			mat <- mat[ -which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0),]
+			#mat$'ensembl_id' <- rownames(mat)
+			gene_UMI <- gene_UMI[ match(rownames(mat),gene_UMI$gname ),]
+			colnames(mat) <- make.names(colnames(mat))
+			ret <- BioData$new( data.frame(cbind(gene_UMI, as.matrix(mat))) ,
+					Samples= data.frame( 'cell_id' = colnames(mat) ), namecol='cell_id', namerow= 'gname', name='from.cellranger' )
 			ret
 		}
 )

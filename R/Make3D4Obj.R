@@ -17,7 +17,8 @@
 #' @title description of function Make3D4obj
 #' @export 
 if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
-	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F, plotType=1 ) { ## Argumente der generischen Funktion
+	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, 
+			names=F, opath=NULL, main='', genes=F, plotType=1 ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -27,7 +28,8 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),
-	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1 ) {
+	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, 
+			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1 ) {
 
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {

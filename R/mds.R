@@ -49,10 +49,12 @@ setMethod('mds', signature = c ('BioData'),
 		if(mds.type == "PCA"){
 			pr <- prcomp(tab)
 			mds.proj <- pr$x[,1:3]
+			try( {
 			png ( file=file.path( dataObj$outpath,'loadings.png'), width=1000, height=1000 )
 			plot (  pr$rotation[,1:2] , col='white' );
 			text( pr$rotation[,1:2], labels= rownames(pr$rotation), cex=1.5 )
 			dev.off()
+			})
 			write.table( cbind( Genes = rownames(pr$rotation), pr$rotation[,1:2] ), 
 					file=file.path( dataObj$outpath,'gene_loadings.xls') , row.names=F, sep='\t',quote=F )
 			#	mds.trans <- prcomp(t(tab))$x[,1:3]

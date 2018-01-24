@@ -155,6 +155,8 @@ setMethod('as_BioData', signature = c ('seurat'),
 					ret
 				}  
 )
+
+
 fetch_first <- function ( sth ) {
 	ret <- RSQLite::fetch(sth)
 	if (RSQLite::dbHasCompleted(sth)) {
@@ -173,15 +175,15 @@ fetch_first <- function ( sth ) {
 SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
 	
-	ncol=as.numeric( fetch_first( dbSendQuery(dbh,  "select max(id) from samples" ) ) )
+	ncol=as.numeric( fetch_first( RSQLite::dbSendQuery(dbh,  "select max(id) from samples" ) ) )
 	if ( ! is.null(useS) ) {
 		ncol = length(useS)
 	}
-	nrow=as.numeric( fetch_first( dbSendQuery(dbh,  "select max(id) from genes" ) ) )
+	nrow=as.numeric( fetch_first( RSQLite::dbSendQuery(dbh,  "select max(id) from genes" ) ) )
 	if ( ! is.null(useG) ) {
 		ncol = length(useG)
 	}
-	
+	print ( paste("I create a", ncol,"columns and",nrow,"rows wide matrix"))
 	ret <- matrix( 0, nrow=nrow, ncol=ncol )
 	
 	q = "select gene_id, sample_id, value from datavalues where sample_id = :x"
@@ -199,7 +201,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	}
 	
 	
-	steps = ceiling(useS/100)
+	steps = ceiling(ncol/100)
 	pb <- progress_estimated(100)
 	print ( "populating the matrix" )
 	
@@ -216,7 +218,6 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		}
 		id = id +1
 	}
-	browser()
 	print ( "adding gene and sample names")
 	RSQLite::dbClearResult(sth)
 	rm(sth)
@@ -225,7 +226,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		q <- paste( q, "where id IN (", paste(collapse=", ", useG),")")
 	}
 	sth <- RSQLite::dbSendQuery(dbh,q)
-	rownames(ret) <- as.character(t(dbFetch(sth)))
+	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
 	RSQLite::dbClearResult(sth)
 	rm(sth)
 	
@@ -234,7 +235,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		q <- paste( q, "where id IN (", paste(collapse=", ", useS),")")
 	}
 	sth <- RSQLite::dbSendQuery(dbh, q )
-	colnames(ret) <- as.character(t(dbFetch(sth)))
+	colnames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
 	RSQLite::dbClearResult(sth)
 	RSQLite::dbDisconnect(dbh)
 	print ( "done creating the matrix")

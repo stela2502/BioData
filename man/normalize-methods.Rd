@@ -7,22 +7,26 @@
 \alias{normalize}
 \alias{normalize,NGSexpressionSet-method}
 \alias{normalize}
+\alias{normalize,SingleCells-method}
+\alias{normalize}
 \alias{normalize,BioData-method}
 \title{description of function normalize}
 \usage{
+\S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
+
 \S4method{normalize}{SingleCells}(object, ..., reads = 600, force = FALSE,
   name = "normalized")
 
 \S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
 }
 \arguments{
-\item{reads}{the required read depth}
-
-\item{force}{re-normalize this object (default FALSE)}
+\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
 
-\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
+\item{reads}{the required read depth}
+
+\item{force}{re-normalize this object (default FALSE)}
 
 \item{x}{The NGSexpressionSet}
 
@@ -35,6 +39,8 @@
 \item{geneLengthCol}{the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
+
+\item{forec}{replace old norm data (FALSE)}
 
 \item{x}{The SingleCellsNGS object}
 

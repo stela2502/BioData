@@ -25,6 +25,10 @@
 \item{main}{the title of the plot (default ='')}
 
 \item{genes}{use gene level MDS data not sample level (default = FALSE)}
+
+\item{plotType}{choose one [1,2] and check whether you like it ;-) default=1}
+
+\item{size}{the size of the 3D points default = 3.0}
 }
 \description{
 This function  created a MDS 3D plot with an inbuilt background describing the data colors

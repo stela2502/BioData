@@ -28,6 +28,8 @@ Complement_and_coagulation_cascades_gene_symbols <- getGeneInfo(
 \item{what}{which column do you want to get (only one)}
 
 \item{what_tab}{analogue to the from_tab the table name containing the colmn if more than one table contains the info}
+
+\item{tab_res}{return all results as table (to check the results; default = FALSE)}
 }
 \value{
 A vector of ids

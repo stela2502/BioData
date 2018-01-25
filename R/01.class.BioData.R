@@ -46,6 +46,7 @@ BioData <- #withFormalClass(
 						name='BioData',
 						usedObj = NULL,
 						drop=c('MDS'),
+						version=NULL,
 						print = function (...) {
 							cat (paste("An object of class", paste(collapse="::",rev(class(self))),"\n" ) )
 							cat("named ",self$name,"\n")
@@ -124,6 +125,7 @@ BioData <- #withFormalClass(
 							self$samples$samples <- colnames(self$dat)
 							
 							self$sampleNamesCol <- 'samples'
+							self$version = sessionInfo('BioData')$otherPkgs$BioData$Version
 							self$force.numeric()
 						},
 						data = function(...){

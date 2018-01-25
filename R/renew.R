@@ -27,7 +27,7 @@ setMethod('renew', signature = c ('BioData'),
 					namerow= x$rownamescol, 
 					outpath=x$outpath 
 			)
-		}else {
+		}else if ( x$version != sessionInfo('BioData')$otherPkgs$BioData$Version ){
 			ret <- BioData$new( 
 				dat = cbind(x$data, x$annotation), 
 				Samples = x$samples, 

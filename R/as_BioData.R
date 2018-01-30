@@ -212,7 +212,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		m <- match( t$gene_id, useG )
 		ret[m, id] <- t$value
 		
-		if ( id %% 100 == 0 ) {
+		if ( id %% steps == 0 ) {
 			pb$tick()$print()
 			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
 		}

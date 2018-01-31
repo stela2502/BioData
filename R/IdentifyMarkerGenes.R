@@ -8,6 +8,7 @@
 #' @param x the BioData object
 #' @param gname the samples column name to group on.
 #' @param settings a list of slurm parameters to use to run a script (optional)
+#' @param names a vector of group name values to compare against all others (default NULL == use all)
 #' @title description of function IdentifyMarkerGenes
 #' @export 
 setGeneric('IdentifyMarkerGenes', ## Name
@@ -18,7 +19,7 @@ setGeneric('IdentifyMarkerGenes', ## Name
 
 
 setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
-		definition = function ( x, gname, settings=list() ) {
+		definition = function ( x, gname, settings=list(), names=NULL ) {
 			x$name <- str_replace_all( x$name, '\\s+', '_')
 			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
 			opath = file.path( OPATH,gname,"RFclust.mp" )
@@ -49,9 +50,12 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 			if ( ! dir.exists(file.path(OPATH, gname, "RFclust.mp")) ){
 				dir.create(file.path(OPATH, gname,"RFclust.mp" ) )
 			}
+			if ( is.null(names)) {
+				names = unique(tmp$samples[,gname])
+			}
 			if ( length(names(settings)) == 0){
 				tmp <- x$clone()
-				for ( n in unique(tmp$samples[,gname])) {
+				for ( n in names) {
 					if ( n == 'rest') {
 						next
 					}
@@ -78,7 +82,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 						SGE=F, slices=1, email="nothing@nowhere.se", tmp.path=opath, 
 						name= 'IdentifyMarkerGenes', settings=settings, slurm=T 
 				)
-				for ( n in unique(tmp$samples[,gname])) {
+				for ( n in names ) {
 					new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
 					new_g <- str_replace_all( new_g, '\\s+', '_')
 					print (paste( "Processing:", new_g ))

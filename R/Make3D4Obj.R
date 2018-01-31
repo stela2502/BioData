@@ -93,11 +93,11 @@ setMethod('Make3D4obj', signature = c ('BioData'),
         }
         else {
                 if ( names ) {
-						My.legend3d ("topright", legend = paste( unique(as.character(x$samples[,group]))  ), pch = 16, col = unique(col), cex=1, inset=c(0.02))
+						My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
                         rgl.texts( x$usedObj$MDS[[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
-                        My.legend3d ("topright", legend = paste( unique(as.character(x$samples[,group]))  ), pch = 16, col = unique(col), cex=1, inset=c(0.02))
+                        My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
 						rgl.points( x$usedObj$MDS[[mds.type]], col=col, size=size )
 						
                 }

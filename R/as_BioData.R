@@ -293,6 +293,7 @@ setMethod('as_BioData', signature = c ('character'),
 			colnames(mat) <- make.names(colnames(mat))
 			ret <- BioData$new( data.frame(cbind(gene_UMI, as.matrix(mat))) ,
 					Samples= data.frame( 'cell_id' = colnames(mat) ), namecol='cell_id', namerow= 'gname', name='from.cellranger' )
+			class(ret) <- c( 'SingleCells', class(ret))
 			ret
 		}
 )

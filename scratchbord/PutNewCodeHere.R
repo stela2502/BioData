@@ -1,24 +1,26 @@
-convert_to <- function(x, type=c("MAST", "DESeq2", "scran") , species=NULL, ...) {
-	ret <- NULL
-	toM <- function (x) {
-		d <- as.matrix(x)
-		d[which(d==-20)] <- NA
-		d[is.na(d)] <- 0
-		d
-	}
-	if (type == 'DESeq2' ) {
-		ret <- DESeq2::DESeqDataSetFromMatrix(
-				toM(x$raw),
-				x$samples
-		)
-	}else if ( type== "MAST" ) {
-		if ( is.null(species) ) {
-			stop ( "to convert to scran I need a species or AnnotationDbi object" )
-			## so now I need to get the ensembl ids into this crappy object
-			ret <- scran::SingleCellExperiment(list(counts=x$raw))
-			colData(ret) <- x$samples
-			rowData(ret) <- x$annotation
-		}
-	}
+SQLite_ExpressionSummary <- function (fname ) {
+	
+	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
+	sth <- RSQLite::dbSendQuery(dbh, paste(  
+					"SELECT gene_id , avg( value), count(value), gname" ,
+					"from  datavalues left join genes on gene_id = genes.id",
+					#			"where sample_id IN (select id from samples where sname not like '%spliced%')",  
+					"GROUP by gene_id"
+			)
+	)
+	ret <- RSQLite::dbFetch(sth)
+	ret
+}
+
+SQLite_SampleSummary <- function (fname ) {
+	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
+	sth <- RSQLite::dbSendQuery(dbh, paste(  
+					"SELECT sample_id , sum(value) as reads, count(value) as count, sname" ,
+					"from  datavalues left join samples on sample_id = samples.id",
+					#"where sample_id IN (select id from samples where sname not like '%spliced%')",  
+					"GROUP by sample_id"
+			)
+	)
+	ret <- RSQLite::dbFetch(sth)
 	ret
 }

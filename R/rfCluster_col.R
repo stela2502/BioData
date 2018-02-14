@@ -158,6 +158,16 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj']]), collapse=" ",sep=', ') ) )
 			}
 			groups <- createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
+			
+			## store the MDS representation of the rfClust dissimilarity object
+			## in case all samples have been used to create the object.
+			if ( is.null (x$usedObj$MDS[[RFname]]) & nrow(x$usedObj$rfObj[[1]]@distRF[[RFname]]$cl1) == ncol(x$dat) ) {
+				a <- (x$usedObj$rfObj[[1]]@distRF[[RFname]]$cl1)
+				d <- cmdscale(a,3)
+				m <- match( colnames(x$dat), rownames(d) )
+				x$usedObj$MDS[[single_res_col]] <- d[m,]
+			}
+				
 			x$usedObj[['rfExpressionSets']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets']][[RFname]]$samples, groups[,3:(2+length(k))] )
 			le <- ncol(x$usedObj[['rfExpressionSets']][[RFname]]$samples)

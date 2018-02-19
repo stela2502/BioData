@@ -132,14 +132,13 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			}else {
 				keep <- which( x$samples[,condition] ==A | x$samples[,condition] == B)
 				name = paste ("SingleCellAssay",condition, A, B)
-				a <- reduceTo( x, what='col',to= colnames(x$data())[keep], name=name)
+				a <- reduceTo( x, what='col',to= colnames(x$data())[keep], name=name, copy=T)
 			}
 			d <- toM(a)
 			sca <- MAST::FromMatrix(class='SingleCellAssay', 
 					exprsArray=d, 
 					cData=data.frame(wellKey=colnames(d), GroupName = a$samples[,condition]), 
 					fData=data.frame(primerid=rownames(d)))
-			
 			#groups <- sca@elementMetadata$GroupName <- a$samples[,condition]
 			zlm.output <- MAST::zlm.SingleCellAssay(~ GroupName, sca, method='glm', ebayes=T)
 			zlm.lr <- MAST::lrTest(zlm.output,'GroupName')

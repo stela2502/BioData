@@ -177,7 +177,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			## create the predictive random forest object
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
-				print ( "using the caclualted grouping")
+				print ( "using the calcualted grouping")
 				mat <- match(colnames(x$dat), colnames(x$usedObj[['rfObj']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
 					#browser()

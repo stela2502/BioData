@@ -171,7 +171,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 			## create the predictive random forest object
 			if ( all.equal( sort(colnames(x$usedObj[['rfObj_row']][[RFname]]@dat)), sort(rownames(x$dat)) ) == TRUE ) {
 				## use the column in grouping
-				print ( "using the caclualted grouping")
+				print ( "using the calcualted grouping")
 				for ( id in 1:length(k) ){
 					mat <- match(rownames(x$dat), colnames(x$usedObj[['rfObj_row']][[RFname]]@dat))
 					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))

@@ -55,7 +55,7 @@ setMethod('clusters_gene', signature = c ('BioData'),
 				}
 				else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			}else { ## now the clusterby is a MDS algorithm name / MDS dataset name
-				cn <- names(dataObj$usedObj$MDSgenes)
+				cn <- names(dataObj$usedObj$MDSgene)
 				if ( length(grep(clusterby, cn  )) == 0) {
 					#if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
 					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
@@ -64,17 +64,19 @@ setMethod('clusters_gene', signature = c ('BioData'),
 				}else {
 					clusterby = cn[grep(clusterby, cn  )]
 				}
-				if ( is.null( dataObj$usedObj$MDSgenes[[clusterby]] ) ) {
+				if ( is.null( dataObj$usedObj$MDSgene[[clusterby]] ) ) {
 					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby, genes=T)
+					clusterby = cn[grep(clusterby, cn  )]
 				}
 				if ( ctype=='hierarchical clust'){
-					hc <- hclust(dist( dataObj$usedObj$MDSgenes[[clusterby]] ),method = cmethod)
+					hc <- hclust(dist( dataObj$usedObj$MDSgene[[clusterby]] ),method = cmethod)
 					clusters_gene <- cutree(hc,k=groups.n)
 				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(dist( dataObj$usedObj$MDSgenes[[clusterby]] ),method = cmethod)
-					clusters_gene <- kmeans( dataObj$usedObj$MDSgenes[[clusterby]] ,centers=groups.n)$cluster
+					hc <- hclust(dist( dataObj$usedObj$MDSgene[[clusterby]] ),method = cmethod)
+					clusters_gene <- kmeans( dataObj$usedObj$MDSgene[[clusterby]] ,centers=groups.n)$cluster
 				}else if ( ctype =='mclust' ) {
-					hc <- hc( dataObj$usedObj$MDSgenes[[clusterby]] )
+					browser()
+					hc <- hc( dataObj$usedObj$MDSgene[[clusterby]] )
 					clusters_gene <- hclass(hc, groups.n)
 				}
 				else { stop( paste('ctype',ctype, 'unknown!' ) )}

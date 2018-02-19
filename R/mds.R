@@ -86,16 +86,10 @@ setMethod('mds', signature = c ('BioData'),
 			mds.proj <- Isomap( tab, dim = 3, k = as.numeric(LLEK) )$dim3
 			#	mds.trans <- Isomap( t(tab), dim = 3, k = as.numeric(LLEK) )$dim3
 		}else if ( mds.type == "ZIFA" ) {
-			stop( "Sorry ZIFA has to be double checked - are you working on normalized data - than ZIFA can not be applied!")
+			#stop( "Sorry ZIFA has to be double checked - are you working on normalized data - than ZIFA can not be applied!")
 			print ( "Running external python script to apply ZIFA dimensional reduction (PCR data only)" )
-			if ( genes ) {
-				ZIFA <- 40.000001 - dataObj$raw
-			}
-			else {
-				ZIFA <- 40.000001 - t(dataObj$raw)
-			}
 			
-			write.table( ZIFA, file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
+			write.table( data$raw, file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
 			write( c("from ZIFA import ZIFA","from ZIFA import block_ZIFA", "import numpy as np",
 							"Y = np.loadtxt('ZIFA_input.dat')", "Z, model_params = ZIFA.fitModel( Y, 3 )", 
 							"np.savetxt('TheMDS_ZIFA.xls', Z )" ), 

@@ -50,11 +50,11 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			name
 		}
 		if ( genes ) {
-			mds.type = check_and_replace( mds.type, x$usedObj$MDSgenes )
-			if ( is.null (x$usedObj$MDSgenes[[mds.type]] )){
+			mds.type = check_and_replace( mds.type, x$usedObj$MDSgene )
+			if ( is.null (x$usedObj$MDSgene[[mds.type]] )){
 				x <- mds(x, mds.type=mds.type, genes=T)
 			}
-			mds.type = check_and_replace( mds.type, x$usedObj$MDSgenes )
+			mds.type = check_and_replace( mds.type, x$usedObj$MDSgene )
 		}else {
 			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
 			if ( is.null (x$usedObj$MDS[[mds.type]] )){		
@@ -66,6 +66,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		if ( genes ) {
 			x <- x$clone()
 			t <- transpose(x)
+			browser()
 		}
         if ( cut ) {
                 ## this is a gene expression value!

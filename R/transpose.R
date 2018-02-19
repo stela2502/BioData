@@ -36,8 +36,8 @@ setMethod('transpose', signature = c ('BioData'),
 				x$zscored <- t(x$zscored)
 			}
 			tmp = x$usedObj$MDS
-			x$usedObj$MDS = x$usedObj$MDSgenes
-			x$usedObj$MDSgenes = tmp
+			x$usedObj$MDS = x$usedObj$MDSgene
+			x$usedObj$MDSgene = tmp
 			invisible(x)
 		} 
 )

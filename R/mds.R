@@ -83,7 +83,8 @@ setMethod('mds', signature = c ('BioData'),
 				stop("package 'Rtsne' needed for this function to work. Please install it.",
 						call. = FALSE)
 			}
-			mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F )
+			mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
+			rownames(mds.proj) <- rownames(tab)
 			
 		}
 		

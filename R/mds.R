@@ -78,7 +78,15 @@ setMethod('mds', signature = c ('BioData'),
 			}
 			dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma)
 			mds.proj <- destiny::as.data.frame(dm)[,1:3]
+		}else if ( mds.type == "TSNE"){
+			if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {
+				stop("package 'Rtsne' needed for this function to work. Please install it.",
+						call. = FALSE)
+			}
+			mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F )
+			
 		}
+		
 		else if ( mds.type == "LLE"){
 			mds.proj <- LLE( tab, dim = 3, k = as.numeric(LLEK) )
 			#	mds.trans <- LLE( t(tab), dim = 3, k = as.numeric(LLEK) )

@@ -14,6 +14,8 @@ IdentifyMarkerGenes(x, gname, ...)
 \item{gname}{the samples column name to group on.}
 
 \item{settings}{a list of slurm parameters to use to run a script (optional)}
+
+\item{names}{a vector of group name values to compare against all others (default NULL == use all)}
 }
 \description{
 This method uses whichever stats function was selected for this class using the cresteStats function.

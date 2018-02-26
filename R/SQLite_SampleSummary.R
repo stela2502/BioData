@@ -12,7 +12,7 @@ setGeneric('SQLite_SampleSummary', ## Name
 	}
 )
 
-setMethod('SQLite_SampleSummary', signature = c ('BioData'),
+setMethod('SQLite_SampleSummary', signature = c ('character'),
 	definition = function (fname ) {
 	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
 	sth <- RSQLite::dbSendQuery(dbh, paste(  

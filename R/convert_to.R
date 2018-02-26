@@ -94,14 +94,19 @@ setMethod('convert_to', signature = c ('BioData'),
 					scale.factor = scale.factor
 			)
 		}
+		ret <- Seurat::FindVariableGenes(ret)
+		
 		m <- match( rownames(ret@data) , rownames(x$dat) )
-		ret@hvg.info <- x$annotation[m,]
+		ret@hvg.info <- cbind(ret@hvg.info, x$annotation[m,])
+		
+		
 		n <- as.vector(ret@meta.data$nUMI )
 		m <- min( n )
 		brks= c( (m-.1),m ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
 		brks = unique(as.numeric(sprintf("%2.6e", brks)))
 		d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
 		ret@meta.data$nUMI_bins <- d		
+		
 		
 	}
 	ret

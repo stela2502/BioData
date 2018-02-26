@@ -37,6 +37,22 @@ setMethod('as_BioData', signature = c ('list'),
 	ret
 } )
 
+setMethod('as_BioData', signature = c ('matrix'),
+		definition = function ( dat ) {
+				dat <- as.data.frame(dat)
+				snames <- colnames(dat)
+				dat$GeneID = rownames(dat)
+			ret <- BioData$new( 
+					dat=  dat, 
+					Samples = data.frame('sampleName' = snames ), 
+					namecol= 'sampleName', 
+					namerow= 'GeneID',
+					outpath= ''
+			)
+			ret
+		}
+)
+
 setMethod('as_BioData', signature = c ('cellexalvr'),
 		definition = function ( dat ) {
 			dat <- cellexalvr::renew(dat)
@@ -103,9 +119,8 @@ setMethod('as_BioData', signature = c ('seurat'),
 					}
 					namerow = NULL
 					if (nrow(dat@hvg.info)==0) {
-						dat@hvg.info <- matrix(ncol=2, c(rownames(dat@data), rep( 0, nrow(dat@data)) ) )
-						colnames(dat@hvg.info) = c('Gene.Symbol', 'useless')
-						rownames(dat@hvg.info) = rownames(x@data)
+						dat@hvg.info <- data.frame( 'Gene.Symbol' = rownames(dat@data),'useless' = rep( 0, nrow(dat@data) ) )
+						rownames(dat@hvg.info) = rownames(dat@data)
 						namerow = 'Gene.Symbol'
 					}else {
 						ok = which(lapply(colnames(dat@hvg.info) , function(x) { all.equal( as.character(as.vector(dat@hvg.info[,x])), rownames(dat@data)) == T } )==T)
@@ -139,7 +154,9 @@ setMethod('as_BioData', signature = c ('seurat'),
 					ret$samples <- samples
 					ret$annotation <- dat@hvg.info
 					
-					ret$zscored <- as.data.frame(as.matrix(dat@scale.data))
+					if ( ! is.null(dat@scale.data)){
+						ret$zscored <- as.data.frame(as.matrix(dat@scale.data))
+					}
 					m <- match(colnames(dat@data), colnames(dat@raw.data))
 					ret$raw <- as.data.frame(as.matrix(dat@raw.data))[,m]
 					## now I need to manually remove unreliable data from the zscored information (set to -20)

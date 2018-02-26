@@ -12,7 +12,7 @@ setGeneric('SQLite_ExpressionSummary', ## Name
 	}
 )
 
-setMethod('SQLite_ExpressionSummary', signature = c ('BioData'),
+setMethod('SQLite_ExpressionSummary', signature = c ('character'),
 	definition = function (fname ) {
 	
 	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )

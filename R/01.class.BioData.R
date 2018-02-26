@@ -88,6 +88,7 @@ BioData <- #withFormalClass(
 							self$dat =  dat[, mat ]
 							annotation <- dat[, is.na(match( colnames(dat), as.vector(S[,namecol]) ))==T ]
 							
+							
 							if ( class(annotation) == 'factor'){
 								annotation <- data.frame( annotation )
 								colnames(annotation) <- namerow

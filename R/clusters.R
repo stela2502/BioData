@@ -44,13 +44,13 @@ setMethod('clusters', signature = c ('BioData'),
 			}
 			else if ( clusterby=="raw"){#...do mds on tab
 				if ( ctype=='hierarchical clust'){
-					hc <- hclust(as.dist( 1- cor(t(tab), method='pearson') ),method = cmethod)
+					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
 					clusters <- cutree(hc,k=groups.n)
 				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(as.dist( 1- cor(t(tab), method='pearson') ),method = cmethod)
+					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
 					clusters <- kmeans( dataObj$usedObj[['mds.proj']] ,centers=groups.n)$cluster
 				}else if ( ctype =='mclust' ) {
-					hc <- hc( as.dist( 1- cor(t(tab), method='pearson') ) )
+					hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
 					clusters <- hclass(hc, 12)
 				}
 				else { stop( paste('ctype',ctype, 'unknown!' ) )}

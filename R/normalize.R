@@ -36,7 +36,7 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 setMethod('normalize', signature = c ('BioData'),
 		definition = function (  object, ..., readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
 			if ( ! object$snorm ){
-				object$samples$SizeFactor <- readCounts
+				
 				if ( is.null(object$raw) ){
 					object$raw <- object$dat
 				}else {
@@ -45,6 +45,7 @@ setMethod('normalize', signature = c ('BioData'),
 				if ( is.null( readCounts ) ) {
 					readCounts <- as.vector( DESeq2::estimateSizeFactorsForMatrix ( as.matrix(object$raw)) )
 				}
+				object$samples$SizeFactor <- readCounts
 				object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
 				colnames(object$dat) = colnames(object$raw)
 				rownames(object$dat) = rownames(object$raw)
@@ -53,12 +54,16 @@ setMethod('normalize', signature = c ('BioData'),
 						object$dat[i,] <- object$dat[i,]/ (object$annotation[i,geneLengthCol ] / 1000)
 					}
 				}
-				
 				object$snorm=TRUE
 				if(is.null(name)){
-					name = paste( object$name ,'normalized' )
+					name = paste( object$name ,'DESeq2_normalized' )
 				}
 				object$name = name
+				
+				if ( object$logged) {
+					object$logged = FALSE
+					logThis(object) ## regen log
+				}
 			}
 			object
 		})
@@ -78,7 +83,7 @@ setMethod('normalize', signature = c ('BioData'),
 #' @title description of function normalize
 #' @export 
 setMethod('normalize', signature = c ('SingleCells'),
-		definition = function (  object, ..., reads=600, force=FALSE , name='normalized') {
+		definition = function (  object, ..., reads=600, force=FALSE , name=NULL) {
 			if ( is.null( object$usedObj$snorm) ) {
 				object$usedObj$snorm = 0
 			}
@@ -86,6 +91,9 @@ setMethod('normalize', signature = c ('SingleCells'),
 			if ( force | object$usedObj$snorm == 0 ) {
 				if ( length( object$samples$counts ) == 0 ) {
 					object$samples$counts <- apply( object$dat, 2, sum)
+				}
+				if(is.null(name)){
+					name = paste( object$name ,'resample_normalized' )
 				}
 				object <- reduceTo( object, what="col", to=as.character(object$samples[which(object$samples$counts >= reads), object$sampleNamesCol ]) 
 						, name=name )

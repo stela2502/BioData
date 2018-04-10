@@ -13,7 +13,7 @@
 #' @title description of function createStats
 #' @export 
 if ( ! isGeneric('createStats') ){ setGeneric('createStats', ## Name
-	function (x, condition, files=F, A=NULL, B=NULL) { ## Argumente der generischen Funktion
+	function (x, condition, files=F, A=NULL, B=NULL, ...) { ## Argumente der generischen Funktion
 		standardGeneric('createStats') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -112,7 +112,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 
 
 setMethod('createStats', signature = c ( 'SingleCells') ,
-		definition = function ( x, condition, files=F, A=NULL, B=NULL ) {
+		definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL ) {
 			if (!requireNamespace("MAST", quietly = TRUE)) {
 				stop("MAST needed for this function to work. Please install it.",
 						call. = FALSE)
@@ -135,9 +135,18 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 				a <- reduceTo( x, what='col',to= colnames(x$data())[keep], name=name, copy=T)
 			}
 			d <- toM(a)
+			cData = data.frame(wellKey=colnames(d), GroupName = a$samples[,condition])
+			if ( ! is.null(covariates)) {
+				for (n in covariates ){
+					new = ncol(cData) +1
+					cData = cbind(cData, a$samples[,n] )
+					colnames(cData)[new] = n
+				}
+				
+			}
 			sca <- MAST::FromMatrix(class='SingleCellAssay', 
 					exprsArray=d, 
-					cData=data.frame(wellKey=colnames(d), GroupName = a$samples[,condition]), 
+					cData=cData, 
 					fData=data.frame(primerid=rownames(d)))
 			#groups <- sca@elementMetadata$GroupName <- a$samples[,condition]
 			zlm.output <- MAST::zlm.SingleCellAssay(~ GroupName, sca, method='glm', ebayes=T)

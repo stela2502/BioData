@@ -66,9 +66,9 @@ setMethod('reduceTo', signature = c ('BioData'),
 					
 					
 				}else if ( what =="col" ) {
-					to <- tolower(make.names(to))
-					if ( length(which(is.na(match(tolower(to),tolower(colnames(x$dat))))==F)) > 0 ) {
-						useOnly <- match(to, tolower(colnames(x$dat)))
+					#to <- tolower(make.names(to))
+					if ( length(which(is.na(match(to,colnames(x$dat)))==F)) > 0 ) {
+						useOnly <- match(to, colnames(x$dat))
 						not.matched <- to[is.na(useOnly)]
 						if ( length(not.matched) > 0 ){
 							print (paste('Problematic samples:', paste(not.matched,sep=', ')))

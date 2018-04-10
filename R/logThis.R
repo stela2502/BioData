@@ -18,6 +18,9 @@ if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
 setMethod('logThis', signature = c ('BioData'),
 	definition = function (x) {
 	if ( ! x$logged ) {
+		if ( is.null(x$raw) ) {
+			x$raw = x$dat
+		}
 		x$dat <- apply( x$dat, 2, function(x){ log(x+1) } )
 		x$logged = TRUE
 	}

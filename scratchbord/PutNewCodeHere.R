@@ -1,26 +1,12 @@
-SQLite_ExpressionSummary <- function (fname ) {
-	
-	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
-	sth <- RSQLite::dbSendQuery(dbh, paste(  
-					"SELECT gene_id , avg( value), count(value), gname" ,
-					"from  datavalues left join genes on gene_id = genes.id",
-					#			"where sample_id IN (select id from samples where sname not like '%spliced%')",  
-					"GROUP by gene_id"
-			)
-	)
-	ret <- RSQLite::dbFetch(sth)
-	ret
-}
-
-SQLite_SampleSummary <- function (fname ) {
-	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
-	sth <- RSQLite::dbSendQuery(dbh, paste(  
-					"SELECT sample_id , sum(value) as reads, count(value) as count, sname" ,
-					"from  datavalues left join samples on sample_id = samples.id",
-					#"where sample_id IN (select id from samples where sname not like '%spliced%')",  
-					"GROUP by sample_id"
-			)
-	)
-	ret <- RSQLite::dbFetch(sth)
-	ret
+add_to_stat <- function( x, stat, name ) {
+	if ( length( match('p.adj BF',colnames(stat) )) == 0 & length( match('hurdle',colnames(stat) ))) {
+		stat = cbind( stat, 'p.adj BF' = p.adjust(stat[,'hurdle'], method='bonferroni') )
+	}
+	if ( ! is.na( match( name, names(x$stats)))){
+		x$stats[[ match( name, names(x$stats)) ]] <- stat
+	}else {
+		x$stats[[ length( x$stats ) +1 ]] <- stat
+		names(x$stats)[length(x$stats) ] <- name
+	}
+	invisible(x)
 }

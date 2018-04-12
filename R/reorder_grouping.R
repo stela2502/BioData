@@ -17,7 +17,7 @@ setGeneric('reorder_grouping', ## Name
 
 setMethod('reorder_grouping', signature = c ('BioData'),
 	definition = function (obj, group, new_order, what='col' ) {
-		if ( what == 'col '){
+		if ( what == 'col'){
 			k <- length(levels(obj$samples[,group]) )
 			err = NULL
 			if ( ! all.equal( sort(as.character(new_order)), sort(levels(obj$samples[,group])) ) == T ) {
@@ -26,6 +26,7 @@ setMethod('reorder_grouping', signature = c ('BioData'),
 			obj$samples[,group] = factor( as.vector(obj$samples[,group]), levels=new_order )
 			print ("sample group order changed")
 		}else {
+			print (paste( "I got what ==",what))
 			k <- length(levels(obj$annotation[,group]) )
 			err = NULL
 			if ( ! all.equal( sort(as.character(new_order)), sort(levels(obj$annotation[,group])) ) == T ) {

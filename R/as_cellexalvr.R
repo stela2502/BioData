@@ -62,7 +62,7 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 					mds=x$usedObj$MDS,
 					index = index
 			)
-			ret@color = x$usedObj$colorRange
+			ret@colors = x$usedObj$colorRange
 			ret
 		}
 )

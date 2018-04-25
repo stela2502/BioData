@@ -122,6 +122,15 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					plotLegend(x, file=paste(x$name, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
+			if ( length(brks) < 3 ) {
+				## not good!
+				print ("Highly invariant data - your're shure that heatmap is what you want?" )
+				if ( is.null(data$zscored)){
+					brks= c( -1, 0, 1, 2, max(x$data()) )
+				}else {
+					brks= c( -3,-2,-1, 0, 1, 2, 3 )
+				}
+			}
 			heatmap.3(
 					data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv= is.null(RowSideColors), Colv = is.null(ColSideColors),  key=F, symkey=FALSE,
 					trace='none', 
@@ -134,11 +143,11 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				dev.off()
 				fn <- paste(file.path(x$outpath,x$name),'_legend_values.pdf',sep='.')
 				if ( ! file.exists(fn) ){
-				pdf( file=fn, width=8, height=4)
-				Z <- as.matrix(1:(length(brks)-2))
-				image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
-				axis( 1, at=c(0,0.1,1), labels=c('NA','low','high'))
-				dev.off()
+					pdf( file=fn, width=8, height=4)
+					Z <- as.matrix(1:(length(brks)-2))
+					image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
+					axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
+					dev.off()
 				}
 			}
 			

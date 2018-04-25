@@ -43,6 +43,13 @@ setMethod('clusters', signature = c ('BioData'),
 				dataObj <- colors_4 (dataObj, useGrouping )
 			}
 			else if ( clusterby=="raw"){#...do mds on tab
+				## here I need to check that I have no var == 0 samples
+				prob <- which(apply(tab, 2, var) == 0)
+				if ( length(prob) > 0 ){
+					for ( id in prob ){
+						tab[,id] = runif(nrow(tab), -19, -16)
+					}
+				}
 				if ( ctype=='hierarchical clust'){
 					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
 					clusters <- cutree(hc,k=groups.n)

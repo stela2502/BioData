@@ -3,7 +3,7 @@
 #' @rdname collaps-methods
 #' @docType methods
 #' @description  This function will collpase the data in the BioData to only contain one value
-#' @description  per sample group.
+#' per sample group.
 #' @param dataObj the BioData
 #' @param by collapsing method c('median','mean','sd','sum', or own function )
 #' @param groupCol the sample names you want to group on

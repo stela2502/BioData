@@ -25,6 +25,7 @@ setGeneric('as_cellexalvr', ## Name
 setMethod('as_cellexalvr', signature = c ('BioData'),
 		definition = function ( x, cellInfo, groups=NULL, linear=NULL  ) {
 			x <- x$clone()
+			print ( "Are you sure, that the rownmaes of the data object are 'gene symbols'? If not please change that and re-run this function" )
 			fixNames <- function( names ) { 
 				unlist(lapply( names, 
 								function(gname) { paste(unlist(stringr::str_split( gname, '\\s+')), collapse='_') }) )
@@ -46,6 +47,16 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 				userGroups = x$samples[,groups]
 				colnames(userGroups) = newN
 				rownames(userGroups) = colnames(x$dat)
+				apply( cbind(groups, newN ),1, 
+						function(rnames) { 
+							if ( is.null(x$usedObj$colorRange[[ rnames[2] ]])){ 
+								if (  is.null(x$usedObj$colorRange[[ rnames[1] ]]) ){ 
+									colors_4(x,rnames[2])
+								}else {
+									x$usedObj$colorRange[[ rnames[2] ]] = x$usedObj$colorRange[[ rnames[1] ]]
+								} 
+							}  } 
+				)
 			}
 			
 			index = NULL

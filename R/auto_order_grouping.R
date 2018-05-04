@@ -23,10 +23,17 @@ setMethod('auto_order_grouping', signature = c ('BioData'),
 	if ( k < 3) {
 		stop( "too view groups to try an automatic grouping here" )
 	}
-	
 	print ("Collapsing the data")
 	x_collapsed = collaps( x, by='median', groupCol= group, copy= TRUE )
 	x_collapsed$name='AutoOrder1'
+	
+	tab <- x_collapsed$data()
+	p <- apply(tab, 2, var)
+	problem = which(p == 0 | is.na(p) )
+	if ( length(problem) > 0 ){
+		stop(paste("The groups", paste( collapse=', ', problem), "have a var of 0 or NA in the collapsed dataset - please add more genes and re-run") )
+	}
+	
 	print ( "Starting RF clustering process")
 	rfCluster_col(x_collapsed, k=k, slice=20, subset = ncol(x_collapsed$dat), name='autoorder1', settings=settings )
 	exp_group = paste('RFgrouping autoorder1 .*', ' n=', k, sep="")
@@ -40,13 +47,23 @@ setMethod('auto_order_grouping', signature = c ('BioData'),
 							settings=settings )} , silent=T)	
 	}
 	exp_group = colnames( x_collapsed$samples )[grep ( exp_group, colnames( x_collapsed$samples ))[1]]
-	x_collapsed2 <- collaps( x_collapsed, by='median', groupCol= exp_group, copy= TRUE )
+	x_collapsed2 <- collaps( x_collapsed, by='sum', groupCol= exp_group, copy= TRUE )
 	print ( "creating hclust orders")
 	tab <- x_collapsed2$data()
+#	browser()
 	colnames(tab) <- x_collapsed2$samples[,exp_group]
+#	p <- apply(tab, 2, var)
+#	problem = which(p == 0 | is.na(p) )
+#	if ( length( problem ) > 0 ) {
+#		tab = tab[,-problem]
+#	}
 	hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = 'ward.D2' )
 	order_l2 <- hc$order ## should be the most likely usable order here
-	
+#	if ( length( problem ) > 0 ) {
+#		for ( i in problem ) { 
+#			insert(order_l2, i, length(order_l2)+1) # push the empty groups to the end
+#		}
+#	}
 	tab <- x_collapsed$data()
 	colnames(tab) <- x_collapsed2$samples[,group]
 	hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = 'ward.D2' )

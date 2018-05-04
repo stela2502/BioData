@@ -34,7 +34,8 @@ setMethod('preprocess', signature = c ('BioData'),
 				colnames( t ) <- make.names(colnames( t ))
 				s <- x$samples
 				rownames(s) <- make.names(rownames(s))
-				storeage.mode(t) <- 'numeric'
+				#browser()
+				#storeage.mode(t) <- 'numeric'
 				dat$cds <- DESeq2::DESeqDataSetFromMatrix(
 					t,
 					x$samples,

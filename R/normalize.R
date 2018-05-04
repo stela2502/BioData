@@ -121,25 +121,25 @@ setMethod('normalize', signature = c ('SingleCells'),
 
 
 
-#' @name normalize
-#' @aliases normalize,BioData-method
-#' @rdname normalize-methods
-#' @docType methods
-#' @description  constructor that has to be implemented for a generic BioData
-#' This generic version was meant for array data and I have not had the need nor time to implement this part.
-#' @param x the BioData object
-#' @param to a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table 
-#' @title description of function normalize
-setMethod('normalize', signature = c ('BioData') ,
-	definition = function ( object , to=NULL, ..., name=NULL) {
-		if ( is.null(to) ) {
-			stop( "Sorry, but to nees to to be a numeric vector" )
-		}
-		if ( is.null(object$raw) ){
-			object$raw = object$dat
-		}
-		object$samples$norm_to <- to
-		object$dat =  data.frame(t(apply(object$raw,1, function(a) { a / to } ) ))
-		invisible(object)
-})
+##' @name normalize
+##' @aliases normalize,BioData-method
+##' @rdname normalize-methods
+##' @docType methods
+##' @description  constructor that has to be implemented for a generic BioData
+##' This generic version was meant for array data and I have not had the need nor time to implement this part.
+##' @param x the BioData object
+##' @param to a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table 
+##' @title description of function normalize
+#setMethod('normalize', signature = c ('BioData') ,
+#	definition = function ( object , to=NULL, ..., name=NULL) {
+#		if ( is.null(to) ) {
+#			stop( "Sorry, but to nees to to be a numeric vector" )
+#		}
+#		if ( is.null(object$raw) ){
+#			object$raw = object$dat
+#		}
+#		object$samples$norm_to <- to
+#		object$dat =  data.frame(t(apply(object$raw,1, function(a) { a / to } ) ))
+#		invisible(object)
+#})
 

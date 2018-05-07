@@ -29,6 +29,9 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 	}
 	else if ( ! file.exists(file.path( x$outpath, fname(ofile_base,"finished" )))) {
 		## create the funciton call
+		if ( ! file.exists( file.path( x$outpath, fname( x$name, 'RData' ) ) )){
+			saveObj(x)
+		}
 		fcall <- paste( sep="", "createStats(data, condition='",condition,"'")
 		if ( files ) {
 			fcall <- paste( sep="", fcall ,', files=T' )
@@ -53,7 +56,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				fcall,
 				'saveObj(data)',
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
-				paste( sep="", "unlink('",fname(ofile_base,'pid'),'")' )
+				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')" )
 		)
 		print ("create and execute script")
 		cat(script, file=paste(sep='.', ofile_base, 'sh' ) )

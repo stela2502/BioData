@@ -7,6 +7,9 @@ runStats_inThread <- function ( x, condition, files=F, A=NULL, B=NULL, covariate
 		stop( "The process is still running" )
 	}
 	else if ( ! file.exists(file.path( x$outpath, fname(ofile_base,"finished" )))) {
+		if ( ! file.exists( file.path( x$outpath, fname( x$name, 'RData' ) ) )){
+			saveObj(x)
+		}
 		## create the funciton call
 		fcall <- paste( sep="", "createStats(data, condition='",condition,"'")
 		if ( files ) {

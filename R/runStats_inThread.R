@@ -53,7 +53,9 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 		script = paste( sep="\n", "library(BioData)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),
 				paste( sep="", "data <- loadObj('",x$name,".RData')"  ),
+				'data$stats <- list()',
 				fcall,
+				'data$name = paste( data$name, "4_stats", sep="")',
 				'saveObj(data)',
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')" )
@@ -71,7 +73,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 	}
 	else { ## the script
 		print ( "read the data" ) 
-		data <- loadObj(file.path( x$outpath, fname( x$name, 'RData' ) ))
+		data <- loadObj(file.path( x$outpath, fname(paste( x$name, "4_stats", sep=""),'RData' ) ))
 		n <- names(data$stats)[length(names(data$stats))]
 		m <- match(rownames(data$dat), rownames(x$dat))
 		x$stats[[n]] <- data$stats[[n]][m,]

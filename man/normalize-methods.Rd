@@ -8,35 +8,31 @@
 \alias{normalize,NGSexpressionSet-method}
 \alias{normalize}
 \alias{normalize,SingleCells-method}
-\alias{normalize}
-\alias{normalize,BioData-method}
 \title{description of function normalize}
 \usage{
-\S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
+\S4method{normalize}{BioData}(object, ..., readCounts = NULL,
+  to_gene_length = FALSE, geneLengthCol = "transcriptLength",
+  force = FALSE, name = NULL)
 
 \S4method{normalize}{SingleCells}(object, ..., reads = 600, force = FALSE,
-  name = "normalized")
-
-\S4method{normalize}{BioData}(object, to = NULL, ..., name = NULL)
+  name = NULL)
 }
 \arguments{
-\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
-
-\item{name}{the new name of the object (deafule old name + normalized)}
-
-\item{reads}{the required read depth}
-
-\item{force}{re-normalize this object (default FALSE)}
-
-\item{x}{The NGSexpressionSet}
-
-\item{x}{The NGSexpressionSet}
-
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}
 
 \item{to_gene_length}{FALSE whether or not to normalize the data to gene length}
 
 \item{geneLengthCol}{the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)}
+
+\item{force}{re-normalize this object (default FALSE)}
+
+\item{name}{the new name of the object (deafule old name + normalized)}
+
+\item{reads}{the required read depth}
+
+\item{x}{The NGSexpressionSet}
+
+\item{x}{The NGSexpressionSet}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
 
@@ -45,8 +41,6 @@
 \item{x}{The SingleCellsNGS object}
 
 \item{name}{the name of the new object}
-
-\item{x}{the BioData object}
 }
 \value{
 the normalized data set (original data stored in NGS$raw
@@ -63,7 +57,4 @@ for each obejct specific function.
 normalize the expression data (sample wise)
 
 normalize the expression data by subsampling as described in PMID 24531970
-
-constructor that has to be implemented for a generic BioData
-This generic version was meant for array data and I have not had the need nor time to implement this part.
 }

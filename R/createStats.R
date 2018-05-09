@@ -24,7 +24,10 @@ if ( ! isGeneric('createStats') ){ setGeneric('createStats', ## Name
 setMethod('createStats', signature = c ('BioData'),
 	definition = function (x, condition, files=F, A=NULL, B=NULL) {
 		#stop( "Not implemented / broken!")
-		
+			if (!requireNamespace("DESeq2", quietly = TRUE)) {
+				stop("limma needed for this function to work. Please install it.",
+						call. = FALSE)
+			}
 		if ( nrow(x$data()) < 1e+3 ) {
 			stop ( "Please calculate the statistics only for the whole dataset!" )
 		}
@@ -56,6 +59,7 @@ setMethod('createStats', signature = c ('BioData'),
 		if ( files ) {
 			writeStatTables( x )
 		}
+		detach( 'package:DESeq2' )
 		x
 })
 
@@ -107,6 +111,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data()),rownames(x$stats[[i]])) ,]
 				x$stats[[i]] <- cbind( rownames(x$data()), x$stats[[i]] )
 			}
+			detach( 'package:limma' )
 			invisible(x)
 		})
 
@@ -165,6 +170,7 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			rm(zlm.output)
 			rm(zlm.lr)
 			gc(FALSE)
+			detach( 'package:MAST' )
 			invisible(x)
 			
 		}

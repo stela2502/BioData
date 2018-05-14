@@ -105,9 +105,14 @@ setMethod('normalize', signature = c ('SingleCells'),
 				n <- nrow(object$raw)
 				object$dat[] <- 0
 				for ( i in 1:ncol(object$raw) ) {
+					ok1 <- which( object$raw[,i] > 0 )
 					d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
+					
 					t <- table(d)
+					
+					dropped <- setdiff( ok1, as.numeric(names(t)) )
 					object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
+					object$dat[ dropped,i] <- -1
 				}
 			}
 			else {

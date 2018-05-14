@@ -64,10 +64,10 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 		cat(script, file=paste(sep='.', ofile_base, 'sh' ) )
 		## run the script
 		system( 
-			paste( 
-				"cd", x$outpath,"&&", 
-				"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 --", 
-				fname(ofile_base, 'sh') , " &"
+			paste( sep='',
+				"cd ", x$outpath," && ", 
+				"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 -- '", 
+				fname(ofile_base, 'sh') , "' &"
 			)
 		)
 	}

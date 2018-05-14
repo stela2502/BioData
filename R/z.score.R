@@ -91,7 +91,8 @@ setMethod('z.score', signature = c ('SingleCells'),
 				ret <- t(
 						apply(ma,1, function (x) {
 									i = i+1
-									n <- which(x==0)
+									n <- which(x <= 0)
+									dropped = which(x == -1)
 									if ( length(x) - length(n) > 1 ){
 										if (length(n) == 0 ){
 											x <-  scale(as.vector(t(x)))
@@ -99,6 +100,9 @@ setMethod('z.score', signature = c ('SingleCells'),
 										else {
 											x[-n] <- scale(as.vector(t(x[-n])))
 											x[n] <- -20
+											if ( length(dropped) > 0) {
+												x[dropped] <- -21
+											}
 										}
 										
 									}

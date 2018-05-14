@@ -25,7 +25,7 @@ setGeneric('complexHeatmap', ## Name
 
 setMethod('complexHeatmap', signature = c ('BioData'),
 		definition = function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE,
-				subpath='', main = '' ,  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo' ) {
+				subpath='', main = '' ,  heapmapCols=NULL, brks=10, X11type= 'cairo' ) {
 			
 			Rowv = FALSE
 			Colv = FALSE
@@ -91,7 +91,14 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			data <- as.matrix(x$data())
 			
-			brks <- unique(as.vector(c(min(data),quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
+			if ( min(data) == -21) {
+				## new z.score function to keep lost info
+				brks <- unique(as.vector(c(min(data),-20,quantile(data[which(data <= 20)],seq(0,1,by=1/brks)),max(data))))
+				if ( is.null(heapmapCols)){heapmapCols = function(x){ c('purple',"black",bluered(x))}}
+			}else {
+				brks <- unique(as.vector(c(min(data),quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
+				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black",bluered(x))}}
+			}
 			if ( ! is.null(ofile)){
 				## here I need more magic
 				x$name = paste( collapse='_',unlist(strsplit( x$name, '\\s+', perl=T)))

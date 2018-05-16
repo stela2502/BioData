@@ -7,19 +7,20 @@
 #' @param x The BioData object
 #' @param group the sample grouping that should become reordered (min 15 groups)
 #' @param settings a list of slurm settings default 
+#' @param k how many groups to put into one super group (default 5)
 #' list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)
 #' @title Auto re-order a (RF) grouping
 #' @export 
 setGeneric('auto_order_grouping', ## Name
-	function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1) ) { ## Argumente der generischen Funktion
+	function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1) , k=5) { ## Argumente der generischen Funktion
 		standardGeneric('auto_order_grouping') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('auto_order_grouping', signature = c ('BioData'),
-	definition = function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1) ) {
+	definition = function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5 ) {
 	
-	k = ceil(length( unique(x$samples[,group])) / 5 )
+	k = ceil(length( unique(x$samples[,group])) / k )
 	if ( k < 3) {
 		stop( "too view groups to try an automatic grouping here" )
 	}

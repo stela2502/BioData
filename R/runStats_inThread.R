@@ -21,7 +21,8 @@ setGeneric('runStats_inThread', ## Name
 setMethod('runStats_inThread', signature = c ('BioData'),
 	definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL ) {
 	## Quite simple - create a script and run it using R CMD Batch &
-	ofile_base <- paste( x$name,'_',condition,'runStats_inThread', sep='') 
+	ofile_base <- paste( x$name,'_',condition,'runStats_inThread', sep='')
+	ofile_base <- str_replace_all(ofile_base, "\\s+","_") 
 	fname <- function( name1, ext) { paste( name1, ext, sep=".") }
 	
 	if ( file.exists(file.path( x$outpath,fname(ofile_base,"pid" ))) ) {
@@ -60,8 +61,8 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')" )
 		)
-		print ("create and execute script")
-		cat(script, file=paste(sep='.', ofile_base, 'sh' ) )
+		print (paste ("create and execute script", fname( ofile_base, 'sh' )) )
+		cat(script, file=fname( ofile_base, 'sh' ) )
 		## run the script
 		system( 
 			paste( sep='',

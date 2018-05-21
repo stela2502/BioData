@@ -25,6 +25,15 @@ setMethod('mds', signature = c ('BioData'),
 	if(onwhat=="Expression"){
 		tab <- as.matrix(t(dataObj$data()))
 		storage.mode(tab)  <- 'numeric' ## brute force, but unfortunately somtimes important..
+		p = which(tab == -21)
+		if ( length(p)>0){
+			tab[p] = -20
+		}else if ( min(tab) == -1) {
+			p= which(tab == -1)
+			if ( length(p)>0){
+				tab[p] = 0
+			}
+		}		
 	} 
 	else {
 		stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )

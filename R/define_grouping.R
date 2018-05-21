@@ -20,7 +20,7 @@ setGeneric('define_grouping', ## Name
 	}
 )
 
-setMethod('define_grouping', signature = c ('BioData'),
+setMethod('define_grouping', signature = c (x='BioData', basedOn='character' ),
 	definition = function ( x, basedOn, colname, newNames, what='col' ) {
 	if ( ! class(newNames) == 'list' ) {
 		stop( "I need a list as newNames object" )
@@ -72,3 +72,48 @@ setMethod('define_grouping', signature = c ('BioData'),
 	invisible(x)
 	
 }  )
+
+setMethod('define_grouping', signature = c (x='BioData', basedOn='BioData' ),
+		definition = function ( x, basedOn, colname, newNames, what='col' ) {
+			print( "This will copy the sample column from baseOn to x")
+			
+			selectFrom = NULL
+			ids = NULL
+			addTo = NULL
+			if ( what == 'col' ){
+				if ( is.null(basedOn$samples[,colname]) ) {
+					stop(paste( "The column",colname, "is not defined in the basedOn samples table"))
+				}
+				
+				m <- match(colnames(x$dat), colnames(basedOn$dat))
+				if ( all.equal(colnames(x$dat), colnames(basedOn$dat)[m]) == TRUE ){
+					x$samples[,newNames] = basedOn$samples[m,colname]
+				}
+				else {
+					stop( "The sample names in the dat slot colnames do not match" )
+				}
+				
+			}else if ( what == 'row') {
+				if ( is.null(basedOn$annotation[,colname]) ) {
+					stop(paste( "The column",colname, "is not defined in the basedOn annotation table"))
+				}
+				
+				m <- match(rownames(x$dat), rownames(basedOn$dat))
+				if ( all.equal(rownames(x$dat), rownames(basedOn$dat)[m]) == TRUE ){
+					x$annotation[,newNames] = basedOn$annotation[m,colname]
+				}
+				else {
+					stop( "The annotation names in the dat slot rownames do not match" )
+				}
+			
+			}else {
+				stop( paste( "Sorry, but the what option '",what,"' is not supported", sep="" ) )
+			}
+			
+			if ( is.null(selectFrom[,basedOn]) ) {
+				stop( paste( "sample/annotation column",basedOn, "is not defined in the object"))
+			}
+			
+			invisible(x)
+			
+		}  )

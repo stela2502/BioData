@@ -55,7 +55,7 @@ setMethod('clusters', signature = c ('BioData'),
 					clusters <- cutree(hc,k=groups.n)
 				}else if (  ctype=='kmeans' ) {
 					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-					clusters <- kmeans( dataObj$usedObj[['mds.proj']] ,centers=groups.n)$cluster
+					clusters <- kmeans( t(tab) ,centers=groups.n)$cluster
 				}else if ( ctype =='mclust' ) {
 					hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
 					clusters <- hclass(hc, 12)

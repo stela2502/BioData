@@ -25,7 +25,7 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 			as.matrix(x$dat),
 			project = x$name,
 			min.cells =3,
-			min.genes =1000,
+			min.genes =10,
 			normalization.method = "LogNormalize",
 			scale.factor = 10000
 	)
@@ -48,7 +48,6 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 	old_m <- ncol(object@meta.data) + 1
 	print ( "addressing the cell cycle phase using Seurat::CellCycleScoring")
 	object <- Seurat::CellCycleScoring(object, g2m.genes, s.genes)
-	browser()
 	x$samples <- cbind( x$samples, object@meta.data[, old_m:ncol(object@meta.data)])
 	eval(detach( 'package:Seurat'))
 	invisible(x)

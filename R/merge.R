@@ -1,4 +1,22 @@
-merge <- function ( x, objects=list(), anno_merge, anno_uniq ) {
+#' @name merge
+#' @aliases merge,BioData-method
+#' @rdname merge-methods
+#' @docType methods
+#' @description merges two BioData objects
+#' @param x  TEXT MISSING
+#' @param objects  TEXT MISSING default=list()
+#' @param anno_merge  TEXT MISSING
+#' @param anno_uniq  TEXT MISSING
+#' @title description of function merge
+#' @export 
+setGeneric('merge', ## Name
+	function ( x, objects=list(), anno_merge, anno_uniq ) { ## Argumente der generischen Funktion
+		standardGeneric('merge') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	}
+)
+
+setMethod('merge', signature = c ('BioData'),
+	definition = function ( x, objects=list(), anno_merge, anno_uniq ) {
 	objects = c( x, objects)
 	merged <- as_BioData(matrix( 0, ncol=2, nrow=2) )
 	gnames = unique(unlist(lapply( 1:length(objects), function( n ) {
@@ -24,13 +42,23 @@ merge <- function ( x, objects=list(), anno_merge, anno_uniq ) {
 	
 	## and now populate the data frame
 	min = 0
+	
 	for ( n in 1:length(objects) ) {
+		
 		x <- objects[[n]]
-		m <- match ( rownames(x$dat), gnames )
-		for ( i in 1:ncol(x$dat) ) {
-			dat[m,min+i] = x$dat[,i]
+		if ( is.null(x$raw) ) {
+			m <- match ( rownames(x$dat), gnames )
+			for ( i in 1:ncol(x$dat) ) {
+				dat[m,min+i] = x$dat[,i]
+			}
+			min = min + ncol(x$dat)
+		}else {
+			m <- match ( rownames(x$raw), gnames )
+			for ( i in 1:ncol(x$raw) ) {
+				dat[m,min+i] = x$raw[,i]
+			}
+			min = min + ncol(x$raw)
 		}
-		min = min + ncol(x$dat)
 	}
 	
 	merged$dat <- as.data.frame(dat)
@@ -56,5 +84,4 @@ merge <- function ( x, objects=list(), anno_merge, anno_uniq ) {
 	merged$annotation = as.data.frame(anno)
 	class(merged) <- class(objects[[1]])
 	merged
-}
-
+} )

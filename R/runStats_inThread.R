@@ -21,7 +21,12 @@ setGeneric('runStats_inThread', ## Name
 setMethod('runStats_inThread', signature = c ('BioData'),
 	definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL ) {
 	## Quite simple - create a script and run it using R CMD Batch &
-	ofile_base <- paste( x$name,'_',condition,'runStats_inThread', sep='')
+	ofile_base <- paste( x$name,condition, sep='_')
+	if ( !is.null(covariates) ) {
+		ofile_base <- paste( ofile_base,covariates, collapse="_", sep='_')
+	}
+	ofile_base <- paste(ofile_base,'_runStats_inThread', sep='_')
+	
 	ofile_base <- str_replace_all(ofile_base, "\\s+","_") 
 	fname <- function( name1, ext) { paste( name1, ext, sep=".") }
 	
@@ -53,13 +58,14 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 		## create the script
 		script = paste( sep="\n", "library(BioData)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),
-				paste( sep="", "data <- loadObj('",x$name,".RData')"  ),
+				paste( sep="", "data <- loadObj('",file.path( x$outpath, fname( x$name, 'RData' ) ),"')"  ),
 				'data$stats <- list()',
 				fcall,
-				'data$name = paste( data$name, "4_stats", sep="")',
-				'saveObj(data)',
+				'stat_res <- list( name = data$name, stat = data$stats[[1]], stat_name = names(data$stats)[1] )',
+				
+				paste( sep="", "save(stat_res, file = '", fname(ofile_base,'RData' ),"' )" ),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
-				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')" )
+				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )
 		)
 		print (paste ("create and execute script", fname( ofile_base, 'sh' )) )
 		cat(script, file=fname( ofile_base, 'sh' ) )
@@ -74,10 +80,15 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 	}
 	else { ## the script
 		print ( "read the data" ) 
-		data <- loadObj(file.path( x$outpath, fname(paste( x$name, "4_stats", sep=""),'RData' ) ))
-		n <- names(data$stats)[length(names(data$stats))]
-		m <- match(rownames(data$dat), rownames(x$dat))
-		x$stats[[n]] <- data$stats[[n]][m,]
+		
+		load( fname(ofile_base,'RData' ) )
+		if ( stat_res$name == x$name ){
+			n <- stat_res$stat_name
+			m <- match(rownames(stat_res$stat), rownames(x$dat))
+			x$stats[[n]] <- stat_res$stat[m,]
+		}else {
+			stop("The name of the BioData object must not change between stst creation and reading.")
+		}
 	}
 	
 	invisible(x)

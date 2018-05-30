@@ -89,13 +89,13 @@ setMethod('normalize', signature = c ('SingleCells'),
 			}
 			reads <- round(reads)
 			if ( force | object$usedObj$snorm == 0 ) {
-				if ( length( object$samples$counts ) == 0 ) {
-					object$samples$counts <- apply( object$dat, 2, sum)
+				if ( length( object$samples$nUMI ) == 0 ) {
+					object$samples$nUMI <- apply( object$dat, 2, sum)
 				}
 				if(is.null(name)){
 					name = paste( object$name ,'resample_normalized' )
 				}
-				object <- reduceTo( object, what="col", to=as.character(object$samples[which(object$samples$counts >= reads), object$sampleNamesCol ]) 
+				object <- reduceTo( object, what="col", to=as.character(object$samples[which(object$samples$nUMI >= reads), object$sampleNamesCol ]) 
 						, name=name )
 				
 				if ( is.null(object$raw) ){

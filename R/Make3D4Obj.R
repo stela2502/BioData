@@ -66,16 +66,29 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		if ( genes ) {
 			x <- x$clone()
 			t <- transpose(x)
-			browser()
+			#browser()
 		}
         if ( cut ) {
                 ## this is a gene expression value!
                 n <- as.numeric(x$data()[group,] )
                 m <- min( n )
-                brks= c( (m-.1),m ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
-                brks = unique(as.numeric(sprintf("%2.6e", brks)))
-                d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-                col = c('black', bluered(length(brks) -1  ))[d]
+                
+				col = NULL
+				COLS = NULL
+				if ( m == -1 | m == -21){
+					brks= c( (m-.1),m+1-.1 , m+1 ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
+              	  	brks = unique(as.numeric(sprintf("%2.6e", brks)))
+					d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
+					COLS = c('purple4', 'black', bluered(length(brks) -1  ))
+					col = COLS[d]
+				}else {
+					brks= c( (m-.1),m,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
+					brks = unique(as.numeric(sprintf("%2.6e", brks)))
+					d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
+					COLS = c('black', bluered(length(brks) -1  ))
+					col = COLS[d]
+				}      
+                
         }else {
 			colors_4(x, group, colFunc=colFunc )
 			col <- x$usedObj$colorRange[[group]][x$samples[,group]]
@@ -88,7 +101,8 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		if ( plotType == 1) {
         if ( cut ) {
                 ## plot points!
-				My.legend3d ("topright", legend = paste( brks ), pch=16, col= c('black', bluered(length(brks) -1  )), cex=1,inset =c(0.02))
+				#browser()
+				My.legend3d ("topright", legend = paste( brks ), pch=16, col= COLS, cex=1,inset =c(0.02))
                 rgl.points( x$usedObj$MDS[[mds.type]], col=col, size=size )
 
         }

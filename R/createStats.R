@@ -124,7 +124,7 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			}
 			toM <- function (x) {
 				d <- as.matrix(x$dat)
-				d[which(d==-20)] <- NA
+				d[which(d<=-20)] <- NA
 				d[is.na(d)] <- 0
 				d
 			}

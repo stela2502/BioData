@@ -31,6 +31,10 @@ setMethod('clusters', signature = c ('BioData'),
 			hc <- NULL
 			if(onwhat=="Expression"){
 				tab <- dataObj$data()
+				m <- min(tab)
+				if ( m == -1 | m == -21 ){ ## get rid of them
+					tab[which( tab == m)] = m +1
+				}
 			}
 			else {
 				stop( paste("Sorry, the data type onwhat = ",onwhat," is not supported", sep="'") )

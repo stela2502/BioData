@@ -21,7 +21,11 @@ setMethod('logThis', signature = c ('BioData'),
 		if ( is.null(x$raw) ) {
 			x$raw = x$dat
 		}
-		x$dat <- apply( x$dat, 2, function(x){ log(x+1); x[which( x == -Inf)] = -1 } )
+		x$dat <- apply( x$dat, 2, function(x){
+					ok = which( x > -1 )
+					x[ok] = log(x[ok]+1)
+					x
+				} )
 		x$logged = TRUE
 	}
 	invisible(x)

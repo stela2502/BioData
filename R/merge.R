@@ -2,15 +2,18 @@
 #' @aliases merge,BioData-method
 #' @rdname merge-methods
 #' @docType methods
-#' @description merges two BioData objects
-#' @param x  TEXT MISSING
-#' @param objects  TEXT MISSING default=list()
-#' @param anno_merge  TEXT MISSING
-#' @param anno_uniq  TEXT MISSING
-#' @title description of function merge
+#' @description merges two or more BioData objects
+#' @param x the first BioData object
+#' @param objects a list of all others to merge to
+#' @title merge 2 or more BioData objects
+#' @examples 
+#' objects # is a list of BioDat objects having the same gene annotation type (e.g. ENSEMBL IDs!)
+#' data <- objects[[1]]
+#' objects[[1]] = NULL
+#' merged <- merge ( data, objects)
 #' @export 
 setGeneric('merge', ## Name
-	function ( x, objects=list(), anno_merge, anno_uniq ) { ## Argumente der generischen Funktion
+	function ( x, objects=list() ) { ## Argumente der generischen Funktion
 		standardGeneric('merge') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -20,11 +23,30 @@ setMethod('merge', signature = c ('BioData'),
 	objects = c( x, objects)
 	merged <- as_BioData(matrix( 0, ncol=2, nrow=2) )
 	
-	
+	### checks and fixes in all objects
 	gnames = unique(unlist(lapply( 1:length(objects), function( n ) {
 								x = objects[[n]]
 								if ( is.null(x$samples$sname)){
 									x$samples$sname = x$name
+								}
+								if ( is.null( x$samples$nUMI) | is.null(x$samples$nGene) ) {
+									if ( ! is.null(x$raw) ){
+										x$samples$nUMI <- apply( x$raw,2, sum)
+										x$samples$nGene <- apply( x$raw,2, function(a){ length(which(a>0)) })
+									}else {
+										x$samples$nUMI <- apply( x$dat,2, sum)
+										x$samples$nGene <- apply( x$dat,2, function(a){ length(which(a>0)) })
+									}
+								}
+								
+								if ( is.null(x$annotation$nUMI) | is.null(x$annotation$nCell) ){
+									if ( ! is.null(x$raw) ){
+										x$annotation$nUMI <- apply( x$raw,1, sum)
+										x$annotation$nCell <- apply( x$raw,1, function(a){ length(which(a>0)) })
+									}else {
+										x$annotation$nUMI <- apply( x$dat,1, sum)
+										x$annotation$nCell <- apply( x$dat,1, function(a){ length(which(a>0)) })
+									}
 								}
 								rownames(x$dat)
 							} )))

@@ -93,8 +93,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			m <- min(data)
 			if ( m == -21 | m == -1) {
 				## new z.score function to keep lost info
-				brks <- unique(as.vector(c(m, m+1, quantile(data[which(data <= 20)],seq(0,1,by=1/brks)),max(data))))
-				if ( is.null(heapmapCols)){heapmapCols = function(x){ c('purple',"black",bluered(x))}}
+				brks <- unique(as.vector(c(m, m+1, quantile(data[which(data > -20)],seq(0,1,by=1/brks)),max(data))))
+				brks[1:2] = brks[1:2] - 1e-4
+				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("#006D2C","black",bluered(x-1))}}
 			}else {
 				brks <- unique(as.vector(c(m, quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
 				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black",bluered(x))}}
@@ -132,9 +133,10 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			if ( length(brks) < 3 ) {
 				## not good!
 				print ("Highly invariant data - your're shure that heatmap is what you want?" )
-				if ( is.null(data$zscored)){
+				if ( is.null(data$zscored) ){
 					brks= c( -1, 0, 1, 2, max(x$data()) )
-				}else {
+				}
+				else {
 					brks= c( -3,-2,-1, 0, 1, 2, 3 )
 				}
 			}
@@ -143,7 +145,8 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					trace='none', 
 					ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
 					RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 
-					cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", lwid=c(0.5,4), lhei=c(1,4)
+					cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", 
+					lwid=c(0.5,4), lhei=c(1,4)
 			)
 			
 			if ( ! is.null(ofile)){
@@ -153,7 +156,11 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					pdf( file=fn, width=8, height=4)
 					Z <- as.matrix(1:(length(brks)-2))
 					image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
-					axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
+					if ( m == -21 | m == -1) {
+						axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
+					}else {
+						axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
+					}
 					dev.off()
 				}
 			}

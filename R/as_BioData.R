@@ -276,11 +276,14 @@ setMethod('as_BioData', signature = c ('character'),
 			gene_UMI <- SQLite_ExpressionSummary( dat )
 			if ( ! is.null(minGexpr)) {
 				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr )]
-				useG = gene_UMI$gene_id
 			}
-			mat = SQLite_2_matrix ( dat, useS = useS, useG = useG )
+			useG = length(gene_UMI$gene_id)
+			mat = SQLite_2_matrix ( dat, useS = useS, useG = NULL )
 			print ( "creating the BioData object" )
-			mat <- mat[ -which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0),]
+			bad <- which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0)
+			if ( length(bad) > 0 ) {
+				mat <- mat[ -bad ,]
+			}
 			#mat$'ensembl_id' <- rownames(mat)
 			gene_UMI <- gene_UMI[ match(rownames(mat),gene_UMI$gname ),]
 			colnames(mat) <- make.names(colnames(mat))

@@ -53,6 +53,21 @@ setMethod('as_BioData', signature = c ('matrix'),
 		}
 )
 
+setMethod('as_BioData', signature = c ('data.frame'),
+		definition = function ( dat ) {
+			snames <- colnames(dat)
+			dat$GeneID = rownames(dat)
+			ret <- BioData$new( 
+					dat=  dat, 
+					Samples = data.frame('sampleName' = snames ), 
+					namecol= 'sampleName', 
+					namerow= 'GeneID',
+					outpath= ''
+			)
+			ret
+		}
+)
+
 setMethod('as_BioData', signature = c ('cellexalvr'),
 		definition = function ( dat ) {
 			dat <- cellexalvr::renew(dat)

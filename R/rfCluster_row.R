@@ -79,6 +79,7 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 					}
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
+						fit_4_rf(x$usedObj[['rfExpressionSets_row']][[ i ]], copy=F)
 						if ( length(settings) > 0 ) {
 							x$usedObj[['rfObj_row']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
 									dat=as.data.frame(x$usedObj[['rfExpressionSets_row']][[ i ]]$data()), 
@@ -192,11 +193,12 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				x$annotation[, paste( single_res_row) ] <-
 						predict( 
 								x$usedObj[['rfExpressionSets_row']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], 
-								as.matrix(x$data())
+								as.matrix(fit_4_rf(x)$dat)
 						)
 				x$annotation[, paste( single_res_row) ] <- factor( x$annotation[, paste( single_res_row) ], levels= 1:m )
 				x <- colors_4( x, single_res_row )
 			}
+			gc()
 			invisible(x)
 		} 
 )

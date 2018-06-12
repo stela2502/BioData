@@ -130,7 +130,6 @@ setMethod('merge', signature = c ('BioData'),
 	## and now populate the data frame
 	
 	for ( n in 1:length(objects) ) {
-		
 		x <- objects[[n]]
 		if ( is.null(x$raw) ) {
 			m <- match ( rownames(x$dat), gnames )

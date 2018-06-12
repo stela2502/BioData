@@ -79,6 +79,8 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					
 					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
 						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
+						## here I need to get rid of the -1 values!
+						fit_4_rf(x$usedObj[['rfExpressionSets']][[ i ]], copy=F)
 						if ( length(settings) > 0 ) {
 							#browser()
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
@@ -123,6 +125,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					processed = TRUE
 				}
 			}
+			gc()
 			invisible(x)		
 		}
 )

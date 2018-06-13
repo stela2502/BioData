@@ -29,6 +29,8 @@
 \item{plotType}{choose one [1,2] and check whether you like it ;-) default=1}
 
 \item{size}{the size of the 3D points default = 3.0}
+
+\item{green}{single cell normalization looses gene expression values. Display the cells with lost expression in green or black default=FALSE}
 }
 \description{
 This function  created a MDS 3D plot with an inbuilt background describing the data colors

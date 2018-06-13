@@ -67,27 +67,28 @@ BioData <- #withFormalClass(
 								cat ( "P values were calculated for ", length(names(self$stats)) -1, " condition(s)\n")
 							}
 						},
-						initialize = function (dat,Samples, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
+						initialize = function (dat,Samples, annotation=NULL, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
 							
 							S <- Samples
-							
-							
 							
 							if ( is.null(namecol)){
 								stop("Please specify the name of the sample name column (namecol)")
 							}
 							n <- make.names(as.vector(S[,namecol]))
-							mat <- match( as.vector(S[,namecol]), colnames(dat))
-							if ( sum(is.na(mat)) > 0 ) {
-								stop(paste( 'The samples', 
-												paste( as.vector(S[,namecol])[is.na(mat)], collapse=', '),
-												'Do not have a data column in the "dat" data.frame' ) 
-								)
+							if ( is.null(annotation)) {
+								mat <- match( as.vector(S[,namecol]), colnames(dat))
+								if ( sum(is.na(mat)) > 0 ) {
+									stop(paste( 'The samples', 
+													paste( as.vector(S[,namecol])[is.na(mat)], collapse=', '),
+													'Do not have a data column in the "dat" data.frame' ) 
+									)
+								}
+							
+								self$dat =  dat[, mat ]
+								annotation <- dat[, is.na(match( colnames(dat), as.vector(S[,namecol]) ))==T ]
+							}else {
+								self$dat =  dat
 							}
-							
-							self$dat =  dat[, mat ]
-							annotation <- dat[, is.na(match( colnames(dat), as.vector(S[,namecol]) ))==T ]
-							
 							
 							if ( class(annotation) == 'factor'){
 								annotation <- data.frame( annotation )
@@ -99,7 +100,7 @@ BioData <- #withFormalClass(
 							}
 							
 							if ( outpath == '' ){
-								outpath = self$pwd()
+								outpath = getwd()
 							}
 							if ( ! file.exists(outpath)){
 								dir.create( outpath )
@@ -125,6 +126,12 @@ BioData <- #withFormalClass(
 							colnames(self$dat) <- make.names(self$forceAbsoluteUniqueSample ( as.vector(S[, namecol]) ))
 							self$samples$samples <- colnames(self$dat)
 							
+							if ( class(self$dat) != 'dgCMatrix' ) {
+								self$dat <- Matrix( as.matrix(self$dat) ) ## should save up to 80% of memory!
+								rm(dat)
+								gc()
+							}
+							
 							self$sampleNamesCol <- 'samples'
 							self$version = sessionInfo('BioData')$otherPkgs$BioData$Version
 							self$force.numeric()
@@ -141,6 +148,7 @@ BioData <- #withFormalClass(
 									{
 										self$dat[,x] = as.numeric(as.character(self$dat[,x]))
 									})
+							self
 						},
 						pwd = function () {
 							system( 'pwd > __pwd' )

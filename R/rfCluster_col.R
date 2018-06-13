@@ -84,13 +84,13 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 						if ( length(settings) > 0 ) {
 							#browser()
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-									dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), 
+									dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
 									SGE=F, slices=slice, email=email, tmp.path=opath, 
 									name= tname, settings=settings, slurm=T 
 							)
 						}else {
 							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-									dat=as.data.frame(x$usedObj[['rfExpressionSets']][[ i ]]$data()), 
+									dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
 									SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname 
 							)
 						}

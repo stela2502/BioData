@@ -166,3 +166,10 @@ scratchbord/outpath/*
 /Split4Geo/
 /gene_loadings.xls
 /loadings.png
+/runRFclust_testObject_RFclust_1_1.Rout
+/runRFclust_testObject_RFclust_1_1_omp_660472.err
+/runRFclust_testObject_RFclust_1_1_omp_660472.out
+/runRFclust_testObject_RFclust_row_1_1_omp_660470.err
+/runRFclust_testObject_RFclust_row_1_1_omp_660470.out
+/runRFclust_testObject_RFclust_row_1_1_omp_660471.err
+/runRFclust_testObject_RFclust_row_1_1_omp_660471.out

@@ -20,7 +20,8 @@ setMethod('renew', signature = c ('BioData'),
 		oldClass <- class(x)
 		if ( is.function(x$data) ){
 			ret <- BioData$new( 
-					dat = cbind(x$dat, x$annotation), 
+					dat = x$dat, 
+					annotation = x$annotation, 
 					Samples = x$samples, 
 					name=x$name, 
 					namecol=x$sampleNamesCol, 
@@ -29,7 +30,8 @@ setMethod('renew', signature = c ('BioData'),
 			)
 		}else if ( x$version != sessionInfo('BioData')$otherPkgs$BioData$Version ){
 			ret <- BioData$new( 
-				dat = cbind(x$data, x$annotation), 
+				dat = x$dat, 
+				annotation= x$annotation,
 				Samples = x$samples, 
 				name=x$name, 
 				namecol=x$sampleNamesCol, 

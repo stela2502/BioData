@@ -24,8 +24,9 @@ setMethod('as_BioData', signature = c ('list'),
 		samples$filename <- rownames(samples)
 		rownames(samples) <-1:nrow(samples)
 		ret <- BioData$new( 
-				dat= cbind(dat$annotation, dat$counts), 
+				dat= Matrix(dat$counts), 
 				Samples = samples, 
+				annotation= dat$annotation,
 				namecol= 'filename', 
 				namerow= 'GeneID',
 				outpath= ''
@@ -39,12 +40,13 @@ setMethod('as_BioData', signature = c ('list'),
 
 setMethod('as_BioData', signature = c ('matrix'),
 		definition = function ( dat ) {
-				dat <- as.data.frame(dat)
+				dat <- Matrix(dat)
 				snames <- colnames(dat)
-				dat$GeneID = rownames(dat)
+				
 			ret <- BioData$new( 
 					dat=  dat, 
 					Samples = data.frame('sampleName' = snames ), 
+					annotation= data.frame( GeneID = rownames(dat) ),
 					namecol= 'sampleName', 
 					namerow= 'GeneID',
 					outpath= ''
@@ -58,8 +60,9 @@ setMethod('as_BioData', signature = c ('data.frame'),
 			snames <- colnames(dat)
 			dat$GeneID = rownames(dat)
 			ret <- BioData$new( 
-					dat=  dat, 
+					dat=  Matrix(as.matrix(dat)), 
 					Samples = data.frame('sampleName' = snames ), 
+					annotation= data.frame( 'GeneID' = rownames(dat)),
 					namecol= 'sampleName', 
 					namerow= 'GeneID',
 					outpath= ''
@@ -103,14 +106,14 @@ setMethod('as_BioData', signature = c ('cellexalvr'),
 				}
 			}
 			storage.mode(dat$data) <- 'numeric'
-			d <- data.frame(cbind( dat$meta.gene, dat$data))
 			if ( nrow(dat$userGroups) == nrow(dat$meta.cell)){
 				samples <- data.frame(cbind(dat$meta.cell, dat$userGroups))
 			}else {
 				samples <- data.frame(dat$meta.cell)
 			}
 			samples[,namecol] <- make.names(samples[,namecol])
-			ret <- BioData$new( d, Samples=samples, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
+			ret <- BioData$new( d, Samples=samples,
+					annotation= dat$meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 			ret$usedObj <- dat$usedObj
 			ret
 		}
@@ -159,21 +162,20 @@ setMethod('as_BioData', signature = c ('seurat'),
 					}
 					#storage.mode(dat$data) <- 'numeric'
 					dataa <- as.matrix(dat@data)
-					d <- data.frame(cbind( dat@hvg.info[1:2,], dataa[1:2,1:2]))				
 					samples <- data.frame(as.matrix(dat@meta.data))
 					
 					samples[,namecol] <- make.names(samples[,namecol])
-					ret <- BioData$new( d, Samples=samples[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
+					ret <- BioData$new( dataa[1:2,1:2], Samples=samples[1:2,], annotation =dat@hvg.info[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 					
-					ret$dat <- dataa
+					ret$dat <- Matrix(dataa)
 					ret$samples <- samples
 					ret$annotation <- dat@hvg.info
 					
 					if ( ! is.null(dat@scale.data)){
-						ret$zscored <- as.data.frame(as.matrix(dat@scale.data))
+						ret$zscored <- Matrix(as.matrix(dat@scale.data))
 					}
 					m <- match(colnames(dat@data), colnames(dat@raw.data))
-					ret$raw <- as.data.frame(as.matrix(dat@raw.data))[,m]
+					ret$raw <- Matrix(as.matrix(dat@raw.data))[,m]
 					## now I need to manually remove unreliable data from the zscored information (set to -20)
 					if ( ! is.null( ret$zscored )) {
 						d <- function( i, obj) {
@@ -219,7 +221,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		ncol = length(useG)
 	}
 	print ( paste("I create a", ncol,"columns and",nrow,"rows wide matrix"))
-	ret <- matrix( 0, nrow=nrow, ncol=ncol )
+	ret <- Matrix( 0, nrow=nrow, ncol=ncol )
 	
 	q = "select gene_id, sample_id, value from datavalues where sample_id = :x"
 	
@@ -302,7 +304,7 @@ setMethod('as_BioData', signature = c ('character'),
 			#mat$'ensembl_id' <- rownames(mat)
 			gene_UMI <- gene_UMI[ match(rownames(mat),gene_UMI$gname ),]
 			colnames(mat) <- make.names(colnames(mat))
-			ret <- BioData$new( data.frame(cbind(gene_UMI, as.matrix(mat))) ,
+			ret <- BioData$new( mat, annotation=gene_UMI ,
 					Samples= data.frame( 'cell_id' = colnames(mat) ), namecol='cell_id', namerow= 'gname', name='from.cellranger' )
 			class(ret) <- c( 'SingleCells', class(ret))
 			ret

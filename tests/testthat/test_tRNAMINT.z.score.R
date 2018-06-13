@@ -1,4 +1,4 @@
-library(BioData)
+#library(BioData)
 x <- loadObj('TestData.tRNAMINT.RData')
 x <- renew(x)
 #all the different sample norm types have to be z.scored separately!

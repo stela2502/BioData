@@ -1,4 +1,4 @@
-library(BioData)
+#library(BioData)
 set.seed(1)
 norm <- matrix(rnorm(1000, mean=20),ncol=10)
 null_indx <- c(
@@ -15,7 +15,7 @@ null_indx <- c(
 )
 norm[null_indx] = 0
 
-dat = data.frame( norm )
+dat = Matrix( norm )
 
 
 colnames(dat) <- paste('Sample', 1:10)
@@ -24,7 +24,7 @@ samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 dat <- round(dat)
 
-x <- SingleCells$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+x <- SingleCells$new( dat, annotation=annotation, Samples=samples, name="testObject",namecol='sname', outpath = "" )
 
 expect_equal( class( x ), c( "SingleCells", 'BioData', 'R6') )
 

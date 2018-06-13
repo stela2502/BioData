@@ -21,7 +21,8 @@ Depends:
 	ggplot2,
 	mclust,
 	RDRToolbox,
-	DDRTree
+	DDRTree,
+	Matrix
 biocViews:
 	RDRToolbox,
 	destiny,

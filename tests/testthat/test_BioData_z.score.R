@@ -1,4 +1,5 @@
-library(BioData)
+#library(BioData)
+test_that("z.score",{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
 colnames(dat) <- paste('Sample', 1:10)
@@ -15,3 +16,4 @@ expect_true( length( which( round(apply(x$zscored,1,mean),digits=10) != 0 )) == 
 
 expect_true( length( which( round(apply(x$zscored,1,sd),digits=10) != 1 )) == 0 ,"all sd's == 1" )
 
+})

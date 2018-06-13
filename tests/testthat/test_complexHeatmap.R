@@ -1,3 +1,4 @@
+test_that("heatmap",{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
 colnames(dat) <- paste('Sample', 1:10)
@@ -24,3 +25,4 @@ for ( f in  files ) {
 	if (file.exists(f) ) { file.remove( f ) }
 }
 
+})

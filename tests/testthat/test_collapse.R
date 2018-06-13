@@ -1,4 +1,5 @@
-library(BioData)
+#library(BioData)
+test_that("collaps",{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
 colnames(dat) <- paste('Sample', 1:10)
@@ -19,3 +20,4 @@ expect_equal( dim(a$data()), c(100,2),info= "right drop" )
 expect_equal( colnames(a$data()), c('A','B'), info="colnames")
 
 ## I am not going to check the data here - too much work for now.
+})

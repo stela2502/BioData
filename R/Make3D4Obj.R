@@ -15,11 +15,12 @@
 #' @param genes use gene level MDS data not sample level (default = FALSE)
 #' @param plotType choose one [1,2] and check whether you like it ;-) default=1 
 #' @param size the size of the 3D points default = 3.0
+#' @param green single cell normalization looses gene expression values. Display the cells with lost expression in green or black default=FALSE
 #' @title description of function Make3D4obj
 #' @export 
 if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, 
-			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0 ) { ## Argumente der generischen Funktion
+			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -30,7 +31,7 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 setMethod('Make3D4obj', signature = c ('BioData'),
 	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, 
-			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0  ) {
+			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE ) {
 
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {
@@ -79,7 +80,12 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 					brks= c( (m-.1),m+1-.1 , m+1 ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
               	  	brks = unique(as.numeric(sprintf("%2.6e", brks)))
 					d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-					COLS = c('purple4', 'black', bluered(length(brks) -1  ))
+					if ( green) {
+						COLS = c('#006D2C', 'black', bluered(length(brks) -1  ))
+					}else{
+						COLS = c('black', 'black', bluered(length(brks) -1  ))
+					}
+					
 					col = COLS[d]
 				}else {
 					brks= c( (m-.1),m,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))

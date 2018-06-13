@@ -23,7 +23,7 @@ setMethod('mds', signature = c ('BioData'),
 	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2 ) {
 	## the code is crap re-code!!
 	if(onwhat=="Expression"){
-		tab <- as.matrix(t(dataObj$data()))
+		tab <- t(as.matrix(dataObj$data()))
 		storage.mode(tab)  <- 'numeric' ## brute force, but unfortunately somtimes important..
 		p = which(tab == -21)
 		if ( length(p)>0){

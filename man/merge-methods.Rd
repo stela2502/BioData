@@ -4,19 +4,21 @@
 \name{merge}
 \alias{merge}
 \alias{merge,BioData-method}
-\title{description of function merge}
+\title{merge 2 or more BioData objects}
 \usage{
-merge(x, objects = list(), anno_merge, anno_uniq)
+merge(x, objects = list())
 }
 \arguments{
-\item{x}{TEXT MISSING}
+\item{x}{the first BioData object}
 
-\item{objects}{TEXT MISSING default=list()}
-
-\item{anno_merge}{TEXT MISSING}
-
-\item{anno_uniq}{TEXT MISSING}
+\item{objects}{a list of all others to merge to}
 }
 \description{
-merges two BioData objects
+merges two or more BioData objects
+}
+\examples{
+objects # is a list of BioDat objects having the same gene annotation type (e.g. ENSEMBL IDs!)
+data <- objects[[1]]
+objects[[1]] = NULL
+merged <- merge ( data, objects)
 }

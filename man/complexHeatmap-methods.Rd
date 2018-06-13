@@ -9,7 +9,7 @@
 complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
   colColors = NULL, rowColors = NULL, pdf = FALSE, subpath = "",
   main = "", heapmapCols = function(x) {     c("darkgrey", bluered(x)) },
-  brks = 10, X11type = "cairo")
+  brks = 10, X11type = "cairo", green = F)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -31,6 +31,8 @@ complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
 \item{heapmapCols}{the color function to calculate the heatmap colours ( default function (x) { c("darkgrey",bluered(x)) } )}
 
 \item{brks}{how many breaks should the expression value color key have (default=10)}
+
+\item{green}{if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)}
 }
 \description{
 plot the PCR heatmap using the heatmap.3 function included in this package

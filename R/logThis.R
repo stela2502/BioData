@@ -21,11 +21,15 @@ setMethod('logThis', signature = c ('BioData'),
 		if ( is.null(x$raw) ) {
 			x$raw = x$dat
 		}
-		x$dat <- apply( x$dat, 2, function(x){
+		rn = rownames(x$dat)
+		cn = colnames(x$dat)
+		x$dat <- Matrix(apply( x$dat, 2, function(x){
 					ok = which( x > -1 )
 					x[ok] = log(x[ok]+1)
 					x
-				} )
+				} ))
+		rownames(x$dat) = rn
+		colnames(x$dat) = cn
 		x$logged = TRUE
 	}
 	invisible(x)

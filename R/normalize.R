@@ -88,6 +88,21 @@ setMethod('normalize', signature = c ('SingleCells'),
 				object$usedObj$snorm = 0
 			}
 			reads <- round(reads)
+			
+			normF <- function(x) {
+				x <- as.vector(x)
+				ok1 <- which( x > 0 )
+				d <- sample(rep ( 1:n, x) , reads, replace=T)
+				
+				t <- table(d)
+				
+				dropped <- setdiff( ok1, as.numeric(names(t)) )
+				x[as.numeric(names(t))] <- as.numeric(t)
+				
+				x[ dropped ] <- -1
+				x
+			}
+			
 			if ( force | object$usedObj$snorm == 0 ) {
 				if ( length( object$samples$nUMI ) == 0 ) {
 					object$samples$nUMI <- apply( object$dat, 2, sum)
@@ -104,16 +119,11 @@ setMethod('normalize', signature = c ('SingleCells'),
 				## resample the data
 				n <- nrow(object$raw)
 				object$dat[] <- 0
-				for ( i in 1:ncol(object$raw) ) {
-					ok1 <- which( object$raw[,i] > 0 )
-					d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
-					
-					t <- table(d)
-					
-					dropped <- setdiff( ok1, as.numeric(names(t)) )
-					object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
-					object$dat[ dropped,i] <- -1
-				}
+				#pb <- progress_estimated(100)
+				#steps = ceiling(ncol(object$raw)/100)
+				
+				object$dat <- Matrix(apply( object$raw,2, normF))
+				rownames(object$dat) <- rownames(object$raw)
 			}
 			else {
 				print ("Data was already normalized - skipped")

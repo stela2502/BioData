@@ -21,7 +21,7 @@ setGeneric('merge', ## Name
 setMethod('merge', signature = c ('BioData'),
 	definition = function ( x, objects=list() ) {
 	objects = c( x, objects)
-	merged <- as_BioData(matrix( 0, ncol=2, nrow=2) )
+	merged <- as_BioData(matrix( 1, ncol=2, nrow=2, dimnames= list( c('A','B'), c('C','D')) ))
 	
 	### checks and fixes in all objects
 	gnames = unique(unlist(lapply( 1:length(objects), function( n ) {
@@ -77,13 +77,12 @@ setMethod('merge', signature = c ('BioData'),
 			}
 	)
 	
-	dat <- matrix( 0, ,ncol=nrow(merged$samples), nrow=length(gnames))
+	dat <- Matrix( 0 ,ncol=nrow(merged$samples), nrow=length(gnames))
 	rownames(dat) = gnames
 	colnames(dat) <- make.names(merged$samples[, snameCol])
 	merged$samples[, snameCol] <- colnames(dat)
 	
-	merged$dat <- as.data.frame(dat)
-	rm(dat)
+	merged$dat <- dat
 	
 	## The annotation table is not unique for each dataset but should overlap
 	## Therefore (1) create the consensus (performed first step in the function. gnames)
@@ -128,9 +127,13 @@ setMethod('merge', signature = c ('BioData'),
 	}	
 	
 	## and now populate the data frame
+	print (paste( "Populate the new dat slot with dim", paste(dim(merged$dat),collapse=":" ) ))
 	
 	for ( n in 1:length(objects) ) {
 		x <- objects[[n]]
+		pb <- progress_estimated(100)
+		steps = ceiling(ncol(x$dat)/100)
+		print ( paste( "Add",ncol(x$dat), "cells from", x$name ))
 		if ( is.null(x$raw) ) {
 			m <- match ( rownames(x$dat), gnames )
 			for ( i in 1:ncol(x$dat) ) {
@@ -139,6 +142,10 @@ setMethod('merge', signature = c ('BioData'),
 					stop(paste( "Library error - sname" , colnames(x$dat)[i], "not defined in the data colnames", mc ))
 				}
 				merged$dat[m, mc ] = x$dat[,i]
+				if ( i %% steps == 0 ) {
+					pb$tick()$print()
+					#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
+				}
 			}
 		}else {
 			m <- match ( rownames(x$raw), gnames )
@@ -149,8 +156,13 @@ setMethod('merge', signature = c ('BioData'),
 					stop(paste( "Library error - sname" , colnames(x$raw)[i], "not defined in the data colnames", mc ))
 				}
 				merged$dat[m, mc ] = x$raw[,i]
+				if ( i %% steps == 0 ) {
+					pb$tick()$print()
+					#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
+				}
 			}
 		}
+		print ( paste( "added object", x$name ) )
 	}
 		
 	class(merged) <- class(objects[[1]])

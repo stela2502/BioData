@@ -3,9 +3,9 @@
 #' @rdname groups.boxplot-methods
 #' @docType methods
 #' @description  This function can be used to get an overview of the different gene level groups in
-#' @description  an BioData It uses the linux montage command to merge all different boxplots
+#' @description  an BioData object. It uses the linux montage command to merge all different boxplots
 #' @description  into one figure
-#' @param x the ExpresionSet object
+#' @param x the BioData object
 #' @param groupCol the column in the samples table that contains the sample grouping information
 #' @param groupRow the column in the annotation table hat contains the gene grouping information
 #' @param svg create the single boxplots as svg or (default png) files

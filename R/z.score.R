@@ -55,7 +55,7 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 						apply(ma,1, norm.name)
 				)
 				#ret[which(is.na(ret)==T)] <- -20
-				m$zscored <- data.frame(ret)
+				m$zscored <- Matrix(ret)
 				colnames(m$zscored)<- colnames(m$dat)
 			}
 			invisible(m)
@@ -86,10 +86,9 @@ setMethod('z.score', signature = c ('SingleCells'),
 		definition = function ( m ) {
 			
 			if ( is.null(m$zscored) ) {
-				ma  <- as.matrix(m$dat)
 				i = 0
-				ret <- Matrix::t(
-						apply(ma,1, function (x) {
+				m$zscored <- Matrix(t(
+						apply(m$dat,1, function (x) {
 									i = i+1
 									n <- which(x <= 0)
 									dropped = which(x == -1)
@@ -111,11 +110,13 @@ setMethod('z.score', signature = c ('SingleCells'),
 									}
 									x}
 						)
-				)
-				ret[which(is.na(ret)==T)] <- 0
-				m$zscored <- Matrix(ret)
-				colnames(m$zscored)<- colnames(m$dat)
+				))
+				#ret[which(is.na(ret)==T)] <- 0
+				m$zscored[which(is.na(m$zscored)==T)] <- 0
+				colnames(m$zscored) <- colnames(m$dat)
+				rownames(m$zscored) <- rownames(m$dat)
 			}
-			m
+			gc()
+			invisible(m)
 		})
 

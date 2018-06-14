@@ -92,9 +92,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			data <- as.matrix(x$data())
 			m <- min(data)
-			if ( m == -21 | m == -1) {
+			if ( m == -1) {
 				## new z.score function to keep lost info
-				brks <- unique(as.vector(c(m, m+1, quantile(data[which(data > -20)],seq(0,1,by=1/brks)),max(data))))
+				brks <- unique(as.vector(c(m, m+1, quantile(data[which(data > m +1 )],seq(0,1,by=1/brks)),max(data))))
 				brks[1:2] = brks[1:2] - 1e-4
 				if ( is.null(heapmapCols)){
 					if ( green ) {
@@ -104,7 +104,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					}
 				}
 			}else {
-				brks <- unique(as.vector(c(m, quantile(data[which(data!= min(data))],seq(0,1,by=1/brks)),max(data))))
+				brks <- unique(as.vector(c(m, quantile(data[which(data!= m)],seq(0,1,by=1/brks)),max(data))))
 				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black",bluered(x))}}
 			}
 			if ( ! is.null(ofile)){
@@ -172,5 +172,6 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				}
 			}
 			
+			invisible(x)
 		}
 )

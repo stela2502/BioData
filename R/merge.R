@@ -137,7 +137,7 @@ setMethod('merge', signature = c ('BioData'),
 		if ( is.null(x$raw) ) {
 			m <- match ( rownames(x$dat), gnames )
 			for ( i in 1:ncol(x$dat) ) {
-				mc <- match(colnames(x$dat)[i], colnames(merged$dat))
+				mc <- match(make.names(colnames(x$dat)[i]), colnames(merged$dat))
 				if ( is.na(mc) ) {
 					stop(paste( "Library error - sname" , colnames(x$dat)[i], "not defined in the data colnames", mc ))
 				}
@@ -150,7 +150,7 @@ setMethod('merge', signature = c ('BioData'),
 		}else {
 			m <- match ( rownames(x$raw), gnames )
 			for ( i in 1:ncol(x$raw) ) {
-				mc <- match(colnames(x$raw)[i], colnames(merged$dat))
+				mc <- match(make.names(colnames(x$raw)[i]), colnames(merged$dat))
 				if ( is.na(mc) ) {
 					browser()
 					stop(paste( "Library error - sname" , colnames(x$raw)[i], "not defined in the data colnames", mc ))

@@ -62,6 +62,6 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 	print ( "addressing the cell cycle phase using Seurat::CellCycleScoring")
 	object <- Seurat::CellCycleScoring(object, g2m.genes, s.genes)
 	x$samples <- cbind( x$samples, object@meta.data[, old_m:ncol(object@meta.data)])
-	eval(detach( 'package:Seurat'))
+	#eval(detach( 'package:Seurat'))
 	invisible(x)
 } )

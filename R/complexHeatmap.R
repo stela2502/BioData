@@ -163,7 +163,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					pdf( file=fn, width=8, height=4)
 					Z <- as.matrix(1:(length(brks)-2))
 					image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
-					if ( m == -21 | m == -1) {
+					if ( min(x$data()) == -1) {
 						axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
 					}else {
 						axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )

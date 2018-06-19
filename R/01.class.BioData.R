@@ -144,10 +144,11 @@ BioData <- #withFormalClass(
 							}
 						},
 						force.numeric = function(...) {
-							lapply(colnames(self$dat), function(x) 
-									{
-										self$dat[,x] = as.numeric(as.character(self$dat[,x]))
-									})
+							## useless for a Matrix - that one can only be numeric ;-)
+							#lapply(colnames(self$dat), function(x) 
+							#		{
+							#			self$dat[,x] = as.numeric(as.character(self$dat[,x]))
+							#		})
 							self
 						},
 						pwd = function () {

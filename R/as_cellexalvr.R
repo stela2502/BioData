@@ -25,7 +25,7 @@ setGeneric('as_cellexalvr', ## Name
 setMethod('as_cellexalvr', signature = c ('BioData'),
 		definition = function ( x, cellInfo, groups=NULL, linear=NULL  ) {
 			x <- x$clone()
-			print ( "Are you sure, that the rownmaes of the data object are 'gene symbols'? If not please change that and re-run this function" )
+			print ( "Are you sure, that the rownames of the data object are 'gene symbols'? If not please change that and re-run this function" )
 			fixNames <- function( names ) { 
 				unlist(lapply( names, 
 								function(gname) { paste(unlist(stringr::str_split( gname, '\\s+')), collapse='_') }) )
@@ -35,11 +35,8 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 				x$usedObj$MDS <- list()
 			}
 			lapply( names(x$usedObj$MDS), function(n){	rownames(x$usedObj$MDS[[n]]) = colnames(x$dat) } )
-			meta.cell = NULL
-			for( name in cellInfo) {
-				meta.cell <- rbind(meta.cell, to.matrix(as.vector(x$samples[,name]), levels(x$samples[,name]) ) )
-			}
-			rownames(meta.cell) = colnames(x$dat)
+			
+			meta.cell = make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
 			
 			userGroups = NULL
 			if ( ! is.null(groups) ) {
@@ -58,12 +55,18 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 							}  } 
 				)
 			}
+			if ( is.null(userGroups)){
+				userGroups = data.frame()
+			}
 			
 			index = NULL
 			if ( !is.null(linear) ) {
 				index = as.matrix(x$samples[,linear])
 				rownames(index) = colnames(x$dat)
 				colnames(index) =  fixNames(linear)
+			}
+			if ( is.null(index) ) {
+				index = matrix()
 			}
 			ret = new( 'cellexalvr',
 					data = as.matrix(x$dat),
@@ -73,6 +76,10 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 					mds=x$usedObj$MDS,
 					index = index
 			)
+			m <- which(ret@data == -1 )
+			if ( length(m) > 0 ) {
+				ret@data[m] = 0
+			}
 			ret@colors = x$usedObj$colorRange
 			ret
 		}

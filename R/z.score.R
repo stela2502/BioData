@@ -112,8 +112,9 @@ setMethod('z.score', signature = c ('SingleCells'),
 						)
 				))
 				#ret[which(is.na(ret)==T)] <- 0
-				if ( length( which(is.na(m$zscored) == T) ) >0 ) {
-					m$zscored[which(is.na(m$zscored) == T)] <- 0
+				bad <- which(is.na(m$zscored) )
+				if ( length( bad ) >0 ) {
+					m$zscored[bad] <- 0
 				}
 				colnames(m$zscored) <- colnames(m$dat)
 				rownames(m$zscored) <- rownames(m$dat)

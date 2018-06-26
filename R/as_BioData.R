@@ -177,18 +177,20 @@ setMethod('as_BioData', signature = c ('seurat'),
 					m <- match(colnames(dat@data), colnames(dat@raw.data))
 					ret$raw <- Matrix(as.matrix(dat@raw.data))[,m]
 					## now I need to manually remove unreliable data from the zscored information (set to -20)
-					if ( ! is.null( ret$zscored )) {
-						d <- function( i, obj) {
-							drop <- which(obj$raw[,i] == 0)
-							if ( length(drop) > 0 ){
-								print ( paste( 'line', i, 'drop', length(drop)) )
-								ret$zscored[drop,i] = -20
+					if ( FALSE ) { # slow and not correct any more!
+						if ( ! is.null( ret$zscored )) {
+							d <- function( i, obj) {
+								drop <- which(obj$raw[,i] == 0)
+								if ( length(drop) > 0 ){
+									print ( paste( 'line', i, 'drop', length(drop)) )
+									ret$zscored[drop,i] = -20
+								}
+								0
 							}
-							0
+							lapply(  1:ncol(ret$dat), d, ret)
 						}
-						lapply(  1:ncol(ret$dat), d, ret)
 					}
-					
+					ret$zscored= NULL
 					ret
 				}  
 )
@@ -221,14 +223,13 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 		ncol = length(useG)
 	}
 	print ( paste("I create a", ncol,"columns and",nrow,"rows wide matrix"))
-	ret <- Matrix( 0, nrow=nrow, ncol=ncol )
 	
-	q = "select gene_id, sample_id, value from datavalues where sample_id = :x"
+	q = "select gene_id, sample_id, value from datavalues"
 	
-	if ( ! is.null(useG) ) {
-		q = paste( q, "and gene_id  IN ( ", paste( collapse=", ", useG),")" )
-	}
 	sth <- RSQLite::dbSendQuery(dbh, q )
+	t <- RSQLite::dbFetch(sth)
+	ret <- sparseMatrix( i=t[,1], j=t[,2], x=t[,3], dims=c(max(t[,1]),max(t[,2])))
+	
 	if(is.null(useS)){
 		useS = 1:ncol(ret)
 	}
@@ -238,39 +239,18 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	}
 	
 	
-	steps = ceiling(ncol/100)
-	pb <- progress_estimated(100)
-	print ( "populating the matrix" )
-	
-	for ( i in  useS ) {
-		RSQLite::dbBind(sth, param = list(x = i))
-		t <- RSQLite::dbFetch(sth)
-		
-		m <- match( t$gene_id, useG )
-		ret[m, id] <- t$value
-		
-		if ( id %% steps == 0 ) {
-			pb$tick()$print()
-			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
-		}
-		id = id +1
-	}
 	print ( "adding gene and sample names")
 	RSQLite::dbClearResult(sth)
 	rm(sth)
 	q <- "select gname from genes"
-	if ( ! is.null(useG) ) {
-		q <- paste( q, "where id IN (", paste(collapse=", ", useG),")")
-	}
+
 	sth <- RSQLite::dbSendQuery(dbh,q)
 	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
 	RSQLite::dbClearResult(sth)
 	rm(sth)
 	
 	q <- "select sname from samples"
-	if ( ! is.null(useS) ) {
-		q <- paste( q, "where id IN (", paste(collapse=", ", useS),")")
-	}
+
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	colnames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
 	RSQLite::dbClearResult(sth)

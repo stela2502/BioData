@@ -67,8 +67,8 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )
 		)
-		print (paste ("create and execute script", fname( ofile_base, 'sh' )) )
-		cat(script, file=fname( ofile_base, 'sh' ) )
+		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'sh' ) ) ) )
+		cat(script, file= file.path( x$outpath, fname( ofile_base, 'sh' )) )
 		## run the script
 		system( 
 			paste( sep='',

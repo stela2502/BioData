@@ -229,7 +229,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	t <- RSQLite::dbFetch(sth)
 	ret <- sparseMatrix( i=t[,1], j=t[,2], x=t[,3], dims=c(max(t[,1]),max(t[,2])))
-	
+	## gives the same result as the old function! EXTREMELY much faster!
 	if(is.null(useS)){
 		useS = 1:ncol(ret)
 	}

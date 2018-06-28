@@ -128,7 +128,30 @@ setMethod('merge', signature = c ('BioData'),
 	
 	## and now populate the data frame
 	print (paste( "Populate the new dat slot with dim", paste(dim(merged$dat),collapse=":" ) ))
+	pI = sum(unlist(lapply(objects, function(x) {
+								if ( is.null(x$raw)) {
+									length(which(x$dat > 0))
+								}else {
+									length(which(x$raw > 0))
+								}
+							})))
 	
+	pM = pI * 2 
+	#pI = 20000 
+	r = rep( NA, pI ) #rows
+	j = rep( NA, pI) #cols
+	v = rep( NA, pI) #vals
+	pos = 0
+	## adding to Matrix - slow as hell
+	## pre_defining the vartors (adding to them) - slow as hell
+	## creating a temporary file - a huge imrovement, but a combo of the last 2 should be best
+	## creating a table if data is more than 10000 ?
+	#file = filePath( Sys.getenv('SNIC_TMP'), 'tmp.table.sqlite')
+	#if ( file.exists(file)) {unlink( file )}
+	#dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=file )
+	#dbh <- RSQLite::dbConnect(RSQLite::SQLite(),":memory:" )
+	# OK as I anyhow put all this info into memory - why not allocate the vectors according to the requirements?
+    
 	for ( n in 1:length(objects) ) {
 		x <- objects[[n]]
 		pb <- progress_estimated(100)
@@ -141,11 +164,27 @@ setMethod('merge', signature = c ('BioData'),
 				if ( is.na(mc) ) {
 					stop(paste( "Library error - sname" , colnames(x$dat)[i], "not defined in the data colnames", mc ))
 				}
-				merged$dat[m, mc ] = x$dat[,i]
+				ok = which(x$dat[,i] > 0)
+				if ( length(ok) > 0 ) {
+					#write.table( cbind( r= m[ok] , j= rep(mc, length(ok), v= x$dat[ok,i]) ),file=file, quote=F, append=T, row.names=F, col.names=F )
+				    add = (pos+1):(pos+length(ok)+1)
+					r[add] = m[ok] ## rows
+					j[add] = rep(mc, length(ok) ) ## cols
+					v[add] = x$dat[ok,i] ## vals
+					pos = pos+length(ok)
+				}
 				if ( i %% steps == 0 ) {
 					pb$tick()$print()
 					#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
 				}
+			}
+			if ( pos > pM ) {
+				RSQLite::dbWriteTable(dbh,'datavalues',data.frame( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),append = TRUE)
+				#write.table( cbind( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),file=file, quote=F, append=T, row.names=F, col.names=F )
+				r = rep( NA, pI ) #rows
+				j = rep( NA, pI) #cols
+				v = rep( NA, pI) #vals
+				pos = 0
 			}
 		}else {
 			m <- match ( rownames(x$raw), gnames )
@@ -155,16 +194,50 @@ setMethod('merge', signature = c ('BioData'),
 					browser()
 					stop(paste( "Library error - sname" , colnames(x$raw)[i], "not defined in the data colnames", mc ))
 				}
-				merged$dat[m, mc ] = x$raw[,i]
+				ok = which(x$raw[,i] > 0)
+				if ( length(ok) > 0 ) {
+					#write.table( cbind( r= m[ok] , j= rep(mc, length(ok), v= x$raw[ok,i]) ),file=file, quote=F, append=T, row.names=F, col.names=F )
+					add = (pos+1):(pos+length(ok)+1)
+					r[add] = m[ok] ## rows
+					j[add] = rep(mc, length(ok) ) ## cols
+					v[add] = x$dat[ok,i] ## vals
+					pos = pos+length(ok)
+				}
 				if ( i %% steps == 0 ) {
 					pb$tick()$print()
 					#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
 				}
 			}
+			if ( pos > pM ) {
+				RSQLite::dbWriteTable(dbh,'datavalues', data.frame( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),append = TRUE)
+				#write.table( cbind( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),file=file, quote=F, append=T, row.names=F, col.names=F )
+				r = rep( NA, pI ) #rows
+				j = rep( NA, pI) #cols
+				v = rep( NA, pI) #vals
+				pos = 0
+			}
 		}
 		print ( paste( "added object", x$name ) )
 	}
-		
+	# not required - all written to a vector anyhow!
+#	if ( pos > 0 ){ ## clean up
+#		RSQLite::dbWriteTable(dbh,'datavalues',data.frame( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),append = TRUE)
+#		#write.table( cbind( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),file=file, quote=F, append=T, row.names=F, col.names=F )
+#	}
+	#browser()
+	#print ("loading tmp database")
+	#q = "select * from datavalues"
+	#sth <- RSQLite::dbSendQuery(dbh, q )
+	#t <- RSQLite::dbFetch(sth)
+	
+	tmp <- sparseMatrix( i=r, j=j, x=v, dims=dim(merged$dat) )
+	
+	#rm(dbh) 
+	colnames(tmp) <- colnames(merged$dat)
+	rownames(tmp) <- rownames(merged$dat)
+	merged$dat = tmp
+	
 	class(merged) <- class(objects[[1]])
+	gc()
 	merged
 } )

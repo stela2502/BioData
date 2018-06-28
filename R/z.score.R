@@ -120,6 +120,10 @@ setMethod('z.score', signature = c ('SingleCells'),
 				rownames(m$zscored) <- rownames(m$dat)
 			}
 			gc()
+			bad <- which(is.na( m$zscored))
+			if (length(bad) > 0 ) {
+				m$zscored[bad] = 0
+			}
 			invisible(m)
 		})
 

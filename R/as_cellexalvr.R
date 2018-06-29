@@ -37,6 +37,7 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 			lapply( names(x$usedObj$MDS), function(n){	rownames(x$usedObj$MDS[[n]]) = colnames(x$dat) } )
 			
 			meta.cell = make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
+			rownames(meta.cell) <- colnames(x$dat)
 			
 			userGroups = NULL
 			if ( ! is.null(groups) ) {

@@ -55,6 +55,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			fcall <- paste( sep="", fcall ,', form="',form, '"' )
 		}
 		fcall <- paste( fcall ,')')
+		fcall <- paste( 'eval(',fcall,')')
 		## create the script
 		script = paste( sep="\n", "library(BioData)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),

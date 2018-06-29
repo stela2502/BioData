@@ -73,48 +73,50 @@ setMethod('as_BioData', signature = c ('data.frame'),
 
 setMethod('as_BioData', signature = c ('cellexalvr'),
 		definition = function ( dat ) {
-			dat <- cellexalvr::renew(dat)
+			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
-			ok = which(lapply(colnames(dat$meta.cell) , function(x) { all.equal( as.character(as.vector(dat$meta.cell[,x])), colnames(dat$data)) == T } )==T)
+			ok = which(lapply(colnames(dat@meta.cell) , function(x) { all.equal( as.character(as.vector(dat@meta.cell[,x])), colnames(dat@data)) == T } )==T)
+			namecol = NULL
 			if ( length(ok) == 0) {
-				if (all.equal( rownames(dat$meta.cell), colnames(dat$data)) ){
-					dat$meta.cell = cbind( cell.name = colnames(dat$data), dat$meta.cell)
+				if (all.equal( rownames(dat@meta.cell), colnames(dat@data)) == TRUE ){
+					dat@meta.cell = cbind( cell.name = colnames(dat@data), dat@meta.cell)
 					namecol = 'cell.name'
 				}
 			}
 			else {
-				namecol = colnames(dat$meta.cell)[ok]
+				namecol = colnames(dat@meta.cell)[ok]
 				namecol = namecol[1]
 			}
+			
 			namerow = NULL
-			if (nrow(dat$meta.gene)==0) {
-				dat$meta.gene <- matrix(ncol=2, c(rownames(dat$data), rep( 0, nrow(dat$data)) ) )
+			if (nrow(dat@meta.gene)==0) {
+				dat@meta.gene <- matrix(ncol=2, c(rownames(dat@data), rep( 0, nrow(dat@data)) ) )
 				colnames(x@meta.gene) = c('Gene.Symbol', 'useless')
 				rownames(x@meta.gene) = rownames(x@data)
 				namerow = 'Gene.Symbol'
 			}else {
-				ok = which(lapply(colnames(dat$meta.gene) , function(x) { all.equal( as.character(as.vector(dat$meta.gene[,x])), rownames(dat$data)) == T } )==T)
+				ok = which(lapply(colnames(dat@meta.gene) , function(x) { all.equal( as.character(as.vector(dat@meta.gene[,x])), rownames(dat@data)) == T } )==T)
 				if ( length(ok) == 0) {
-					if (all.equal( rownames(dat$meta.gene), rownames(dat$data)) ){
-						dat$meta.gene = cbind( gene.name = rownames(dat$data), dat$meta.gene)
+					if (all.equal( rownames(dat@meta.gene), rownames(dat@data)) == TRUE ){
+						dat@meta.gene = cbind( gene.name = rownames(dat@data), dat@meta.gene)
 						namerow = 'gene.name'
 					}
 				}
 				else {
-					namerow = colnames(dat$meta.gene)[ok]
+					namerow = colnames(dat@meta.gene)[ok]
 					namerow = make.names(namerow[1])
 				}
 			}
-			storage.mode(dat$data) <- 'numeric'
-			if ( nrow(dat$userGroups) == nrow(dat$meta.cell)){
-				samples <- data.frame(cbind(dat$meta.cell, dat$userGroups))
+			#storage.mode(dat@data) <- 'numeric'
+			if ( nrow(dat@userGroups) == nrow(dat@meta.cell)){
+				samples <- data.frame(cbind(dat@meta.cell, dat@userGroups))
 			}else {
-				samples <- data.frame(dat$meta.cell)
+				samples <- data.frame(dat@meta.cell)
 			}
 			samples[,namecol] <- make.names(samples[,namecol])
-			ret <- BioData$new( d, Samples=samples,
-					annotation= dat$meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
-			ret$usedObj <- dat$usedObj
+			ret <- BioData$new( Matrix(dat@data), Samples=samples,
+					annotation= dat@meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
+			ret$usedObj <- dat@usedObj
 			ret
 		}
 		
@@ -143,6 +145,7 @@ setMethod('as_BioData', signature = c ('seurat'),
 					}else {
 						ok = which(lapply(colnames(dat@hvg.info) , function(x) { all.equal( as.character(as.vector(dat@hvg.info[,x])), rownames(dat@data)) == T } )==T)
 						if ( length(ok) == 0) {
+							## add the missing info
 							if (all.equal( rownames(dat@hvg.info), rownames(dat@data)) == TRUE ){
 								dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info)
 								namerow = 'gene.name'
@@ -160,14 +163,15 @@ setMethod('as_BioData', signature = c ('seurat'),
 							dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info[order(m),])
 						}
 					}
-					#storage.mode(dat$data) <- 'numeric'
-					dataa <- as.matrix(dat@data)
+					#storage.mode(dat@data) <- 'numeric'
+			
+					dataa <- as.matrix(dat@data[1:2,1:2])
 					samples <- data.frame(as.matrix(dat@meta.data))
 					
 					samples[,namecol] <- make.names(samples[,namecol])
-					ret <- BioData$new( dataa[1:2,1:2], Samples=samples[1:2,], annotation =dat@hvg.info[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
+					ret <- BioData$new( dataa, Samples=samples[1:2,], annotation =dat@hvg.info[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 					
-					ret$dat <- Matrix(dataa)
+					ret$dat <- Matrix(dat@data)
 					ret$samples <- samples
 					ret$annotation <- dat@hvg.info
 					
@@ -177,19 +181,19 @@ setMethod('as_BioData', signature = c ('seurat'),
 					m <- match(colnames(dat@data), colnames(dat@raw.data))
 					ret$raw <- Matrix(as.matrix(dat@raw.data))[,m]
 					## now I need to manually remove unreliable data from the zscored information (set to -20)
-					if ( FALSE ) { # slow and not correct any more!
-						if ( ! is.null( ret$zscored )) {
-							d <- function( i, obj) {
-								drop <- which(obj$raw[,i] == 0)
-								if ( length(drop) > 0 ){
-									print ( paste( 'line', i, 'drop', length(drop)) )
-									ret$zscored[drop,i] = -20
-								}
-								0
-							}
-							lapply(  1:ncol(ret$dat), d, ret)
-						}
-					}
+#					if ( FALSE ) { # slow and not correct any more!
+#						if ( ! is.null( ret$zscored )) {
+#							d <- function( i, obj) {
+#								drop <- which(obj$raw[,i] == 0)
+#								if ( length(drop) > 0 ){
+#									print ( paste( 'line', i, 'drop', length(drop)) )
+#									ret$zscored[drop,i] = -20
+#								}
+#								0
+#							}
+#							lapply(  1:ncol(ret$dat), d, ret)
+#						}
+#					}
 					ret$zscored= NULL
 					ret
 				}  

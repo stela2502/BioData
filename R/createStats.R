@@ -59,7 +59,7 @@ setMethod('createStats', signature = c ('BioData'),
 		if ( files ) {
 			writeStatTables( x )
 		}
-		detach( 'package:DESeq2' )
+		#eval( detach( 'package:DESeq2' ) )
 		x
 })
 

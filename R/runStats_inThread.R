@@ -55,15 +55,15 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			fcall <- paste( sep="", fcall ,', form="',form, '"' )
 		}
 		fcall <- paste( fcall ,')')
-		fcall <- paste( 'eval(',fcall,')')
+		fcall <- paste( fcall,')')
 		## create the script
 		script = paste( sep="\n", "library(BioData)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),
 				paste( sep="", "data <- loadObj('",file.path( x$outpath, fname( x$name, 'RData' ) ),"')"  ),
-				'data$stats <- list()',
+				'data$stats <- list()','try( {',
 				fcall,
+				'})',
 				'stat_res <- list( name = data$name, stat = data$stats[[1]], stat_name = names(data$stats)[1] )',
-				
 				paste( sep="", "save(stat_res, file = '", fname(ofile_base,'RData' ),"' )" ),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )

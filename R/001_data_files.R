@@ -34,7 +34,8 @@
 #'
 #' A list of human transcription factors. Used when generating TF networks
 #'
-#' @format A vector 1468 in length:
+#' @format A vector 1468 in length:almdiR_Aurroa
+#' 
 #' \describe{
 #'   \item{tf}{transcription factor}
 #'   ...

@@ -6,7 +6,7 @@
 \alias{groups.boxplot,BioData-method}
 \title{description of function groups.boxplot}
 \arguments{
-\item{x}{the ExpresionSet object}
+\item{x}{the BioData object}
 
 \item{groupCol}{the column in the samples table that contains the sample grouping information}
 
@@ -21,7 +21,7 @@
 \description{
 This function can be used to get an overview of the different gene level groups in
 
-an BioData It uses the linux montage command to merge all different boxplots
+an BioData object. It uses the linux montage command to merge all different boxplots
 
 into one figure
 }

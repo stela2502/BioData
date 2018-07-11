@@ -114,6 +114,7 @@ setMethod('as_BioData', signature = c ('cellexalvr'),
 				samples <- data.frame(dat@meta.cell)
 			}
 			samples[,namecol] <- make.names(samples[,namecol])
+			
 			ret <- BioData$new( Matrix(dat@data), Samples=samples,
 					annotation= dat@meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 			ret$usedObj <- dat@usedObj

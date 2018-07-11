@@ -4,7 +4,8 @@
 \name{human.tfs}
 \alias{human.tfs}
 \title{A list of human transcription factors.}
-\format{A vector 1468 in length:
+\format{A vector 1468 in length:almdiR_Aurroa
+
 \describe{
   \item{tf}{transcription factor}
   ...

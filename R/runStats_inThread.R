@@ -2,7 +2,7 @@
 #' @aliases runStats_inThread,BioData-method
 #' @rdname runStats_inThread-methods
 #' @docType methods
-#' @description 
+#' @description create a script that calculates the stats in a new thread; run the script and collect the data after the script has finished
 #' @param x the BioData object
 #' @param condition the samples column to run stats for
 #' @param files whether to print the stats output to file ( default =F - depricated)

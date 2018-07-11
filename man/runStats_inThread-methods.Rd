@@ -24,3 +24,6 @@ runStats_inThread(x, condition, files = F, A = NULL, B = NULL,
 
 \item{form}{a specific formualr to use? State it here}
 }
+\description{
+create a script that calculates the stats in a new thread; run the script and collect the data after the script has finished
+}

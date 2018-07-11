@@ -55,15 +55,26 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			fcall <- paste( sep="", fcall ,', form="',form, '"' )
 		}
 		fcall <- paste( fcall ,')')
-		fcall <- paste( fcall,')')
+
 		## create the script
+		stat_name = condition
+		if (! is.null(form) ) {
+			stat_name = paste( stat_name, form) 
+		}else if ( ! is.null(covariates) ){
+			stat_name = paste( stat_name, covariates, collapse="_") 
+		}
+		
+		stat_name = gsub( '\\s+', '.', stat_name, perl=T)
+		
 		script = paste( sep="\n", "library(BioData)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),
 				paste( sep="", "data <- loadObj('",file.path( x$outpath, fname( x$name, 'RData' ) ),"')"  ),
-				'data$stats <- list()','try( {',
+				'data$stats <- list()',
+				'try( {',
 				fcall,
 				'})',
-				'stat_res <- list( name = data$name, stat = data$stats[[1]], stat_name = names(data$stats)[1] )',
+				'stat_res <- list( name = data$name, stat = data$stats[[1]], ',
+				paste('stat_name = "',stat_name,'" )', sep=""),
 				paste( sep="", "save(stat_res, file = '", fname(ofile_base,'RData' ),"' )" ),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )
@@ -82,7 +93,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 	else { ## the script
 		print ( "read the data" ) 
 		
-		load( fname(ofile_base,'RData' ) )
+		load( file.path( x$outpath,fname( ofile_base,'RData' ) ) )
 		if ( stat_res$name == x$name ){
 			n <- stat_res$stat_name
 			m <- match(rownames(stat_res$stat), rownames(x$dat))

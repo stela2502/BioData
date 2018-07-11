@@ -18,7 +18,7 @@ setGeneric('auto_order_grouping', ## Name
 )
 
 setMethod('auto_order_grouping', signature = c ('BioData'),
-	definition = function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5 ) {
+	definition = function ( x, group,  settings=list( 'A' = 'lsens2018-3-3', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5 ) {
 	
 	k = ceil(length( unique(x$samples[,group])) / k )
 	if ( k < 3) {

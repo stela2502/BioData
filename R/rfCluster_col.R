@@ -24,15 +24,23 @@
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
-		function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust',settings=list()){
-			standardGeneric('rfCluster_col')
-		}
-)
+			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust',settings=list()){
+				standardGeneric('rfCluster_col')
+			}
+	)
 }else {
 	print ("Onload warn generic function 'rfCluster_col' already defined - no overloading here!")
 }
 setMethod('rfCluster_col', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list()) {
+			if ( rep > 1) {
+				lapply(1:rep, function(i) { 
+							rfCluster_col(
+									x, rep=1, SGE=SGE, email=email, 
+									k=k, slice=slice, subset=subset ,nforest=nforest, 
+									ntree=ntree, name=paste(sep="_",name, i ), settings=settings ) 
+						} )
+			}
 			x$name <- str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
@@ -52,79 +60,79 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 			}
 			processed = FALSE
 			single_res_col <- paste('RFgrouping',name)
-			for ( i in 1:rep) {
-				tname = paste(n,i,sep='_')
-				if ( is.null(x$usedObj[['rfExpressionSets']][[tname]]) ){
-					i <- length(x$usedObj$rfObj)+i
-					## start the calculations!
-					if ( dir.exists(opath)){
-						if ( opath == '' ) {
-							stop( "Are you mad? Not giving me an tmp path to delete?")
-						}
-						system( paste('rm -f ',opath,"/*",tname,'*', sep='') )
+			
+			tname = paste(n,i,sep='_')
+			if ( is.null(x$usedObj[['rfExpressionSets']][[tname]]) ){
+				i <- length(x$usedObj$rfObj)+i
+				## start the calculations!
+				if ( dir.exists(opath)){
+					if ( opath == '' ) {
+						stop( "Are you mad? Not giving me an tmp path to delete?")
+					}
+					system( paste('rm -f ',opath,"/*",tname,'*', sep='') )
+				}else {
+					dir.create( opath )
+				}
+				total <- ncol(x$dat)
+				if ( total-subset <= 20  && rep > 1) {
+					stop( paste( 'You have only', total, 'samples in this dataset and request to draw random',subset, "samples, which leaves less than 20 cells to draw on random!") )
+				}
+				else if ( total < subset ){
+					stop ( paste("You can not ask for more than the max of",total, "samples in the test dataset!") )			
+				}
+				if ( is.null(x$usedObj[['rfExpressionSets']])){
+					x$usedObj[['rfExpressionSets']] <- list()
+					x$usedObj[['rfObj']][[ i ]] <- list()
+				}
+				
+				if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
+					x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
+					## here I need to get rid of the -1 values!
+					fit_4_rf(x$usedObj[['rfExpressionSets']][[ i ]], copy=F)
+					if ( length(settings) > 0 ) {
+						#browser()
+						x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
+								dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
+								SGE=F, slices=slice, email=email, tmp.path=opath, 
+								name= tname, settings=settings, slurm=T 
+						)
 					}else {
-						dir.create( opath )
+						x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
+								dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
+								SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname 
+						)
 					}
-					total <- ncol(x$dat)
-					if ( total-subset <= 20  && rep > 1) {
-						stop( paste( 'You have only', total, 'samples in this dataset and request to draw random',subset, "samples, which leaves less than 20 cells to draw on random!") )
-					}
-					else if ( total < subset ){
-						stop ( paste("You can not ask for more than the max of",total, "samples in the test dataset!") )			
-					}
-					if ( is.null(x$usedObj[['rfExpressionSets']])){
-						x$usedObj[['rfExpressionSets']] <- list()
-						x$usedObj[['rfObj']][[ i ]] <- list()
-					}
-					
-					if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
-						## here I need to get rid of the -1 values!
-						fit_4_rf(x$usedObj[['rfExpressionSets']][[ i ]], copy=F)
-						if ( length(settings) > 0 ) {
-							#browser()
-							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-									dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
-									SGE=F, slices=slice, email=email, tmp.path=opath, 
-									name= tname, settings=settings, slurm=T 
-							)
-						}else {
-							x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-									dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
-									SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname 
-							)
-						}
-					}
-					names(x$usedObj[['rfExpressionSets']]) [i] <- tname
-					names(x$usedObj[['rfObj']]) [i] <- tname
-					x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::runRFclust ( x$usedObj[['rfObj']][[ i ]] , nforest=nforest, ntree=ntree, name=tname )
-					if ( SGE){
-						print ( "You should wait some time now to let the calculation finish! check: system('qstat -f') -> re-run the function")
-					}
-					else {
-						print ( "You should wait some time now to let the calculation finish! -> re-run the function")
-						print ( "check: system( 'ps -Af | grep \"R.*BATCH\" | grep -v grep')")
-					}
+				}
+				names(x$usedObj[['rfExpressionSets']]) [i] <- tname
+				names(x$usedObj[['rfObj']]) [i] <- tname
+				x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::runRFclust ( x$usedObj[['rfObj']][[ i ]] , nforest=nforest, ntree=ntree, name=tname )
+				if ( SGE){
+					print ( "You should wait some time now to let the calculation finish! check: system('qstat -f') -> re-run the function")
 				}
 				else {
-					i <- match( tname,names(x$usedObj$rfObj) )
-					## read in the results
-					try ( x$usedObj[['rfObj']][[ i ]] <- runRFclust ( x$usedObj[['rfObj']][[ i]] , nforest=nforest, ntree=ntree, name=tname ) )
-					if ( ! is.null(x$usedObj[['rfObj']][[ i ]]@RFfiles[[tname]]) ){
-						stop( "please re-run this function later - the clustring process has not finished!")
-					}
-					for ( a in k ){
-						x$usedObj[["rfExpressionSets"]][[i]]$samples <- 
-								x$usedObj[["rfExpressionSets"]][[i]]$samples[ ,
-										is.na(match ( colnames(x$usedObj[["rfExpressionSets"]][[i]]$samples), paste('group n=',a) ))==T 
-								]
-					}
-					x <- createRFgrouping_col( x, RFname=tname,  k=k, single_res_col = paste( single_res_col, i) )
-					
-					print ( paste("Done with cluster",i))
-					processed = TRUE
+					print ( "You should wait some time now to let the calculation finish! -> re-run the function")
+					print ( "check: system( 'ps -Af | grep \"R.*BATCH\" | grep -v grep')")
 				}
 			}
+			else {
+				i <- match( tname,names(x$usedObj$rfObj) )
+				## read in the results
+				try ( x$usedObj[['rfObj']][[ i ]] <- runRFclust ( x$usedObj[['rfObj']][[ i]] , nforest=nforest, ntree=ntree, name=tname ) )
+				if ( ! is.null(x$usedObj[['rfObj']][[ i ]]@RFfiles[[tname]]) ){
+					stop( "please re-run this function later - the clustring process has not finished!")
+				}
+				for ( a in k ){
+					x$usedObj[["rfExpressionSets"]][[i]]$samples <- 
+							x$usedObj[["rfExpressionSets"]][[i]]$samples[ ,
+									is.na(match ( colnames(x$usedObj[["rfExpressionSets"]][[i]]$samples), paste('group n=',a) ))==T 
+							]
+				}
+				x <- createRFgrouping_col( x, RFname=tname,  k=k, single_res_col = paste( single_res_col, i) )
+				
+				print ( paste("Done with cluster",i))
+				processed = TRUE
+			}
+			
 			gc()
 			invisible(x)		
 		}
@@ -146,14 +154,14 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 #' @title description of function createRFgrouping_col
 #' @export 
 if ( ! isGeneric('createRFgrouping_col') ){ setGeneric('createRFgrouping_col', ## Name
-		function ( x, RFname, k=10, single_res_col = paste('BioData',RFname), colFunc=NULL) { ## Argumente der generischen Funktion
-			standardGeneric('createRFgrouping_col') ## der Aufruf von standardGeneric sorgt für das Dispatching
-		}
-)
+			function ( x, RFname, k=10, single_res_col = paste('BioData',RFname), colFunc=NULL) { ## Argumente der generischen Funktion
+				standardGeneric('createRFgrouping_col') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			}
+	)
 }else {
 	print ("Onload warn generic function 'createRFgrouping_col' already defined - no overloading here!")
 }
-			
+
 
 setMethod('createRFgrouping_col', signature = c ('BioData'),
 		definition = function ( x, RFname, k=10, single_res_col = paste('RFgrouping',RFname), colFunc=NULL) {
@@ -161,7 +169,6 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj']]), collapse=" ",sep=', ') ) )
 			}
 			groups <- createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
-			
 			## store the MDS representation of the rfClust dissimilarity object
 			## in case all samples have been used to create the object.
 			if ( is.null (x$usedObj$MDS[[RFname]]) & nrow(x$usedObj$rfObj[[RFname]]@distRF[[RFname]]$cl1) == ncol(x$dat) ) {
@@ -170,7 +177,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				m <- match( colnames(x$dat), rownames(d) )
 				x$usedObj$MDS[[single_res_col]] <- d[m,]
 			}
-				
+			
 			x$usedObj[['rfExpressionSets']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets']][[RFname]]$samples, groups[,3:(2+length(k))] )
 			le <- ncol(x$usedObj[['rfExpressionSets']][[RFname]]$samples)

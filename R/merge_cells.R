@@ -51,7 +51,7 @@ setMethod('merge_cells', signature = c ('BioData'),
 	for( gname in gIDs ) {
 		m <- match( dataObj$samples[,group], gname )
 		m <- which(is.na(m) == F)
-		
+		m = sample(m) ## a little bit more randomness is likely good
 		if ( is.na(match( gname, gID) ) ){
 			new_group[m] = i:(i+length(m) -1)
 			i = i+length(m)

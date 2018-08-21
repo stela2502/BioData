@@ -30,8 +30,8 @@ setMethod('mds', signature = c ('BioData'),
 			n = ncol(dataObj$data())
 			if ( n > 100) 
 				n = 100
-			if ( is.null(dataObj$usedObj$pr) ||  all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) ) {
-				dataObj$usedObj$pr <- irlba::prcomp_irlba ( tab, center=T, n=n )
+			if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) == F ) {
+				dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(dataObj$data()), center=T, n=n )
 				rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
 			}
 		}
@@ -49,8 +49,8 @@ setMethod('mds', signature = c ('BioData'),
 		n = ncol(dataObj$data())
 		if ( n > 100) 
 			n = 100
-		if ( is.null(dataObj$usedObj$prGenes) ||  all.equal( rownames(dataObj$usedObj$prGenes$x), rownames(dataObj$dat) )) {
-			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tab, center=T, n=n )
+		if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes$x), rownames(dataObj$dat) ) == F ) {
+			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( dataObj$data(), center=T, n=n )
 			rownames(dataObj$usedObj$pr$x) = rownames(dataObj$dat)
 		}
 		if ( useRaw ) {

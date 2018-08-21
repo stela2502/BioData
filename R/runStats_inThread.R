@@ -67,6 +67,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 		stat_name = gsub( '\\s+', '.', stat_name, perl=T)
 		
 		script = paste( sep="\n", "library(BioData)",
+				"options(warn=-1)",
 				paste( sep="", 'cat(Sys.getpid(),file="',fname(ofile_base,'pid'),'")' ),
 				paste( sep="", "data <- loadObj('",file.path( x$outpath, fname( x$name, 'RData' ) ),"')"  ),
 				'data$stats <- list()',

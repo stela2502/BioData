@@ -2,16 +2,18 @@
 #' @aliases mds,BioData-method
 #' @rdname mds-methods
 #' @docType methods
-#' @description Calculates the MDS for a given MDS type and stores the 3 dimensions in the object for later use.
+#' @description Calculates the MDS for a given MDS type and stores the 3 dimensions 
+#' in the object for later use. All projections use a n=100 PCA projection as starting material instead of the raw data.
 #' @param dataObj the BioData object
 #' @param mds.type Which MDS function should be called default="PCA"
 #' @param onwhat condense which dataset at the moment only Expression is supported default='expression'
 #' @param genes do it on genes not on samples (default = F)
 #' @param LLEK the neighbours in the LLE algorithm (default=2)
-#' @title description of function mds.and.clus
+#' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
+#' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 
 if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
-	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2) { ## Argumente der generischen Funktion
+	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F) { ## Argumente der generischen Funktion
 		standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -20,44 +22,60 @@ if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
 }
 
 setMethod('mds', signature = c ('BioData'),
-	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2 ) {
+	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F ) {
 	## the code is crap re-code!!
+	mds_store = NULL
 	if(onwhat=="Expression"){
-		tab <- t(as.matrix(dataObj$data()))
-		storage.mode(tab)  <- 'numeric' ## brute force, but unfortunately somtimes important..
-		p = which(tab == -21)
-		if ( length(p)>0){
-			tab[p] = -20
-		}else if ( min(tab) == -1) {
-			p= which(tab == -1)
-			if ( length(p)>0){
-				tab[p] = 0
+		if ( onwhat == 'Expression'){
+			n = ncol(dataObj$data())
+			if ( n > 100) 
+				n = 100
+			if ( is.null(dataObj$usedObj$pr) ||  all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) ) {
+				dataObj$usedObj$pr <- irlba::prcomp_irlba ( tab, center=T, n=n )
+				rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
 			}
-		}		
+		}
+		if ( useRaw ) {
+			tab=t(as.matrix(dataObj$data()))
+		}else {
+			mds_store <- 'PCA100'
+			tab <- dataObj$usedObj$pr$x	
+		}
 	} 
 	else {
 		stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 	}
 	if ( genes ) {
-		tab <- t(tab)
-		## define mds storage position
-		mds_store <- 'MDSgene'
-	}
-	else {
-		mds_store <- 'MDS'
+		n = ncol(dataObj$data())
+		if ( n > 100) 
+			n = 100
+		if ( is.null(dataObj$usedObj$prGenes) ||  all.equal( rownames(dataObj$usedObj$prGenes$x), rownames(dataObj$dat) )) {
+			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tab, center=T, n=n )
+			rownames(dataObj$usedObj$pr$x) = rownames(dataObj$dat)
+		}
+		if ( useRaw ) {
+			mds_store <- 'MDSgene'
+			tab <- t(tab)
+		}else {
+			mds_store <- 'MDSgene_PCA100'
+			tab <- dataObj$usedObj$prGenes$x	
+		}	
 	}
 	
-	this.k <- paste(onwhat,mds.type)
+	## define mds storage position
 	if ( is.null( dataObj$usedObj[[mds_store]]) ) {
 		dataObj$usedObj[[mds_store]] = list()
 	}
+	this.k <- paste(onwhat,mds.type)
+	
+	## MDS code
 	if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$dat) )==F ) {
 		mds.proj <- NULL
 		pr <- NULL
 		#system ( 'rm loadings.png' )
+				
 		if(mds.type == "PCA"){
-			pr <- prcomp(tab)
-			mds.proj <- pr$x[,1:3]
+			mds.proj <- tab[,1:3]
 			try( {
 			png ( file=file.path( dataObj$outpath,'loadings.png'), width=1000, height=1000 )
 			plot (  pr$rotation[,1:2] , col='white' );
@@ -67,6 +85,7 @@ setMethod('mds', signature = c ('BioData'),
 			write.table( cbind( Genes = rownames(pr$rotation), pr$rotation[,1:2] ), 
 					file=file.path( dataObj$outpath,'gene_loadings.xls') , row.names=F, sep='\t',quote=F )
 			#	mds.trans <- prcomp(t(tab))$x[,1:3]
+		
 		} else if ( mds.type=='DM') {
 			if (!library("destiny", quietly = TRUE,logical.return=TRUE )) {
 				stop("package 'destiny' needed for this function to work. Please install it.",
@@ -87,6 +106,7 @@ setMethod('mds', signature = c ('BioData'),
 			}
 			dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma)
 			mds.proj <- destiny::as.data.frame(dm)[,1:3]
+			
 		}else if ( mds.type == "TSNE"){
 			if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {
 				stop("package 'Rtsne' needed for this function to work. Please install it.",
@@ -100,12 +120,14 @@ setMethod('mds', signature = c ('BioData'),
 		else if ( mds.type == "LLE"){
 			mds.proj <- LLE( tab, dim = 3, k = as.numeric(LLEK) )
 			#	mds.trans <- LLE( t(tab), dim = 3, k = as.numeric(LLEK) )
+	
 		}else if ( mds.type == "ISOMAP"){
 			mds.proj <- Isomap( tab, dim = 3, k = as.numeric(LLEK) )$dim3
 			#	mds.trans <- Isomap( t(tab), dim = 3, k = as.numeric(LLEK) )$dim3
+	
 		}else if ( mds.type == "ZIFA" ) {
 			#stop( "Sorry ZIFA has to be double checked - are you working on normalized data - than ZIFA can not be applied!")
-			print ( "Running external python script to apply ZIFA dimensional reduction (PCR data only)" )
+			print ( "Running external python script to apply ZIFA dimensional reduction (Expression data only)" )
 			if ( genes ) {
 				write.table( dataObj$dat, file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
 			}else {
@@ -143,8 +165,6 @@ setMethod('mds', signature = c ('BioData'),
 		
 		dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 	}
-#	dataObj <- clusters ( dataObj, onwhat=onwhat, clusterby=clusterby, groups.n = groups.n,
-#			ctype = ctype, cmethod=cmethod, useGrouping=useGrouping )
 	
 	invisible(dataObj)
 } )

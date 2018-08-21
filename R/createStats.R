@@ -111,7 +111,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data()),rownames(x$stats[[i]])) ,]
 				x$stats[[i]] <- cbind( rownames(x$data()), x$stats[[i]] )
 			}
-			detach( 'package:limma' )
+			#detach( 'package:limma' )
 			invisible(x)
 		})
 
@@ -170,7 +170,7 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			rm(zlm.output)
 			rm(zlm.lr)
 			gc(FALSE)
-			detach( 'package:MAST' )
+			#detach( 'package:MAST' )
 			invisible(x)
 			
 		}

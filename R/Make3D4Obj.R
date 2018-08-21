@@ -16,11 +16,12 @@
 #' @param plotType choose one [1,2] and check whether you like it ;-) default=1 
 #' @param size the size of the 3D points default = 3.0
 #' @param green single cell normalization looses gene expression values. Display the cells with lost expression in green or black default=FALSE
+#' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
 #' @title description of function Make3D4obj
 #' @export 
 if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, 
-			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE ) { ## Argumente der generischen Funktion
+			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE, useRaw=FALSE ) { ## Argumente der generischen Funktion
 		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -31,8 +32,10 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 setMethod('Make3D4obj', signature = c ('BioData'),
 	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, 
-			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE ) {
+			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE, useRaw=FALSE ) {
 
+		MDS_NAME = 'MDS_PCA100'
+		
 		My.legend3d <- function (...) {
 			if ( ! exists ( 'main')) {
 				main = ''
@@ -51,19 +54,29 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			name
 		}
 		if ( genes ) {
-			mds.type = check_and_replace( mds.type, x$usedObj$MDSgene )
-			if ( is.null (x$usedObj$MDSgene[[mds.type]] )){
-				x <- mds(x, mds.type=mds.type, genes=T)
+			MDS_NAME = 'MDSgene_PCA100'
+			if ( useRaw ){
+				MDS_NAME = 'MDSgene'
 			}
-			mds.type = check_and_replace( mds.type, x$usedObj$MDSgene )
+			mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+			if ( is.null (x$usedObj[[MDS_NAME]][[mds.type]] )){
+				mds(x, mds.type=mds.type, genes=T, useRaw = useRaw)
+				mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+			}
 		}else {
-			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
-			if ( is.null (x$usedObj$MDS[[mds.type]] )){		
-				x <- mds(x, mds.type=mds.type)
+			MDS_NAME = 'MDS_PCA100'
+			if ( useRaw ){
+				MDS_NAME = 'MDS'
 			}
-			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
+			mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+
+			if ( is.null (x$usedObj[[MDS_NAME]][[mds.type]] )){
+				x <- mds(x, mds.type=mds.type, useRaw = useRaw)
+				mds.type = check_and_replace( mds.type, x$usedObj$MDS )
+			}
+			
 		}
-		
+		#browser()
 		if ( genes ) {
 			x <- x$clone()
 			t <- transpose(x)
@@ -109,26 +122,26 @@ setMethod('Make3D4obj', signature = c ('BioData'),
                 ## plot points!
 				#browser()
 				My.legend3d ("topright", legend = paste( brks ), pch=16, col= COLS, cex=1,inset =c(0.02))
-                rgl.points( x$usedObj$MDS[[mds.type]], col=col, size=size )
+                rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 
         }
         else {
                 if ( names ) {
 						My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
-                        rgl.texts( x$usedObj$MDS[[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
+                        rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
                         My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
-						rgl.points( x$usedObj$MDS[[mds.type]], col=col, size=size )
+						rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 						
                 }
         }
 		}else if ( plotType == 2) {
 			bg3d("white")
 			if ( names) {
-				rgl.texts( x$usedObj$MDS[[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
+				rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
 			}else {
-				rgl.points( x$usedObj$MDS[[mds.type]], col=col, size=size )
+				rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 			}
 			grid3d(c("x", "y", "z"))
 			axis3d(c("x+"),col="black",xlab="Component 1")

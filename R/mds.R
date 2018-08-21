@@ -31,14 +31,21 @@ setMethod('mds', signature = c ('BioData'),
 			if ( n > 100) 
 				n = 100
 			if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) == F ) {
-				dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(dataObj$data()), center=T, n=n )
+				tmp = dataObj$data()
+				bad = which(tmp == -1)
+				if ( length(bad) > 0 ) {
+					tmp[bad] = 0
+				}
+				dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+				rm(tmp)
 				rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
 			}
 		}
 		if ( useRaw ) {
+			mds_store <- 'MDS'
 			tab=t(as.matrix(dataObj$data()))
 		}else {
-			mds_store <- 'PCA100'
+			mds_store <- 'MDS_PCA100'
 			tab <- dataObj$usedObj$pr$x	
 		}
 	} 
@@ -50,7 +57,13 @@ setMethod('mds', signature = c ('BioData'),
 		if ( n > 100) 
 			n = 100
 		if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes$x), rownames(dataObj$dat) ) == F ) {
-			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( dataObj$data(), center=T, n=n )
+			tmp = dataObj$data()
+			bad = which(tmp == -1)
+			if ( length(bad) > 0 ) {
+				tmp[bad] = 0
+			}
+			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
+			rm(tmp)
 			rownames(dataObj$usedObj$pr$x) = rownames(dataObj$dat)
 		}
 		if ( useRaw ) {
@@ -81,9 +94,9 @@ setMethod('mds', signature = c ('BioData'),
 			plot (  pr$rotation[,1:2] , col='white' );
 			text( pr$rotation[,1:2], labels= rownames(pr$rotation), cex=1.5 )
 			dev.off()
-			})
 			write.table( cbind( Genes = rownames(pr$rotation), pr$rotation[,1:2] ), 
 					file=file.path( dataObj$outpath,'gene_loadings.xls') , row.names=F, sep='\t',quote=F )
+		})
 			#	mds.trans <- prcomp(t(tab))$x[,1:3]
 		
 		} else if ( mds.type=='DM') {

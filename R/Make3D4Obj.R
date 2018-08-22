@@ -35,15 +35,15 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE, useRaw=FALSE ) {
 
 		MDS_NAME = 'MDS_PCA100'
-		
-		My.legend3d <- function (...) {
+		title = paste( group, mds.type )
+		My.legend3d <- function (main= '', ...) {
 			if ( ! exists ( 'main')) {
 				main = ''
 			}
 			bgplot3d( {
 				par( mar =c(1,1,1,1),bg='#4C4C4C')
 				plot(0, 0, type = "n", xlim = 0:1, ylim = 0:1, xaxs = "i",
-						yaxs = "i", axes = FALSE, bty = "n", col='#4C4C4C', main=main)
+						yaxs = "i", axes = FALSE, bty = "n", col='#4C4C4C', main=main, col.main =  "white" )
 				legend(...)
 			} )
 		}
@@ -121,17 +121,25 @@ setMethod('Make3D4obj', signature = c ('BioData'),
         if ( cut ) {
                 ## plot points!
 				#browser()
-				My.legend3d ("topright", legend = paste( brks ), pch=16, col= COLS, cex=1,inset =c(0.02))
+				My.legend3d ("topright", legend = paste( brks ), pch=16, col= COLS, cex=1,inset =c(0.02),
+						main = title
+				)
                 rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 
         }
         else {
                 if ( names ) {
-						My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
+						My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, 
+								col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02),
+								main = title
+						)
                         rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
-                        My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02))
+                        My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), 
+								pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02),
+								main = title
+						)
 						rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 						
                 }

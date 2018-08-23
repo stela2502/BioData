@@ -107,6 +107,6 @@ setMethod('reduceTo', signature = c ('BioData'),
 					stop(paste( "the option what='",what,"' is not supported!", sep="") )
 				}
 			}
-			gc(FALSE)
+			x$usedObj$pr = x$usedObj$prGenes = NULL
 			invisible(x)
 		} )

@@ -31,12 +31,18 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 								function(gname) { paste(unlist(stringr::str_split( gname, '\\s+')), collapse='_') }) )
 			} 
 			colnames(x$dat) <- make.names( colnames(x$dat) )
-			if ( is.null(x$usedObj$MDS) ){
-				x$usedObj$MDS <- list()
-			}
-			lapply( names(x$usedObj$MDS), function(n){	rownames(x$usedObj$MDS[[n]]) = colnames(x$dat) } )
+			lapply(c ('MDS', 'MDS_PCA100'), function (n) {
+					if ( ! is.null(x$usedObj[[n]]) ){
+						lapply( names(x$usedObj[[n]]),
+								function(v){	rownames(x$usedObj[[n]][[v]]) = colnames(x$dat) }
+						)
+					}
+					else { x$usedObj[[n]] = list()}
+				}
+			)
+			names(x$usedObj[['MDS_PCA100']]) = paste( 'PCA100', names(x$usedObj[['MDS_PCA100']]) )
 			
-			meta.cell = make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
+			meta.cell = cellexalvrR::make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
 			rownames(meta.cell) <- colnames(x$dat)
 			
 			userGroups = NULL
@@ -69,14 +75,16 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 			if ( is.null(index) ) {
 				index = matrix()
 			}
+			
 			ret = new( 'cellexalvr',
 					data = as.matrix(x$dat),
 					meta.cell= meta.cell, 
 					userGroups= userGroups,
 					meta.gene= as.matrix(x$annotation), 
-					mds=x$usedObj$MDS,
+					mds=c ( x$usedObj$MDS, x$usedObj$MDS_PCA100),
 					index = index
 			)
+			names(ret@mds) = unlist(lapply(names(ret@mds), function(n) { str_replace_all(n, "\\s+", '_') } ))
 			m <- which(ret@data == -1 )
 			if ( length(m) > 0 ) {
 				ret@data[m] = 0

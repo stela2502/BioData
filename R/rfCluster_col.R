@@ -60,7 +60,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 			}
 			processed = FALSE
 			single_res_col <- paste('RFgrouping',name)
-			
+			i = 1
 			tname = paste(n,i,sep='_')
 			if ( is.null(x$usedObj[['rfExpressionSets']][[tname]]) ){
 				i <- length(x$usedObj$rfObj)+i
@@ -197,11 +197,9 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			}else {
 				#predict based on the RFdata
 				print ( "predicting on the calculated grouping" )
-				x$usedObj[['rfExpressionSets']][[RFname]] <- 
-						bestGrouping( x$usedObj[['rfExpressionSets']][[RFname]], group=paste('group n=', m), bestColname = paste('OptimalGrouping',m ,RFname))
+				RFobj <- bestGrouping( x$usedObj[['rfExpressionSets']][[RFname]], group=paste('group n=', m), bestColname = paste('OptimalGrouping',m ,RFname))
 				print( "rf predict")
-				x$samples[, paste( single_res_col) ] <-
-						predict( x$usedObj[['rfExpressionSets']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], t(as.matrix(x$data())) )
+				x$samples[, paste( single_res_col) ] <-	predict( RFobj , t(as.matrix(x$data())) )
 				x$samples[, paste( single_res_col) ] <- factor( x$samples[, paste( single_res_col) ], levels= 1:m )
 				x <- colors_4( x, single_res_col )
 			}

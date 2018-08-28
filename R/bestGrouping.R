@@ -27,7 +27,7 @@ setMethod('bestGrouping', signature = c ('BioData'),
 				x$usedObj[[uObj]] <- randomForest( x= t(as.matrix(fit_4_rf(x)$dat)), y=factor(x$samples[, group]),ntree=2000 )
 			}
 			gc()
-			x
+			x$usedObj[[uObj]]
 		}
 )
 

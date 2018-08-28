@@ -183,7 +183,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				#predict based on the RFdata
 				print ( "predicting on the calculated grouping" )
 				
-				x$usedObj[['rfExpressionSets_row']][[RFname]] <- 
+				rfObj <- 
 						bestGrouping( x$usedObj[['rfExpressionSets_row']][[RFname]], 
 								group=paste('group n=', m), 
 								bestColname = paste('OptimalGrouping',m ,RFname)
@@ -191,9 +191,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				print( "rf predict")
 				
 				x$annotation[, paste( single_res_row) ] <-
-						predict( 
-								x$usedObj[['rfExpressionSets_row']][[RFname]]$usedObj[[paste( 'predictive RFobj group n=',m) ]], 
-								as.matrix(fit_4_rf(x)$dat)
+						predict(rfObj, as.matrix(fit_4_rf(x)$dat)
 						)
 				x$annotation[, paste( single_res_row) ] <- factor( x$annotation[, paste( single_res_row) ], levels= 1:m )
 				x <- colors_4( x, single_res_row )

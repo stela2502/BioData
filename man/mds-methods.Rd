@@ -4,7 +4,7 @@
 \name{mds}
 \alias{mds}
 \alias{mds,BioData-method}
-\title{description of function mds.and.clus}
+\title{Calculate MDS projections for the 3D Make3Dobj function}
 \arguments{
 \item{dataObj}{the BioData object}
 
@@ -15,7 +15,10 @@
 \item{genes}{do it on genes not on samples (default = F)}
 
 \item{LLEK}{the neighbours in the LLE algorithm (default=2)}
+
+\item{useRaw}{base the projection on the raw data and not the n=100 PCA data (default FALSE)}
 }
 \description{
-Calculates the MDS for a given MDS type and stores the 3 dimensions in the object for later use.
+Calculates the MDS for a given MDS type and stores the 3 dimensions 
+in the object for later use. All projections use a n=100 PCA projection as starting material instead of the raw data.
 }

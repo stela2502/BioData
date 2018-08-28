@@ -31,6 +31,8 @@
 \item{size}{the size of the 3D points default = 3.0}
 
 \item{green}{single cell normalization looses gene expression values. Display the cells with lost expression in green or black default=FALSE}
+
+\item{useRaw}{base the projection on the raw data and not the n=100 PCA data (default FALSE)}
 }
 \description{
 This function  created a MDS 3D plot with an inbuilt background describing the data colors

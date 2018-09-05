@@ -35,7 +35,6 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE, useRaw=FALSE ) {
 
 		MDS_NAME = 'MDS_PCA100'
-		title = paste( group, mds.type )
 		My.legend3d <- function (main= '', ...) {
 			if ( ! exists ( 'main')) {
 				main = ''
@@ -76,6 +75,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			}
 			
 		}
+		
+		title = paste( group, mds.type )
+		
 		#browser()
 		if ( genes ) {
 			x <- x$clone()

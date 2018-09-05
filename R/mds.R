@@ -30,15 +30,19 @@ setMethod('mds', signature = c ('BioData'),
 			n = ncol(dataObj$data())
 			if ( n > 100) 
 				n = 100
-			if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) == F ) {
+			if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
 				tmp = dataObj$data()
-				bad = which(tmp == -1)
+				bad = which(tmp@x == -1)
 				if ( length(bad) > 0 ) {
 					tmp[bad] = 0
 				}
-				dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+				dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
+				
+				#dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+				
 				rm(tmp)
-				rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
+				#rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
+				rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
 			}
 		}
 		if ( useRaw ) {
@@ -46,7 +50,8 @@ setMethod('mds', signature = c ('BioData'),
 			tab=t(as.matrix(dataObj$data()))
 		}else {
 			mds_store <- 'MDS_PCA100'
-			tab <- dataObj$usedObj$pr$x	
+			#tab <- dataObj$usedObj$pr$x
+			tab <- dataObj$usedObj$pr@scores
 		}
 	} 
 	else {
@@ -56,22 +61,24 @@ setMethod('mds', signature = c ('BioData'),
 		n = ncol(dataObj$data())
 		if ( n > 100) 
 			n = 100
-		if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes$x), rownames(dataObj$dat) ) == F ) {
+		if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes@scores), rownames(dataObj$dat) ) == F ) {
 			tmp = dataObj$data()
-			bad = which(tmp == -1)
+			bad = which(tmp@x  == -1)
 			if ( length(bad) > 0 ) {
 				tmp[bad] = 0
 			}
-			dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
+			dataObj$usedObj$prGenes <- bpca( as.matrix(tmp), nPcs=100 )
+			#dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
 			rm(tmp)
-			rownames(dataObj$usedObj$pr$x) = rownames(dataObj$dat)
+			#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
+			rownames(dataObj$usedObj$prGenes@scores) = rownames(dataObj$dat)
 		}
 		if ( useRaw ) {
 			mds_store <- 'MDSgene'
 			tab <- t(tab)
 		}else {
 			mds_store <- 'MDSgene_PCA100'
-			tab <- dataObj$usedObj$prGenes$x	
+			tab <- dataObj$usedObj$prGenes@scores	
 		}	
 	}
 	
@@ -125,7 +132,13 @@ setMethod('mds', signature = c ('BioData'),
 				stop("package 'Rtsne' needed for this function to work. Please install it.",
 						call. = FALSE)
 			}
-			mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
+			if ( useRaw ){
+				mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
+			}else {
+				## The data is already PCAed
+				mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F,  verbose=T, pca=F )$Y
+			}
+			
 			rownames(mds.proj) <- rownames(tab)
 			
 		}

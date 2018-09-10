@@ -13,6 +13,10 @@
 \item{bestColname}{the column name to store the best grouping in}
 
 \item{cutoff}{the cutoff percentage where all groups showing less than this percentacge of remapped samples are dropped}
+
+\item{ntree}{for the rf process (default 2000)}
+
+\item{...}{additional variables for the randomForest call}
 }
 \value{
 a distRF object to be analyzed by pamNew

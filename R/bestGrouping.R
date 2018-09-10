@@ -8,11 +8,13 @@
 #' @param group a vector of sample columns that should be checked (the most complex is used only)
 #' @param bestColname the column name to store the best grouping in
 #' @param cutoff the cutoff percentage where all groups showing less than this percentacge of remapped samples are dropped
+#' @param ntree for the rf process (default 2000)
+#' @param ... additional variables for the randomForest call
 #' @title description of function randomForest
 #' @return a distRF object to be analyzed by pamNew
 #' @export 
 if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
-		function ( x, group , bestColname='QualifiedGrouping', cutoff=0.5){
+		function ( x, group , bestColname='QualifiedGrouping', cutoff=0.5, ntree=2000, ...){
 			standardGeneric('bestGrouping')
 		}
 )
@@ -20,9 +22,10 @@ if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
 	print ("Onload warn generic function 'bestGrouping' already defined - no overloading here!")
 }
 setMethod('bestGrouping', signature = c ('BioData'),
-		definition = function (x, group, bestColname='QualifiedGrouping' , cutoff=0.5) {
+		definition = function (x, group, bestColname='QualifiedGrouping' , cutoff=0.5, ... ) {
 			uObj <- paste( 'predictive RFobj', group )
 			rf <- NULL
+			
 			if (  is.null( x$usedObj[[uObj]])){
 				x$usedObj[[uObj]] <- randomForest( x= t(as.matrix(fit_4_rf(x)$dat)), y=factor(x$samples[, group]),ntree=2000 )
 			}

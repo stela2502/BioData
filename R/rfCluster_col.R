@@ -177,9 +177,9 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				m <- match( colnames(x$dat), rownames(d) )
 				x$usedObj$MDS[[single_res_col]] <- d[m,]
 			}
-			
 			x$usedObj[['rfExpressionSets']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets']][[RFname]]$samples, groups[,3:(2+length(k))] )
+			
 			le <- ncol(x$usedObj[['rfExpressionSets']][[RFname]]$samples)
 			colnames(x$usedObj[['rfExpressionSets']][[RFname]]$samples)[(le-length(k)+1):le] <- 
 					paste('group n=',k)

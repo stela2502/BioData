@@ -130,39 +130,49 @@ setMethod('combineGroupings', signature = c ('BioData'),
 	IDS = which( x$usedObj$tmpres == 0 )
 	minGroupOverlap = minGroupOverlap -2
 	
+	## useless - use the others to build the module to include them all.
+	OK = reduceTo( x, copy=T, to=colnames(x$dat)[which( x$usedObj$tmpres != 0)], what='col' )
+	OK$samples$tmp_Group = x$usedObj$tmpres[which( x$usedObj$tmpres != 0)]
+	
 	print ( paste("remapping", length(IDS),"small group cells with lowered group overlap to ", minGroupOverlap) )
+	print("Creating predictive RFobject")
+	RFobj = bestGrouping( OK, 'tmp_Group')
+	print ("apply grouping on the whole dataset")
+	x$samples[, new_name] <- factor(predict( RFobj , t(as.matrix(x$data())) ) )
 	
-	steps = ceiling(length(IDS)/100)
-	pb <- progress_estimated(100)
-	a= 0;
-	for ( i in IDS ) {
-		closestCells(i, orNULL=TRUE)
-		a = a+1
-		if ( a %% steps == 0 ) {
-			pb$tick()$print()
-			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
-		}
-	}
-	pb$stop()
-	#pb$tick()$print()
-	
-	x$usedObj$tmpres[which(is.na(x$usedObj$tmpres))] = 0
-	
-	x$usedObj$tmpgroupID = max(as.numeric(x$usedObj$tmpres))
-	rname = which( as.numeric(x$usedObj$tmpres) == 0 )
-	print ( paste( length(ungroup), "tiny groups with less than" , 
-					minCellsInReturnGroup,"cells per group have been combined into the 'ungrouped' group (n=",
-					length(rname),")"
-			))
-	if ( length(rname) > 0 ){
-		x$usedObj$tmpres[rname] = "ungrouped"
-		rname = c(1:x$usedObj$tmpgroupID, "ungrouped")
-	}else {
-		rname = c(1:x$usedObj$tmpgroupID)
-	}
-	
-	x$samples[,new_name] = factor(x$usedObj$tmpres, levels=rname)
-	x$usedObj$tmpres = NULL
-	x$usedObj$tmpgroupID = NULL
+	print ( paste("remapping", length(IDS),"small group cells with lowered group overlap to ", minGroupOverlap) )
+#	
+#	steps = ceiling(length(IDS)/100)
+#	pb <- progress_estimated(100)
+#	a= 0;
+#	for ( i in IDS ) {
+#		closestCells(i, orNULL=TRUE)
+#		a = a+1
+#		if ( a %% steps == 0 ) {
+#			pb$tick()$print()
+#			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
+#		}
+#	}
+#	pb$stop()
+#	#pb$tick()$print()
+#	
+#	x$usedObj$tmpres[which(is.na(x$usedObj$tmpres))] = 0
+#	
+#	x$usedObj$tmpgroupID = max(as.numeric(x$usedObj$tmpres))
+#	rname = which( as.numeric(x$usedObj$tmpres) == 0 )
+#	print ( paste( length(ungroup), "tiny groups with less than" , 
+#					minCellsInReturnGroup,"cells per group have been combined into the 'ungrouped' group (n=",
+#					length(rname),")"
+#			))
+#	if ( length(rname) > 0 ){
+#		x$usedObj$tmpres[rname] = "ungrouped"
+#		rname = c(1:x$usedObj$tmpgroupID, "ungrouped")
+#	}else {
+#		rname = c(1:x$usedObj$tmpgroupID)
+#	}
+#	
+#	x$samples[,new_name] = factor(x$usedObj$tmpres, levels=rname)
+#	x$usedObj$tmpres = NULL
+#	x$usedObj$tmpgroupID = NULL
 	res
 } )

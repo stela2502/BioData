@@ -1,5 +1,27 @@
+#' @name plot_velocyto
+#' @aliases plot_velocyto,BioData-method
+#' @rdname plot_velocyto-methods
+#' @docType methods
+#' @description use a velocyto input and plot the velocities on one of the MDS projections
+#' @param x The BioData object
+#' @param velo the velocyto read reads
+#' @param translation a two columns table with 'velo' and 'BioData' sample names (translation table)
+#' @param group the group to be plotted
+#' @param mds_name the mds to plot on (default "Expression PCA")
+#' @param ret an optional list gotten from the last plot_velocyto run (default=list())
+#' @param ofile an optional outfile for the figure (pdf) default= NULL
+#' @param ... unused at the moment
+#' @title description of function plot_velocyto
+#' @return a list of velocyto.R results (reusable)
+#' @export 
+setGeneric('plot_velocyto', ## Name
+	function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) { ## Argumente der generischen Funktion
+		standardGeneric('plot_velocyto') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	}
+)
 
-plot_velocyto <- function( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) {
+setMethod('plot_velocyto', signature = c ('BioData'),
+	definition = function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) {
 	
 	if (!requireNamespace("velocyto.R", quietly = TRUE)) {
 		stop("velocyto.R needed for this function to work. Please install it.",
@@ -14,8 +36,6 @@ plot_velocyto <- function( x, velo, translation, group, mds_name = "Expression P
 	
 	# What we will do here:
 	# get rid of all velocyto samples that are not in our dataset
-	
-	
 	
 	ok = match( colnames(velo$spliced), translation$velo )
 	ok = which(is.na(ok)==F)
@@ -67,4 +87,4 @@ plot_velocyto <- function( x, velo, translation, group, mds_name = "Expression P
 		dev.off()
 	}
 	invisible(ret)	
-} 
+}  )

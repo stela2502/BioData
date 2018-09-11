@@ -22,3 +22,8 @@ define_grouping(x, basedOn, colname, newNames, what = "col")
 \description{
 This will create a new sample or annotation column based on an old grouping and a list.
 }
+\examples{
+# data is a BioData object with a sample group 'oldG' and the levels c( 1, 2, 3, 4)
+define_grouping( data, 'oldG', 'newGrouping', list( 'A' = c( 1,4), B= c(2,3)), 'col')
+# will create a 'newGrouping' column in the $samples table with the entries A and B
+}

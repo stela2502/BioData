@@ -10,10 +10,11 @@
 #' @param genes do it on genes not on samples (default = F)
 #' @param LLEK the neighbours in the LLE algorithm (default=2)
 #' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
+#' @param dim default 3
 #' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 
 if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
-	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F) { ## Argumente der generischen Funktion
+	function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F, dim=3) { ## Argumente der generischen Funktion
 		standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -22,7 +23,7 @@ if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
 }
 
 setMethod('mds', signature = c ('BioData'),
-	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F ) {
+	definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F, dim=3 ) {
 	## the code is crap re-code!!
 	mds_store = NULL
 	if(onwhat=="Expression"){
@@ -91,7 +92,9 @@ setMethod('mds', signature = c ('BioData'),
 			tab <- dataObj$usedObj$prGenes@scores	
 		}	
 	}
-	
+	if ( dim != 3)
+	mds_store = paste( mds_store, 'dim',dim, sep="_")
+
 	## define mds storage position
 	if ( is.null( dataObj$usedObj[[mds_store]]) ) {
 		dataObj$usedObj[[mds_store]] = list()
@@ -105,7 +108,7 @@ setMethod('mds', signature = c ('BioData'),
 		#system ( 'rm loadings.png' )
 				
 		if(mds.type == "PCA"){
-			mds.proj <- tab[,1:3]
+			mds.proj <- tab[,1:dim]
 			try( {
 			png ( file=file.path( dataObj$outpath,'loadings.png'), width=1000, height=1000 )
 			plot (  pr$rotation[,1:2] , col='white' );
@@ -135,7 +138,7 @@ setMethod('mds', signature = c ('BioData'),
 				distance = 'cosine'
 			}
 			dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma)
-			mds.proj <- destiny::as.data.frame(dm)[,1:3]
+			mds.proj <- destiny::as.data.frame(dm)[,1:dim]
 			
 		}else if ( mds.type == "TSNE"){
 			if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {
@@ -143,10 +146,10 @@ setMethod('mds', signature = c ('BioData'),
 						call. = FALSE)
 			}
 			if ( useRaw ){
-				mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
+				mds.proj <- Rtsne( tab, dims=dim , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
 			}else {
 				## The data is already PCAed
-				mds.proj <- Rtsne( tab, dims=3 , check_duplicates =F,  verbose=T, pca=F )$Y
+				mds.proj <- Rtsne( tab, dims=dim , check_duplicates =F,  verbose=T, pca=F )$Y
 			}
 			
 			rownames(mds.proj) <- rownames(tab)
@@ -154,11 +157,11 @@ setMethod('mds', signature = c ('BioData'),
 		}
 		
 		else if ( mds.type == "LLE"){
-			mds.proj <- LLE( tab, dim = 3, k = as.numeric(LLEK) )
+			mds.proj <- LLE( tab, dim = dim, k = as.numeric(LLEK) )
 			#	mds.trans <- LLE( t(tab), dim = 3, k = as.numeric(LLEK) )
 	
 		}else if ( mds.type == "ISOMAP"){
-			mds.proj <- Isomap( tab, dim = 3, k = as.numeric(LLEK) )$dim3
+			mds.proj <- Isomap( tab, dim = dim, k = as.numeric(LLEK) )$dim3
 			#	mds.trans <- Isomap( t(tab), dim = 3, k = as.numeric(LLEK) )$dim3
 	
 		}else if ( mds.type == "ZIFA" ) {
@@ -182,9 +185,12 @@ setMethod('mds', signature = c ('BioData'),
 				rownames(mds.proj) <- colnames(dataObj$dat)
 			}
 			colnames(mds.proj) <- c( 'x','y','z')
+			if ( dim ==2 ) {
+				mds.proj = mds.proj[,1:2]
+			}
 			
 		} else if ( mds.type == "DDRTree" ) {
-			DDRTree_res <- DDRTree( t(tab), dimensions=3)
+			DDRTree_res <- DDRTree( t(tab), dimensions=dim)
 			mds.proj <- t(DDRTree_res$Z)
 			rownames(mds.proj) <- rownames(tab)
 			dataObj$usedObj$DRRTree.genes <- DDRTree_res
@@ -202,5 +208,5 @@ setMethod('mds', signature = c ('BioData'),
 		dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 	}
 	
-	invisible(dataObj)
+	invisible(dataObj$usedObj[[mds_store]][[this.k]])
 } )

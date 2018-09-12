@@ -41,7 +41,7 @@ setMethod('mds', signature = c ('BioData'),
 				if ( length(bad) > 0 ) {
 					tmp[bad] = 0
 				}
-				dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
+				dataObj$usedObj$pr <- pcaMethods::bpca( t(as.matrix(tmp)), nPcs=100 )
 				
 				#dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
 				
@@ -77,7 +77,7 @@ setMethod('mds', signature = c ('BioData'),
 			if ( length(bad) > 0 ) {
 				tmp[bad] = 0
 			}
-			dataObj$usedObj$prGenes <- bpca( as.matrix(tmp), nPcs=100 )
+			dataObj$usedObj$prGenes <- pcaMethods::bpca( as.matrix(tmp), nPcs=100 )
 			#dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
 			rm(tmp)
 			#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)

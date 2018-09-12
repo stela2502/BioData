@@ -30,7 +30,12 @@ setMethod('mds', signature = c ('BioData'),
 			n = ncol(dataObj$data())
 			if ( n > 100) 
 				n = 100
-			if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+			if ( ! is.null(dataObj$usedObj$pr) ){
+		    if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+				dataObj$usedObj$pr = NULL
+			}
+			}
+			if ( is.null(dataObj$usedObj$pr) ){
 				tmp = dataObj$data()
 				bad = which(tmp@x == -1)
 				if ( length(bad) > 0 ) {
@@ -61,7 +66,12 @@ setMethod('mds', signature = c ('BioData'),
 		n = ncol(dataObj$data())
 		if ( n > 100) 
 			n = 100
-		if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes@scores), rownames(dataObj$dat) ) == F ) {
+		if ( ! is.null(dataObj$usedObj$prGenes) ){
+			if ( all.equal( rownames(dataObj$usedObj$prGenes@scores), rownames(dataObj$dat) ) == F ) {
+				dataObj$usedObj$prGenes = NULL
+			}
+		}
+		if ( is.null(dataObj$usedObj$prGenes) ) {
 			tmp = dataObj$data()
 			bad = which(tmp@x  == -1)
 			if ( length(bad) > 0 ) {

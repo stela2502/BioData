@@ -5,23 +5,24 @@
 #' @description use a velocyto input and plot the velocities on one of the MDS projections
 #' @param x The BioData object
 #' @param velo the velocyto read reads
-#' @param translation a two columns table with 'velo' and 'BioData' sample names (translation table)
+#' @param veloCol the column in the BioData samples table containing the velocyto cell names
 #' @param group the group to be plotted
 #' @param mds_name the mds to plot on (default "Expression PCA")
 #' @param ret an optional list gotten from the last plot_velocyto run (default=list())
 #' @param ofile an optional outfile for the figure (pdf) default= NULL
+#' @param arrow.scale the arrow.scale in the final figure (default 5)
 #' @param ... unused at the moment
 #' @title description of function plot_velocyto
 #' @return a list of velocyto.R results (reusable)
 #' @export 
 setGeneric('plot_velocyto', ## Name
-	function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) { ## Argumente der generischen Funktion
+	function ( x, velo, veloCol, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, arrow.scale=5, ... ) { ## Argumente der generischen Funktion
 		standardGeneric('plot_velocyto') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('plot_velocyto', signature = c ('BioData'),
-	definition = function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) {
+	definition = function ( x, velo, veloCol, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, arrow.scale=5, ... ) {
 	
 	if (!requireNamespace("velocyto.R", quietly = TRUE)) {
 		stop("velocyto.R needed for this function to work. Please install it.",
@@ -37,26 +38,34 @@ setMethod('plot_velocyto', signature = c ('BioData'),
 	# What we will do here:
 	# get rid of all velocyto samples that are not in our dataset
 	
-	ok = match( colnames(velo$spliced), translation$velo )
-	ok = which(is.na(ok)==F)
-	velo$spliced = velo$spliced[,ok]
-	velo$unspliced = velo$sunspliced[,ok]
-	velo$ambiguous = velo$ambiguous[,ok]
+	m = match( x$samples[,veloCol], colnames(velo$spliced) )
+	matching_BioDataCols =which(is.na(m)==F)
+    OKveloCol = m[which(is.na(m)==F)]
+	all.equal(x$samples[ matching_BioDataCols,veloCol], colnames(velo$spliced)[OKveloCol] )
 	
-	colnames(velo$spliced) = colnames(velo$unspliced) = 
-			translation[match(colnames(velo$spliced), translation[,'velo']  ),'BioData']
+	velo$spliced   = velo$spliced[,OKveloCol]
+	velo$unspliced = velo$unspliced[,OKveloCol]
+	velo$ambiguous = velo$ambiguous[,OKveloCol]
+		
+	colnames(velo$spliced) = colnames(velo$unspliced) = colnames (x$dat )[matching_BioDataCols]
+	
 	emat <- velo$spliced
 	nmat <- velo$unspliced
-	
+
 	# calculate using velocyto.R
 	if ( is.null( ret$cell.dist)) {
 		print ("calculate cell distances")
 		ret$rvel.cd = NULL
 		ret$velocity_vals = NULL
-		ret$cell.dist <- as.dist(1-velocyto.R::armaCor(t(x$usedObj$pr@scores)))
+		ret$cell.dist <- as.dist(1-velocyto.R::armaCor(t(x$usedObj$pr@scores[matching_BioDataCols,])))
 	}
 	
-	emb <- x$MDS_PCA100[[mds_name]][,1:2]
+	emb = mds(x, mds.type=mds_name, dim=2 )[matching_BioDataCols,]
+	#emb <- x$usedObj$MDS_PCA100[[mds_name]][matching_BioDataCols,1:2]
+	
+	cluster.label=x$samples[matching_BioDataCols,group]
+	names(cluster.label) = colnames(x$dat)[matching_BioDataCols]
+	
 	
 	emat <- velocyto.R::filter.genes.by.cluster.expression(emat,cluster.label,min.max.cluster.average = 0.5)
 	nmat <- velocyto.R::filter.genes.by.cluster.expression(nmat,cluster.label,min.max.cluster.average = 0.05)
@@ -69,19 +78,25 @@ setMethod('plot_velocyto', signature = c ('BioData'),
 	}
 	
 	## now get the colors
-	col = data$usedObj$colorRange[[group]][ data$samples[, group] ]
+	
+	#col = x$usedObj$colorRange[[group]][ x$samples[matching_BioDataCols, group] ]
+	#names(col) = colnames(x$dat)[matching_BioDataCols]
+	
+	col = x$usedObj$colorRange[[group]][ x$samples[, group] ]
 	names(col) = colnames(x$dat)
 	
 	## and plot
 	print ("create plot")
 	## here is where we need to create the plot outfile
 	if ( ! is.null(ofile)) {
-		pdf( file=paste(ofile ,'pdf',sep='.'), width=8, height=8)
+		png( file=paste(ofile ,'png',sep='.'), width=800, height=800)
 	}
+	if ( ! is.null(ret$velocity_vals$cc))
 	ret$velocity_vals = velocyto.R::show.velocity.on.embedding.cor(
-			emb, ret$rvel.cd, n=300, scale='sqrt', cell.colors=col,
-			cex=0.8, arrow.scale=5, show.grid.flow=TRUE, min.grid.cell.mass=0.5,
-			grid.n=40, arrow.lwd=1, do.par=F, cell.border.alpha = 0.1, return.details=T
+			mds(x, mds.type=mds_name, dim=2 ), ret$rvel.cd, n=300, scale='sqrt', cell.colors=col,
+			cex=0.8, arrow.scale=arrow.scale, show.grid.flow=TRUE, min.grid.cell.mass=0.5,
+			grid.n=40, arrow.lwd=1, do.par=F, cell.border.alpha = 0.1, return.details=T,
+			cc= ret$velocity_vals$cc
 	)
 	if ( ! is.null(ofile)) {
 		dev.off()

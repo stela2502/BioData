@@ -6,15 +6,15 @@
 \alias{plot_velocyto,BioData-method}
 \title{description of function plot_velocyto}
 \usage{
-plot_velocyto(x, velo, translation, group, mds_name = "Expression PCA",
-  ret = list(), ofile = NULL, ...)
+plot_velocyto(x, velo, veloCol, group, mds_name = "Expression PCA",
+  ret = list(), ofile = NULL, arrow.scale = 5, ...)
 }
 \arguments{
 \item{x}{The BioData object}
 
 \item{velo}{the velocyto read reads}
 
-\item{translation}{a two columns table with 'velo' and 'BioData' sample names (translation table)}
+\item{veloCol}{the column in the BioData samples table containing the velocyto cell names}
 
 \item{group}{the group to be plotted}
 
@@ -23,6 +23,8 @@ plot_velocyto(x, velo, translation, group, mds_name = "Expression PCA",
 \item{ret}{an optional list gotten from the last plot_velocyto run (default=list())}
 
 \item{ofile}{an optional outfile for the figure (pdf) default= NULL}
+
+\item{arrow.scale}{the arrow.scale in the final figure (default 5)}
 
 \item{...}{unused at the moment}
 }

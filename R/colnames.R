@@ -2,19 +2,19 @@
 #' @aliases colnames,BioData-method
 #' @rdname colnames-methods
 #' @docType methods
-#' @description 
-#' @param x  TEXT MISSING
-#' @param do.NULL  TEXT MISSING default= TRUE
-#' @param prefix  TEXT MISSING default= "col"
-#' @title description of function colnames
+#' @description simple wrapper around colnames(x$dat)
+#' @param x the BioData object
+#' @param do.NULL see base::colnames (default= TRUE)
+#' @param prefix see base::colnames  T default= "col"
+#' @title warpper for colnames(x$dat)
 #' @export 
-setGeneric('colnames', ## Name
+if ( ! isGeneric('colnames') ){setGeneric('colnames', ## Name
 	function ( x, do.NULL = TRUE, prefix = "col") { ## Argumente der generischen Funktion
 		standardGeneric('colnames') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
-)
+)}
 
 setMethod('colnames', signature = c ('BioData'),
 	definition = function ( x, do.NULL = TRUE, prefix = "col") {
-	colnames(x$dat)
+	colnames(x$dat, do.NULL = do.NULL, prefix = prefix)
 } )

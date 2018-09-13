@@ -17,6 +17,8 @@
 \item{LLEK}{the neighbours in the LLE algorithm (default=2)}
 
 \item{useRaw}{base the projection on the raw data and not the n=100 PCA data (default FALSE)}
+
+\item{dim}{default 3}
 }
 \description{
 Calculates the MDS for a given MDS type and stores the 3 dimensions 

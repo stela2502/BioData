@@ -22,11 +22,17 @@ Depends:
 	mclust,
 	RDRToolbox,
 	DDRTree,
-	Matrix
+	Matrix,
+	topGO,
+	pcaMethods,
+	destiny,
+	org.Mm.eg.db,
+	org.Hs.eg.db
 biocViews:
 	RDRToolbox,
 	pcaMethods,
 	destiny,
+	topGO,
 	org.Mm.eg.db,
 	org.Hs.eg.db
 Remotes:

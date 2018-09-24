@@ -30,7 +30,7 @@ setMethod('clusters', signature = c ('BioData'),
 			clusters <- NULL
 			hc <- NULL
 			if(onwhat=="Expression"){
-				tab <- dataObj$data()
+				tab <- as.matrix(dataObj$data())
 				m <- min(tab)
 				if ( m == -1 | m == -21 ){ ## get rid of them
 					tab[which( tab == m)] = m +1

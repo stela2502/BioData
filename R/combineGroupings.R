@@ -12,9 +12,9 @@
 #' @param minCellsInReturnGroup merge all groups with less than this number of cells into a ungrouped group default=1% of the bigges sname subgroup
 #' @title description of function combineGroupings
 #' @details This function will calculate the overlap in group names for each cell to all other cells,
-#' select the cells that match the requirement ( minCellOverlap and minGroupOverlap) and asigne the group id of the biggest group
-#' to this cell.
-#' The same algorythm will be applied for all cells that end up in small groups before the final ungrouped cells are assigned.
+#' @details select the cells that match the requirement ( minCellOverlap and minGroupOverlap) and asigne the group id of the biggest group
+#' @details to this cell.
+#' @details The same algorythm will be applied for all cells that end up in small groups before the final ungrouped cells are assigned.
 #' @examples combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 #' @export 
 setGeneric('combineGroupings', ## Name

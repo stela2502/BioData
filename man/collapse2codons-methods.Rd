@@ -16,3 +16,4 @@
 This function collapses the data to the different codons and reports the sum.fun of all codons.
 Single fragments can/will be counted multiple times.
 }
+

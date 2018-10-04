@@ -23,3 +23,4 @@ Creates the legend for one sample or annotation variable using either the inbuil
 color or an external one in the col option. If a file is given, the data will be plotted into a file. 
 If neither pdf of svg is true the data will be plotted to a png file. File endings will always be added - so do not do that yourself.
 }
+

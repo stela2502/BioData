@@ -21,7 +21,7 @@ combineGroupings(x, colGroups, new_name = "Merged Group 1",
 
 \item{minGroupOverlap}{while caulculating the overlap - how many groups should overlap in order to considder a cell overlapping default=length(colGroups)-2}
 
-\item{minCellsInReturnGroup}{merge all groups with less than this number of cells into a ungrouped group default=1% of the bigges sname subgroup}
+\item{minCellsInReturnGroup}{merge all groups with less than this number of cells into a ungrouped group default=1\% of the bigges sname subgroup}
 }
 \description{
 combine different grouping informations to create overlaps. 
@@ -39,3 +39,4 @@ The same algorythm will be applied for all cells that end up in small groups bef
 \examples{
 combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 }
+

@@ -14,29 +14,27 @@ Depends:
     gplots,
     weights,
     reshape2,
-	rgl,
-	gplots,
+    rgl,
+    gplots,
     RFclust.SGE,
     RSQLite,
-	ggplot2,
-	mclust,
-	RDRToolbox,
-	DDRTree,
-	Matrix
-biocViews:
-	RDRToolbox,
-	pcaMethods,
-	destiny,
-	org.Mm.eg.db,
-	org.Hs.eg.db
-Remotes:
-	stela2502/RFclust.SGE
+    ggplot2,
+    mclust,
+    RDRToolbox,
+    DDRTree,
+    Matrix
+biocViews: RDRToolbox,
+    pcaMethods,
+    destiny,
+    org.Mm.eg.db,
+    org.Hs.eg.db
+Remotes: stela2502/RFclust.SGE
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests:
     testthat,
-	DESeq2,
-	MAST,
-	Seurat
-RoxygenNote: 6.1.0.9000
+    DESeq2,
+    MAST,
+    Seurat
+RoxygenNote: 5.0.1

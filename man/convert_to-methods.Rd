@@ -20,3 +20,4 @@ convert_to(x, type = c("MAST", "DESeq2", "scran"), species = NULL, ...)
 \description{
 convert a biodata object into another object type
 }
+

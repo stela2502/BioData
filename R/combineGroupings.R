@@ -9,7 +9,7 @@
 #' @param new_name the name of the new grouping (default="Merged Group 1" will replace existing information)
 #' @param minCellOverlap while calculating the grouing overlap - how many cells need to overlap with each other default=5 
 #' @param minGroupOverlap while caulculating the overlap - how many groups should overlap in order to considder a cell overlapping default=length(colGroups)-2
-#' @param minCellsInReturnGroup merge all groups with less than this number of cells into a ungrouped group default=1% of the bigges sname subgroup
+#' @param minCellsInReturnGroup merge all groups with less than this number of cells into a ungrouped group default=1\% of the bigges sname subgroup
 #' @title description of function combineGroupings
 #' @details This function will calculate the overlap in group names for each cell to all other cells,
 #' @details select the cells that match the requirement ( minCellOverlap and minGroupOverlap) and asigne the group id of the biggest group

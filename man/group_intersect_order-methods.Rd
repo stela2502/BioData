@@ -18,3 +18,4 @@ group_intersect_order(x, group, otherGroup)
 \description{
 use a second ordering to reorder a given sample grouping
 }
+

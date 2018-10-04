@@ -17,3 +17,4 @@
 Adds a stst table to the object
 }
 \keyword{datasets}
+

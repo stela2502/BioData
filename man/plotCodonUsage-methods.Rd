@@ -28,3 +28,4 @@
 plots the codon usage for one sample
 The function uses sampleCodonUsage() to extract this information from for the sample
 }
+

@@ -9,7 +9,7 @@
 #' @param newNames the list "with new_group_name" = c( "old Group Names" ) structure
 #' @param what create a sample ('col') or annotation ('row') grouping
 #' @title description of function define_grouping
-#' @example 
+#' @examples
 #' # data is a BioData object with a sample group 'oldG' and the levels c( 1, 2, 3, 4)
 #' define_grouping( data, 'oldG', 'newGrouping', list( 'A' = c( 1,4), B= c(2,3)), 'col')
 #' # will create a 'newGrouping' column in the $samples table with the entries A and B

@@ -39,4 +39,4 @@ Suggests:
 	DESeq2,
 	MAST,
 	Seurat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.0.9000

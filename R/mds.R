@@ -138,13 +138,13 @@ setMethod('mds', signature = c ('BioData'),
 					## there is an extremely efficient python implementation of that available.
 					## lets try to use that:
 					## first export the '\t' separated file
-					if ( file.exists( 'runTSNE.py' ) ){
-						
+					if ( file.exists( 'runTSNE.py' ) & ! file.exists( 'tSNE_dim3_coods.csv') ){
 						print ( "The pyton process should be started and processing the data - please check manually")
+						return (invisible(dataObj))
 						
 					}else if ( ! file.exists( 'tSNE_dim3_coods.csv' ) )  {
 						
-						write.table( tab, sep="\t", file="TSNE_data.csv", quote=F )
+						write.table( t(tab), sep=",", file="TSNE_data.csv", quote=F )
 						fileConn<-file( 'runTSNE.py' )
 						writeLines(c(
 										"from MulticoreTSNE import MulticoreTSNE as TSNE",
@@ -152,7 +152,7 @@ setMethod('mds', signature = c ('BioData'),
 										"import numpy as np",
 										"",
 										"tsne = TSNE(n_jobs=4,n_components=3)",
-										"X = pd.io.parsers.read_csv('Cytof_data_150k.csv',sep='\t',index_col=0)",
+										"X = pd.io.parsers.read_csv('TSNE_data.csv',sep=',',index_col=0)",
 										"",
 										"Y = tsne.fit_transform(np.transpose(X))",
 										"",
@@ -164,10 +164,11 @@ setMethod('mds', signature = c ('BioData'),
 						system( paste(Sys.which('python'), 'runTSNE.py' ) )
 						print ("the external python script has been run - rerun this function to check if it is finished.")
 						print ( "in case the python script does not produce output (1) try to install MulticoreTSNE grom its git resource or (2) use mds.type='TSNE_R'")
+						return (invisible(dataObj))
 					} else {
 						## OK the output file has been produced
 						mds.proj <- read.delim( 'tSNE_dim3_coods.csv', sep="," );
-						browser()
+						rownames(mds.proj) <- rownames(tab)
 					}
 				}else if ( mds.type == "TSNE_R"){
 					if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {

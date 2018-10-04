@@ -9,6 +9,8 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 
 x <- BioData$new( dat, annotation=annotation,  Samples=samples, name="testObject",namecol='sname', outpath = "" )
 
+mds( x, mds.type='TSNE')
+
 expect_equal( class( x ), c('BioData', 'R6') )
 
 reduceTo(x,what='row', to=paste( 'gene', c(1,50:100)), name="rows dropped" )

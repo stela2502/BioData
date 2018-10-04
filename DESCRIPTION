@@ -22,7 +22,11 @@ Depends:
     mclust,
     RDRToolbox,
     DDRTree,
-    Matrix
+    Matrix,
+    pcaMethods,
+    destiny,
+    org.Mm.eg.db,
+    org.Hs.eg.db
 biocViews: RDRToolbox,
     pcaMethods,
     destiny,

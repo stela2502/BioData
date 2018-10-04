@@ -30,7 +30,13 @@ setMethod('mds', signature = c ('BioData'),
 					n = ncol(dataObj$data())
 					if ( n > 100) 
 						n = 100
-					if ( is.null(dataObj$usedObj$pr) |  all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+					rerun = 0
+					if ( is.null(dataObj$usedObj$pr) ){
+						rerun = 1	
+					}else if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+						rerun = 1
+					}
+					if ( rerun == 1) {
 						tmp = dataObj$data()
 						bad = which(tmp@x == -1)
 						if ( length(bad) > 0 ) {

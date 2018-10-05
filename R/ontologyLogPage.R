@@ -103,7 +103,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 #' @aliases rmdLink,BioData-method
 #' @rdname rmdLink-methods
 #' @docType methods
-#' @description creates a linke in the structure [<name>](<link><name>){target='blank'}\n
+#' @description creates a linke in the structure [<name>](<link><name>){target='blank'}
 #' @param name the displayed text
 #' @param link the link address
 #' @param lineEnd add a line end at the end of every entry (default =T) 

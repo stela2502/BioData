@@ -24,4 +24,3 @@
 Calculates the MDS for a given MDS type and stores the 3 dimensions 
 in the object for later use. All projections use a n=100 PCA projection as starting material instead of the raw data.
 }
-

@@ -14,4 +14,3 @@
 This function creates a BioData object from a data frame only assuming, that the first column of the data frame
 contains the row names. The sample table will be constructed from the colnames(x)[-1] vector.
 }
-

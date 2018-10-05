@@ -27,4 +27,3 @@ function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function
 CodonHeatmap specific for tRNAMINT data. These heatmaps should be run on size ordered objects 
 in order to visualize the read counts of the different tRNA fragments starting from the 5' over the center to the 3' and full length fragments.
 }
-

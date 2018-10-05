@@ -21,4 +21,3 @@ An easy function to register the inbuilt (G)enes (O)f (I)nterest lists 'TFs' and
 
 'epigenetic' are supported at the moment
 }
-

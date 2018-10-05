@@ -20,4 +20,3 @@ addCellCyclePhase(x, s.genes = NULL, g2m.genes = NULL, gnameCol = NULL)
 \description{
 Uses Seurat to address the cell cycle phase
 }
-

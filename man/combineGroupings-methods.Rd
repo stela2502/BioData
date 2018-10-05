@@ -39,4 +39,3 @@ The same algorythm will be applied for all cells that end up in small groups bef
 \examples{
 combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 }
-

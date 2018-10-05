@@ -13,4 +13,3 @@
 \description{
 this function reorderes the BioData object based on a column in the annotation table (e.g. for plotting)
 }
-

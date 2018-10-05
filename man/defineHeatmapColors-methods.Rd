@@ -20,4 +20,3 @@ a list with the modified merged table and the colors vector
 \description{
 uses ggplot2 to plot heatmaps
 }
-

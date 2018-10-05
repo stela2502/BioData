@@ -20,23 +20,19 @@ Depends:
     RSQLite,
     ggplot2,
     mclust,
-    DDRTree,
     RDRToolbox,
-   Matrix,
-     topGO,
+    DDRTree,
+    Matrix,
+    pcaMethods,
     destiny,
-     pcaMethods,
     org.Mm.eg.db,
-       org.Hs.eg.db
-biocViews:
-	RDRToolbox,
-	pcaMethods,
-	destiny,
-	topGO,
-	org.Mm.eg.db,
-	org.Hs.eg.db
-Remotes:
-	stela2502/RFclust.SGE
+    org.Hs.eg.db
+biocViews: RDRToolbox,
+    pcaMethods,
+    destiny,
+    org.Mm.eg.db,
+    org.Hs.eg.db
+Remotes: stela2502/RFclust.SGE
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -45,4 +41,4 @@ Suggests:
     DESeq2,
     MAST,
     Seurat
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1.9000

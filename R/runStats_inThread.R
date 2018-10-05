@@ -10,11 +10,10 @@
 #' @param B if not all conditions should be used condition B
 #' @param covariates should covariates be used - name them here
 #' @param form a specific formualr to use? State it here
-#' @param setting the slurm settings to use as list (default NULL)
 #' @title description of function runStats_inThread
 #' @export 
 setGeneric('runStats_inThread', ## Name
-	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings=NULL  ) { ## Argumente der generischen Funktion
+	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings = NULL ) { ## Argumente der generischen Funktion
 		standardGeneric('runStats_inThread') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
@@ -81,14 +80,9 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )
 		)
-		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'R' ) ) ) )
-		cat(script, file= file.path( x$outpath, fname( ofile_base, 'R' )) )
+		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'sh' ) ) ) )
+		cat(script, file= file.path( x$outpath, fname( ofile_base, 'sh' )) )
 		## run the script
-		cmd = paste( sep='',
-				"cd ", x$outpath," && ", 
-				"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 -- ", 
-				fname(ofile_base, 'R') 
-		)
 		if ( ! is.null(settings) ) {
 			## easy and simple - use the Perl stefanls_libs::SLURM runCommand.pl script
 			opt = ""
@@ -105,11 +99,15 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			## Hope that works ;-)
 			## But set the PID file right here as the slurm might take some time to start
 			system( paste("touch", fname(ofile_base,'pid') ) )
-		}
+		}else {
 		system( 
-			paste( sep='', cmd , "' &"
+			paste( sep='',
+				"cd ", x$outpath," && ", 
+				"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 -- '", 
+				fname(ofile_base, 'sh') , "' &"
 			)
 		)
+		}
 	}
 	else { ## the script
 		print ( "read the data" ) 

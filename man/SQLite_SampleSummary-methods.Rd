@@ -14,4 +14,3 @@ SQLite_SampleSummary(fname)
 \description{
 Connect to a sqlite database and retrieve a sample read count summary for all the stored genes.
 }
-

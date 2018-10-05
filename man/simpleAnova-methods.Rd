@@ -24,4 +24,3 @@ or general trends in the dataset. This function adds the results into the stats 
 
 of the BioData object.
 }
-

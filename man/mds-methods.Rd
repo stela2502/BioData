@@ -17,9 +17,10 @@
 \item{LLEK}{the neighbours in the LLE algorithm (default=2)}
 
 \item{useRaw}{base the projection on the raw data and not the n=100 PCA data (default FALSE)}
+
+\item{pythonEnv}{if needed the virtual environment for the MulticoreTSNE call (default = NULL)}
 }
 \description{
 Calculates the MDS for a given MDS type and stores the 3 dimensions 
 in the object for later use. All projections use a n=100 PCA projection as starting material instead of the raw data.
 }
-

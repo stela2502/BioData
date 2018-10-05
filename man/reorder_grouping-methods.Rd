@@ -20,4 +20,3 @@ reorder_grouping(obj, group, new_order, what = "col")
 \description{
 Reorder a grouping after some checks that the id string is suitable to do this
 }
-

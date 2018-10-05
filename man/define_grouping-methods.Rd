@@ -27,4 +27,3 @@ This will create a new sample or annotation column based on an old grouping and 
 define_grouping( data, 'oldG', 'newGrouping', list( 'A' = c( 1,4), B= c(2,3)), 'col')
 # will create a 'newGrouping' column in the $samples table with the entries A and B
 }
-

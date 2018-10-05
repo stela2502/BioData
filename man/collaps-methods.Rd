@@ -18,4 +18,3 @@
 This function will collpase the data in the BioData to only contain one value
 per sample group.
 }
-

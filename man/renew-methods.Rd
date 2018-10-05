@@ -11,4 +11,3 @@
 \description{
 update the class definition by re-creating the instance
 }
-

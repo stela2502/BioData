@@ -10,10 +10,11 @@
 #' @param genes do it on genes not on samples (default = F)
 #' @param LLEK the neighbours in the LLE algorithm (default=2)
 #' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
+#' @param pythonEnv if needed the virtual environment for the MulticoreTSNE call set to something like 'source <myPrivateEnvPath>/bin/activate'  (default = NULL)
 #' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 
 if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
-			function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F) { ## Argumente der generischen Funktion
+			function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F, pythonEnv=NULL) { ## Argumente der generischen Funktion
 				standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
 			}
 	)
@@ -22,7 +23,7 @@ if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
 }
 
 setMethod('mds', signature = c ('BioData'),
-		definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F ) {
+		definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F, pythonEnv=NULL ) {
 			## the code is crap re-code!!
 			mds_store = NULL
 			if(onwhat=="Expression"){
@@ -160,8 +161,11 @@ setMethod('mds', signature = c ('BioData'),
 										"df.to_csv('tSNE_dim3_coods.csv')"
 								), fileConn )
 						close(fileConn)
-						
-						system( paste(Sys.which('python'), 'runTSNE.py' ) )
+						if ( ! is.null(pythonEnv)) {
+							system( paste( pythonEnv, "&&", Sys.which('python'), 'runTSNE.py' ) )
+						}else {
+							system( paste(Sys.which('python'), 'runTSNE.py' ) )
+						}
 						print ("the external python script has been run - rerun this function to check if it is finished.")
 						print ( "in case the python script does not produce output (1) try to install MulticoreTSNE grom its git resource or (2) use mds.type='TSNE_R'")
 						return (invisible(dataObj))

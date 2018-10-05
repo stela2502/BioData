@@ -21,7 +21,7 @@ combineGroupings(x, colGroups, new_name = "Merged Group 1",
 
 \item{minGroupOverlap}{while caulculating the overlap - how many groups should overlap in order to considder a cell overlapping default=length(colGroups)-2}
 
-\item{minCellsInReturnGroup}{merge all groups with less than this number of cells into a ungrouped group default=1% of the bigges sname subgroup}
+\item{minCellsInReturnGroup}{merge all groups with less than this number of cells into a ungrouped group default=1\% of the bigges sname subgroup}
 }
 \description{
 combine different grouping informations to create overlaps. 
@@ -29,10 +29,14 @@ Implemented to combine different subset RFclusterings into one including all fea
 }
 \details{
 This function will calculate the overlap in group names for each cell to all other cells,
+
 select the cells that match the requirement ( minCellOverlap and minGroupOverlap) and asigne the group id of the biggest group
+
 to this cell.
+
 The same algorythm will be applied for all cells that end up in small groups before the final ungrouped cells are assigned.
 }
 \examples{
 combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 }
+

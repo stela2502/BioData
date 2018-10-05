@@ -23,3 +23,4 @@ default == rownames(x$dat)}
 \description{
 Allows the user to define (G)enes (O)f (I)nterest lists in the object
 }
+

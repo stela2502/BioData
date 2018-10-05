@@ -7,7 +7,7 @@
 #' @param group the samples column to clean up
 #' @param otherGroup the samples column to look for contaminations
 #' @param max_cells how many cells to max use to create the predictive RF object (default = 10 [cells])
-#' @param min_cells if two groups inside one cluster exceed min_cells one more cell group is created (defualt =1% of all cells)
+#' @param min_cells if two groups inside one cluster exceed min_cells one more cell group is created (defualt =1\% of all cells)
 #' @param ... additional variables for the randomForest call
 #' @title description of function cleanUpGroup
 #' @export 

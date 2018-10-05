@@ -14,3 +14,4 @@ SQLite_ExpressionSummary(fname)
 \description{
 Connect to a sqlite database and retrieve a gene read count summary for all the stored genes.
 }
+

@@ -25,3 +25,4 @@ an BioData object. It uses the linux montage command to merge all different boxp
 
 into one figure
 }
+

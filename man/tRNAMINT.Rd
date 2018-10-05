@@ -27,7 +27,6 @@ Class interface for the MINT output
 
 \item{\code{stats}}{all stats with one result for each data row}
 }}
-
 \examples{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
@@ -39,3 +38,4 @@ x <- tRNAMINT$new( cbind(annotation,dat), Samples=samples, name="testObject",nam
 }
 \keyword{MINT}
 \keyword{tRNA}
+

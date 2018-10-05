@@ -17,10 +17,11 @@ cleanUpGroup(x, group, otherGroup, max_cells = 10, min_cells = 10, ...)
 
 \item{max_cells}{how many cells to max use to create the predictive RF object (default = 10 [cells])}
 
-\item{min_cells}{if two groups inside one cluster exceed min_cells one more cell group is created (defualt =1% of all cells)}
+\item{min_cells}{if two groups inside one cluster exceed min_cells one more cell group is created (defualt =1\% of all cells)}
 
 \item{...}{additional variables for the randomForest call}
 }
 \description{
 Clean up intermixed groups
 }
+

@@ -12,3 +12,4 @@
 This function loads the a BioData file and returns the data R object int them.
  The function is mainly to keep the scripts simpler. There is no magic involved.
 }
+

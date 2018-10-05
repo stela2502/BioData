@@ -22,3 +22,4 @@ data <- objects[[1]]
 objects[[1]] = NULL
 merged <- merge ( data, objects)
 }
+

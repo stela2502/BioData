@@ -129,18 +129,81 @@ setMethod('mds', signature = c ('BioData'),
 					sigmas <- destiny::find_sigmas(tab, verbose=F)
 					sigma <- destiny::optimal_sigma(sigmas)
 				}else {
-					sigmas <- destiny::find.sigmas(tab, verbose=F)
-					sigma <- destiny::optimal.sigma(sigmas)
+					mds_store <- 'MDS_PCA100'
+					#tab <- dataObj$usedObj$pr$x
+					tab <- dataObj$usedObj$pr@scores
 				}
-				
+			} 
+			else {
+				stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 			}
-			if ( !exists('distance', mode='character')){
-				distance = 'cosine'
+			if ( genes ) {
+				n = ncol(dataObj$data())
+				if ( n > 100) 
+					n = 100
+				if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes@scores), rownames(dataObj$dat) ) == F ) {
+					tmp = dataObj$data()
+					bad = which(tmp@x  == -1)
+					if ( length(bad) > 0 ) {
+						tmp[bad] = 0
+					}
+					dataObj$usedObj$prGenes <- bpca( as.matrix(tmp), nPcs=100 )
+					#dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
+					rm(tmp)
+					#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
+					rownames(dataObj$usedObj$prGenes@scores) = rownames(dataObj$dat)
+				}
+				if ( useRaw ) {
+					mds_store <- 'MDSgene'
+					tab <- t(tab)
+				}else {
+					mds_store <- 'MDSgene_PCA100'
+					tab <- dataObj$usedObj$prGenes@scores	
+				}	
 			}
 			dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma)
 			mds.proj <- destiny::as.data.frame(dm)[,1:dim]
 			
 		}else if ( mds.type == "TSNE"){
+
+                                        ## there is an extremely efficient python implementation of that available.
+                                        ## lets try to use that:
+                                        ## first export the '\t' separated file
+                                        if ( file.exists( 'runTSNE.py' ) & ! file.exists( 'tSNE_dim3_coods.csv') ){
+                                                print ( "The pyton process should be started and processing the data - please check manually")
+                                                return (invisible(dataObj))
+
+                                        }else if ( ! file.exists( 'tSNE_dim3_coods.csv' ) )  {
+
+                                                write.table( t(tab), sep=",", file="TSNE_data.csv", quote=F )
+                                                fileConn<-file( 'runTSNE.py' )
+                                                writeLines(c(
+                                                                                "from MulticoreTSNE import MulticoreTSNE as TSNE",
+                                                                                "import pandas as pd",
+                                                                                "import numpy as np",
+                                                                                "",
+                                                                                "tsne = TSNE(n_jobs=4,n_components=3)",
+                                                                                "X = pd.io.parsers.read_csv('TSNE_data.csv',sep=',',index_col=0)",
+                                                                                "",
+                                                                                "Y = tsne.fit_transform(np.transpose(X))",
+                                                                                "",
+                                                                                "df=pd.DataFrame(data=Y,index=None)",
+                                                                                "df.to_csv('tSNE_dim3_coods.csv')"
+                                                                ), fileConn )
+                                                close(fileConn)
+
+                                                system( paste(Sys.which('python'), 'runTSNE.py' ) )
+                                                print ("the external python script has been run - rerun this function to check if it is finished.")
+                                                print ( "in case the python script does not produce output (1) try to install MulticoreTSNE grom its git resource or (2) use mds.type='TSNE_R'")
+                                                return (invisible(dataObj))
+                                        } else {
+                                                ## OK the output file has been produced
+                                                mds.proj <- read.delim( 'tSNE_dim3_coods.csv', sep="," );
+                                                rownames(mds.proj) <- rownames(tab)
+                                        }
+                                }else if ( mds.type == "TSNE_R"){
+
+
 			if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {
 				stop("package 'Rtsne' needed for this function to work. Please install it.",
 						call. = FALSE)
@@ -151,6 +214,7 @@ setMethod('mds', signature = c ('BioData'),
 				## The data is already PCAed
 				mds.proj <- Rtsne( tab, dims=dim , check_duplicates =F,  verbose=T, pca=F )$Y
 			}
+			this.k <- paste(onwhat,mds.type)
 			
 			rownames(mds.proj) <- rownames(tab)
 			

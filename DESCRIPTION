@@ -14,20 +14,20 @@ Depends:
     gplots,
     weights,
     reshape2,
-	rgl,
-	gplots,
+    rgl,
+    gplots,
     RFclust.SGE,
     RSQLite,
-	ggplot2,
-	mclust,
-	RDRToolbox,
-	DDRTree,
-	Matrix,
-	topGO,
-	pcaMethods,
-	destiny,
-	org.Mm.eg.db,
-	org.Hs.eg.db
+    ggplot2,
+    mclust,
+    DDRTree,
+    RDRToolbox,
+   Matrix,
+     topGO,
+    destiny,
+     pcaMethods,
+    org.Mm.eg.db,
+       org.Hs.eg.db
 biocViews:
 	RDRToolbox,
 	pcaMethods,
@@ -42,7 +42,7 @@ Encoding: UTF-8
 LazyData: true
 Suggests:
     testthat,
-	DESeq2,
-	MAST,
-	Seurat
-RoxygenNote: 6.1.0
+    DESeq2,
+    MAST,
+    Seurat
+RoxygenNote: 5.0.1

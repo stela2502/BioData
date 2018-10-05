@@ -13,13 +13,13 @@
 #' @title description of function runStats_inThread
 #' @export 
 setGeneric('runStats_inThread', ## Name
-	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL ) { ## Argumente der generischen Funktion
+	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings = NULL ) { ## Argumente der generischen Funktion
 		standardGeneric('runStats_inThread') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('runStats_inThread', signature = c ('BioData'),
-	definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL ) {
+	definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings=NULL ) {
 	## Quite simple - create a script and run it using R CMD Batch &
 	ofile_base <- paste( x$name,condition, sep='_')
 	if ( !is.null(covariates) ) {
@@ -83,6 +83,23 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'sh' ) ) ) )
 		cat(script, file= file.path( x$outpath, fname( ofile_base, 'sh' )) )
 		## run the script
+		if ( ! is.null(settings) ) {
+			## easy and simple - use the Perl stefanls_libs::SLURM runCommand.pl script
+			opt = ""
+			for ( n in names(settings) ){
+				opt= paste(opt, n," '" , settings[[n]], "' ", sep="" )
+			}
+			system( 
+					paste( sep='', "runCommand.pl -cmd '",cmd,
+							"' -options ", opt,
+							" -outfile ",file.path( x$outpath,fname( ofile_base, 'RData') ),
+							" -I_have_loaded_all_modules"
+					)
+			)
+			## Hope that works ;-)
+			## But set the PID file right here as the slurm might take some time to start
+			system( paste("touch", fname(ofile_base,'pid') ) )
+		}else {
 		system( 
 			paste( sep='',
 				"cd ", x$outpath," && ", 
@@ -90,6 +107,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				fname(ofile_base, 'sh') , "' &"
 			)
 		)
+		}
 	}
 	else { ## the script
 		print ( "read the data" ) 

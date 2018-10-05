@@ -7,7 +7,7 @@
 \title{description of function runStats_inThread}
 \usage{
 runStats_inThread(x, condition, files = F, A = NULL, B = NULL,
-  covariates = NULL, form = NULL)
+  covariates = NULL, form = NULL, settings = NULL)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -23,6 +23,8 @@ runStats_inThread(x, condition, files = F, A = NULL, B = NULL,
 \item{covariates}{should covariates be used - name them here}
 
 \item{form}{a specific formualr to use? State it here}
+
+\item{setting}{the slurm settings to use as list (default NULL)}
 }
 \description{
 create a script that calculates the stats in a new thread; run the script and collect the data after the script has finished

@@ -23,6 +23,9 @@ setMethod('merge', signature = c ('BioData'),
 	objects = c( x, objects)
 	merged <- as_BioData(matrix( 1, ncol=2, nrow=2, dimnames= list( c('A','B'), c('C','D')) ))
 	
+	#merge.Matrix( ldat[[paste(n)]], ldat1[[paste(n)]], rownames(ldat[[paste(n)]]), rownames(ldat1[[paste(n)]])  )
+	
+	
 	### checks and fixes in all objects
 	gnames = unique(unlist(lapply( 1:length(objects), function( n ) {
 								x = objects[[n]]

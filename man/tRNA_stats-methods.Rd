@@ -23,3 +23,4 @@ If you give one codon column name here (x$usedObj$Codons) the stats will be calc
 \description{
 This function calculates the tRNA statistics as described in XYZ
 }
+

@@ -4,22 +4,23 @@
 #' @docType methods
 #' @description Connect to a sqlite database and retrieve a sample read count summary for all the stored genes.
 #' @param fname the file to the sqlite db
+#' @param cells details about the cell storage table default list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname')
 #' @title description of function SQLite_SampleSummary
 #' @export 
 setGeneric('SQLite_SampleSummary', ## Name
-	function (fname ) { ## Argumente der generischen Funktion
+	function (fname , cells= list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname') ) { ## Argumente der generischen Funktion
 		standardGeneric('SQLite_SampleSummary') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('SQLite_SampleSummary', signature = c ('character'),
-	definition = function (fname ) {
+	definition = function (fname, cells=  list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname') ) {
 	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
 	sth <- RSQLite::dbSendQuery(dbh, paste(  
-					"SELECT sample_id , sum(value) as reads, count(value) as count, sname" ,
-					"from  datavalues left join samples on sample_id = samples.id",
+					paste("SELECT",cells$rev,", sum(value) as reads, count(value) as count,", cells$name ),
+					paste("from  datavalues left join ", cells$table,"on", cells$rev, " = ",paste( sep=".", cells$table, 'id') ),
 					#"where sample_id IN (select id from samples where sname not like '%spliced%')",  
-					"GROUP by sample_id"
+					paste("GROUP by ", cells$rev)
 			)
 	)
 	ret <- RSQLite::dbFetch(sth)

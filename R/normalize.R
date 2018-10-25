@@ -20,11 +20,11 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 }
 
 #' @name normalize
-#' @aliases normalize,NGSexpressionSet-method
+#' @aliases normalize,BioData-method
 #' @rdname normalize-methods
 #' @docType methods
 #' @description  normalize the expression data (sample wise)
-#' @param x The NGSexpressionSet
+#' @param x The BioData object (NGS expression data, not single cells)
 #' @param readCounts The number of reads from each bam file or another value you want to normalize the data to
 #' @param to_gene_length FALSE whether or not to normalize the data to gene length
 #' @param geneLengthCol the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)

@@ -24,3 +24,4 @@ cleanUpGroup(x, group, otherGroup, max_cells = 10, min_cells = 10, ...)
 \description{
 Clean up intermixed groups
 }
+

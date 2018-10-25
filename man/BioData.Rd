@@ -27,7 +27,6 @@ Class a simple interface to biological data (numeric) and rich annotation for bo
 
 \item{\code{stats}}{all stats with one result for each data row}
 }}
-
 \examples{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
@@ -38,3 +37,4 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
 }
 \keyword{BioData}
+

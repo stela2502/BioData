@@ -28,3 +28,4 @@ Convert a R6::BioData object into a R6::cellexalvr object
 
 Convert a R6::BioData object into a R6::cellexalvr object
 }
+

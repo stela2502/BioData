@@ -23,3 +23,4 @@ list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)}
 This function uses the rfCluster_col function to order median collapsed data values.
 This RF order is then re-ordered twice using hclust 'ward.D2' and the final ordering is forced onto the original grouping.
 }
+

@@ -4,9 +4,29 @@
 \name{as_BioData}
 \alias{as_BioData}
 \title{description of function as_BioData}
+\usage{
+\S4method{as_BioData}{list}(dat)
+
+\S4method{as_BioData}{matrix}(dat)
+
+\S4method{as_BioData}{cellexalvr}(dat)
+
+\S4method{as_BioData}{seurat}(dat)
+
+\S4method{as_BioData}{character}(dat, minUMI = 100, minGexpr = NULL)
+}
 \arguments{
-\item{dat}{the counts list you get from Rsubread::featureCounts()}
+\item{dat}{a list coming for Rsubread scanning of NGS data}
+
+\item{dat}{a matrix object with cells in columns and genes in rows}
+
+\item{dat}{a cellexlvrR object}
+
+\item{dat}{a seurat object}
+
+\item{dat}{a sqlite database as created by the cellexalvrR::export2cellexalvr() function}
 }
 \description{
-create a NGSexpressionSet from a counts list object
+create a NGSexpressionSet from an other object
 }
+

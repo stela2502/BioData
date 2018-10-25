@@ -40,5 +40,8 @@ Suggests:
     testthat,
     DESeq2,
     MAST,
-    Seurat
-RoxygenNote: 6.0.1
+    Seurat,
+    knitr,
+    rmarkdown
+RoxygenNote: 5.0.1
+VignetteBuilder: knitr

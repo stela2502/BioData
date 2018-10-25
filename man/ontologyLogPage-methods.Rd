@@ -20,3 +20,4 @@ ontologyLogPage(x, genes, ontology = "BP", ...)
 \description{
 creates the GO analysis for a gene list and puts it into the report.
 }
+

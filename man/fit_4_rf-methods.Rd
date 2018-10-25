@@ -16,3 +16,4 @@ fit_4_rf(x, copy = TRUE)
 \description{
 fit_4_rf removes raw and zscored data and all -1 values from the dat object
 }
+

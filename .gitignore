@@ -176,3 +176,4 @@ scratchbord/outpath/*
 /TSNE_data.csv
 /runTSNE.py
 /tSNE_dim3_coods.csv
+inst/doc

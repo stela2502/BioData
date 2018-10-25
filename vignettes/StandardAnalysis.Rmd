@@ -1,0 +1,152 @@
+---
+title: "Example Analysi of Single Cell Expression Data"
+author: "Stefan Lang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example Analysi of Single Cell Expression Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  cache=TRUE,
+  autodep=TRUE, 
+  comment = "#>"
+)
+```
+
+BioData is a R6 R class to handle different kinds of biological data. At the moment a BioData object is for NGS expression data and will 
+e.g. use DEseq2 for statistical analysis; a SingleCells object is meant to store SingleCell NGS data and is using the MAST statistics by default; and finally Microarray, the oldes implemtaion and using limma for the startistics.
+
+BioData is an R6 class and therefore objects are modified by functions.
+Please keep that in mind when you use it.
+
+``` {r}
+m = matrix(0,ncol=10, nrow=10)
+colnames(m) = paste('cell', 1:10)
+rownames(m) = paste('gene', 1:10)
+test <- as_BioData( m )
+test
+reduceTo(test, what='row', to=rownames(test)[1:5])
+test
+```
+
+BioData uses S4 method dispatching and not the R6 object$method() syntax.
+
+
+## Create BioData objects
+
+In the first example you have seen that you can generate BioData objects from a simple marix objects.
+
+But not only matrix objects can be used you can create BioData objects from a seurat object, cellexalvrR object of simply Rsubread list objects.
+You can also read sqlite databases. The function call is always 
+
+``` { r , eval = FALSE}
+TM_Heart_10x <- as_BioData( system.file("extdata", "droplet_Heart_TabulaMuris.sqlite", package = "BioData"))
+TM_Heart_10x
+```
+
+## Merging two BioData objects
+
+Normally BioData objects contain e.g. one 10X sample run. When you want to compare your data to e.g. a second run of a similar sample or a opublished similar analysis, 
+you need to merge these data parts together.
+
+Used the merge function:
+```{ r }
+TM_Aorta_facs <- as_BioData( system.file("extdata", "facs_Aorta_TabulaMuris.sqlite", package = "BioData"))
+TM_Aorta_facs
+merged <- merge( TM_Heart_10x, TM_Aorta_facs )
+merged
+
+```
+
+This will merge the raw data and all entries in the annotation and samples tables. In addition data in the usedObj list is stored.
+It will drop all normalized and z.scored data as these steps have to be re-calculated for the merged dataset.
+
+## Change BioData classes
+
+A BioData object can store different types of expression data.
+The type of data is linked to the sub class name.
+You can check the class of a BioData object by
+```{r, eval = FALSE}
+class(BioData)
+```
+
+The functions normalize, z.score and createStats applies different functions to the different classes.
+
+```{r}{
+class(merged)
+# change that to Microarray
+class(merged) = c( 'MicroArray', 'BioData', 'R6')
+# change that to a SingleCell class:
+class(merged) = c( 'SingleCells', 'BioData', 'R6')
+```
+
+We keep the SingleCells class here as that is what this dataset is.
+
+## Normalization
+
+Depending on the class of the BioData object different normalization steps are used:
+1. SingleCells: Use re-sampling to normalize the reads. This normalization is loosing information as I have experienced, that this is the only way to make single cell data really comparable.
+2. BioData: Use DEseq2 to normalize the data
+3. MicroArray: Use DEseq2 to normalize the data (missing implementation of anything else)
+
+I will go into more details for our merged dataset here:
+
+```{r}{
+mds(merged)
+## the 3D data is stored in merged$usedObj$
+merged$usedObj$MDS
+normalize(merged)
+
+
+Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+
+- Never uses retina figures
+- Has a smaller default figure size
+- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))

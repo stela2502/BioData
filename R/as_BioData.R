@@ -1,9 +1,7 @@
 #' @name as_BioData
 #' @rdname as_BioData-methods
 #' @docType methods
-#' @description create a NGSexpressionSet from a counts list object
-#' @param dat the counts list you get from Rsubread::featureCounts()
-#' @title description of function as_BioData
+#' @description create a NGSexpressionSet from an other object
 #' @export 
 if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
 	function ( dat, ... ) { ## Argumente der generischen Funktion
@@ -14,6 +12,12 @@ if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
 	print ("Onload warn generic function 'as_BioData' already defined - no overloading here!")
 }
 
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a list coming for Rsubread scanning of NGS data
+#' @title description of function as_BioData
+#' @export 
 setMethod('as_BioData', signature = c ('list'),
 	definition = function ( dat ) {
 	ret = NULL
@@ -38,6 +42,12 @@ setMethod('as_BioData', signature = c ('list'),
 	ret
 } )
 
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a matrix object with cells in columns and genes in rows
+#' @title description of function as_BioData
+#' @export 
 setMethod('as_BioData', signature = c ('matrix'),
 		definition = function ( dat ) {
 				dat <- Matrix(dat)
@@ -58,7 +68,7 @@ setMethod('as_BioData', signature = c ('matrix'),
 setMethod('as_BioData', signature = c ('data.frame'),
 		definition = function ( dat ) {
 			snames <- colnames(dat)
-			dat$GeneID = rownames(dat)
+			#dat$GeneID = rownames(dat)
 			ret <- BioData$new( 
 					dat=  Matrix(as.matrix(dat)), 
 					Samples = data.frame('sampleName' = snames ), 
@@ -71,6 +81,12 @@ setMethod('as_BioData', signature = c ('data.frame'),
 		}
 )
 
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a cellexlvrR object
+#' @title description of function as_BioData
+#' @export 
 setMethod('as_BioData', signature = c ('cellexalvr'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
@@ -123,7 +139,12 @@ setMethod('as_BioData', signature = c ('cellexalvr'),
 		
 )
 
-
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a seurat object
+#' @title description of function as_BioData
+#' @export 
 setMethod('as_BioData', signature = c ('seurat'),
 				definition = function ( dat ) {
 					#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
@@ -216,10 +237,10 @@ fetch_first <- function ( sth ) {
 }
 
 
-SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
+SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname')) {
 	dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=fname )
 	
-	ncol=as.numeric( fetch_first( RSQLite::dbSendQuery(dbh,  "select max(id) from samples" ) ) )
+	ncol=as.numeric( fetch_first( RSQLite::dbSendQuery(dbh,  paste("select max(id) from", cells$table ) ) ) )
 	if ( ! is.null(useS) ) {
 		ncol = length(useS)
 	}
@@ -229,7 +250,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	}
 	print ( paste("I create a", ncol,"columns and",nrow,"rows wide matrix"))
 	
-	q = "select gene_id, sample_id, value from datavalues"
+	q = paste( "select gene_id,", cells$rev,", value from datavalues")
 	
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	t <- RSQLite::dbFetch(sth)
@@ -247,23 +268,28 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL ) {
 	print ( "adding gene and sample names")
 	RSQLite::dbClearResult(sth)
 	rm(sth)
-	q <- "select gname from genes"
-
+	q <- "select gname from genes order by id"
 	sth <- RSQLite::dbSendQuery(dbh,q)
-	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
+	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))[1:nrow(ret)]
 	RSQLite::dbClearResult(sth)
 	rm(sth)
 	
-	q <- "select sname from samples"
+	q <- paste("select",cells$name,"from", cells$table, 'order by id' )
 
 	sth <- RSQLite::dbSendQuery(dbh, q )
-	colnames(ret) <- as.character(t(RSQLite::dbFetch(sth)))
+	colnames(ret) <- as.character(t(RSQLite::dbFetch(sth)))[1:ncol(ret)]
 	RSQLite::dbClearResult(sth)
 	RSQLite::dbDisconnect(dbh)
 	print ( "done creating the matrix")
 	ret
 }
 
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a sqlite database as created by the cellexalvrR::export2cellexalvr() function
+#' @title description of function as_BioData
+#' @export 
 setMethod('as_BioData', signature = c ('character'),
 		definition = function ( dat, minUMI=100, minGexpr=NULL ) {
 			path = dat
@@ -271,8 +297,11 @@ setMethod('as_BioData', signature = c ('character'),
 				stop( "please - I need an existsing sqlite db at start up!")
 			}
 			print ( "Obtaining the sample UMI summary")
-			sample_UMIs <- SQLite_SampleSummary( dat )
-			useS = sample_UMIs$sample_id[which(sample_UMIs$count > minUMI ) ]
+			
+			sample_UMIs = tryCatch({ SQLite_SampleSummary( dat ) }, error = function(e) { 
+						SQLite_SampleSummary( dat, list( 'table' = 'cells', name='cname', rev='cell_id') )
+					} )
+			useS =  sample_UMIs$sample_id[which(sample_UMIs$count > minUMI ) ]
 			
 			useG = NULL
 			gene_UMI <- SQLite_ExpressionSummary( dat )
@@ -280,7 +309,13 @@ setMethod('as_BioData', signature = c ('character'),
 				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr )]
 			}
 			useG = length(gene_UMI$gene_id)
-			mat = SQLite_2_matrix ( dat, useS = useS, useG = NULL )
+			
+			mat = tryCatch({ SQLite_2_matrix ( dat, useS = useS, useG = NULL ) } ,
+					 error = function(e) {
+						 SQLite_2_matrix ( dat, useS = useS, useG = NULL, list( 'table' = 'cells', name='cname', rev='cell_id') )
+					 }
+			 )
+			
 			print ( "creating the BioData object" )
 			bad <- which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0)
 			if ( length(bad) > 0 ) {

@@ -46,6 +46,7 @@ You can also read sqlite databases. The function call is always
 
 ``` { r , eval = FALSE}
 TM_Heart_10x <- as_BioData( system.file("extdata", "droplet_Heart_TabulaMuris.sqlite", package = "BioData"))
+TM_Heart_10x$name = 'TM_Heart_10x'
 TM_Heart_10x
 ```
 
@@ -57,6 +58,7 @@ you need to merge these data parts together.
 Used the merge function:
 ```{ r }
 TM_Aorta_facs <- as_BioData( system.file("extdata", "facs_Aorta_TabulaMuris.sqlite", package = "BioData"))
+TM_Aorta_facs$name = 'TM_Aorta_facs'
 TM_Aorta_facs
 merged <- merge( TM_Heart_10x, TM_Aorta_facs )
 merged

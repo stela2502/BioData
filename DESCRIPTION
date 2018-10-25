@@ -23,6 +23,7 @@ Depends:
     RDRToolbox,
     DDRTree,
     Matrix,
+    Matrix.utils,
     pcaMethods,
     destiny,
     org.Mm.eg.db,

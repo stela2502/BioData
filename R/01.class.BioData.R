@@ -143,6 +143,13 @@ BioData <- #withFormalClass(
 								self$zscored
 							}
 						},
+						rawData = function(...){
+							if ( is.null(self$raw) ) {
+								self$dat
+							} else {
+								self$raw
+							}
+						},
 						force.numeric = function(...) {
 							## useless for a Matrix - that one can only be numeric ;-)
 							#lapply(colnames(self$dat), function(x) 

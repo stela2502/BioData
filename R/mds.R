@@ -46,9 +46,15 @@ setMethod('mds', signature = c ('BioData'),
 					if ( length(bad) > 0 ) {
 						tmp[bad] = 0
 					}
-					dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
 					
-					#dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+					if ( nrow(dataObj$annotation) > 2000 ) {
+						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 genes)" )
+						dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+					}else {
+						dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
+					}
+					
+					#
 					
 					rm(tmp)
 					#rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)

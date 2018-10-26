@@ -27,6 +27,7 @@ setMethod('mds', signature = c ('BioData'),
 		definition = function ( dataObj, ..., mds.type="PCA", onwhat ='Expression', genes=F, LLEK=2, useRaw=F, pythonEnv=NULL, dim=3 ) {
 			## the code is crap re-code!!
 			mds_store = NULL
+			mds.proj = NULL
 			if ( mds.type=="PCA" ) {
 				seRaw=F
 			}
@@ -35,11 +36,21 @@ setMethod('mds', signature = c ('BioData'),
 				if ( n > 100) 
 					n = 100
 				rerun = 0
+				
 				if ( is.null(dataObj$usedObj$pr) ){
 					rerun = 1	
-				}else if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
-					rerun = 1
+				}else{
+					if (isS4(dataObj$usedObj$pr)) {
+						if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+							rerun = 1
+						}
+					}else {
+						if ( all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) == F ) {
+							rerun = 1
+						}
+					}
 				}
+				
 				if ( rerun == 1) {
 					tmp = dataObj$data()
 					bad = which(tmp@x == -1)
@@ -50,17 +61,14 @@ setMethod('mds', signature = c ('BioData'),
 					if ( nrow(dataObj$annotation) > 2000 ) {
 						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 genes)" )
 						dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+						rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
 					}else {
-						dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
+						dataObj$usedObj$pr <- pcaMethods::bpca( t(as.matrix(tmp)), nPcs=100 )
+						rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
 					}
-					
-					#
-					
 					rm(tmp)
-					#rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
-					rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
 				}
-			}else {
+			} else {
 				stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 			}
 			
@@ -69,8 +77,11 @@ setMethod('mds', signature = c ('BioData'),
 				tab=t(as.matrix(dataObj$data()))
 			}else {
 				mds_store <- 'MDS_PCA100'
-				#tab <- dataObj$usedObj$pr$x
-				tab <- dataObj$usedObj$pr@scores
+				if ( nrow(dataObj$annotation) > 2000 ){
+					tab <- dataObj$usedObj$pr$x
+				}else {
+					tab <- dataObj$usedObj$pr@scores
+				}
 			}
 			
 			if ( genes ) {
@@ -83,7 +94,7 @@ setMethod('mds', signature = c ('BioData'),
 					if ( length(bad) > 0 ) {
 						tmp[bad] = 0
 					}
-					dataObj$usedObj$prGenes <- bpca( as.matrix(tmp), nPcs=100 )
+					dataObj$usedObj$prGenes <- pcaMethods::bpca( as.matrix(tmp), nPcs=100 )
 					#dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
 					rm(tmp)
 					#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)

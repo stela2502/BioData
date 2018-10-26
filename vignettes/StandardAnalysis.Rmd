@@ -24,18 +24,28 @@ e.g. use DEseq2 for statistical analysis; a SingleCells object is meant to store
 BioData is an R6 class and therefore objects are modified by functions.
 Please keep that in mind when you use it.
 
-``` {r}
+``` {r, , echo=FALSE}
+library(BioData)
+```
+
+```{r}
 m = matrix(0,ncol=10, nrow=10)
 colnames(m) = paste('cell', 1:10)
 rownames(m) = paste('gene', 1:10)
 test <- as_BioData( m )
 test
-reduceTo(test, what='row', to=rownames(test)[1:5])
+reduceTo(test, what='row', to=rownames(test$dat)[1:5])
 test
 ```
 
 BioData uses S4 method dispatching and not the R6 object$method() syntax.
 
+
+## Aim of this document
+
+This document is not only for the user, but also for a more advanced user type
+that wants to understand the mechanics of the package and increase its
+usability.
 
 ## Create BioData objects
 
@@ -50,6 +60,25 @@ TM_Heart_10x$name = 'TM_Heart_10x'
 TM_Heart_10x
 ```
 
+The BioData object is containing many possible interesting datasets that I will
+document here:
+
+I have two important data access function which actually use the
+R6 method style: 
+1. BioData$data() returns the most analyzed data in the obejct
+2. BioData$rawData() returns the most primitive data in the dataset
+
+The raw / processed data is stored in $raw, $dat and $zsored as sparse Matrix.
+There are two important data.tables $samples and $annotation that store the
+respective data and are always kept in sync to the three data tables.
+
+In addition there are two lists that grow while the data is processed:
+1. $stats every time a statistics is run the results get added to this list.
+   The entries of this list are also in sync with the data tables.
+2. $usedObj this list contains all kind of objects and will be discussed when
+   needed.
+ 
+
 ## Merging two BioData objects
 
 Normally BioData objects contain e.g. one 10X sample run. When you want to compare your data to e.g. a second run of a similar sample or a opublished similar analysis, 
@@ -60,13 +89,17 @@ Used the merge function:
 TM_Aorta_facs <- as_BioData( system.file("extdata", "facs_Aorta_TabulaMuris.sqlite", package = "BioData"))
 TM_Aorta_facs$name = 'TM_Aorta_facs'
 TM_Aorta_facs
+
 merged <- merge( TM_Heart_10x, TM_Aorta_facs )
 merged
 
 ```
 
-This will merge the raw data and all entries in the annotation and samples tables. In addition data in the usedObj list is stored.
-It will drop all normalized and z.scored data as these steps have to be re-calculated for the merged dataset.
+This will merge the raw data and all entries in the annotation and samples tables. 
+In addition data in the usedObj list is stored. It will drop all normalized and
+z.scored data as these steps have to be re-calculated for the merged dataset. It
+will not keep any additional information like stats or the usedObj list of the
+source objects.
 
 ## Change BioData classes
 
@@ -101,9 +134,12 @@ I will go into more details for our merged dataset here:
 ```{r}{
 mds(merged)
 ## the 3D data is stored in merged$usedObj$
-merged$usedObj$MDS
+merged$usedObj$MDS_PCA100[['Expression PCA']]
+names(merged$usedObj$MDS_PCA100) <- 'PCA not normalized'
 normalize(merged)
+mds(merged)
 
+```
 
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 

@@ -30,7 +30,7 @@ setMethod('changeNames', signature = c ('BioData'),
 		}
 		if ( length(which(table(as.character(x$annotation[,colname] ) ) > 1 ) ) > 0 ){
 			x$rownamescol <- paste(colname, 'unique', sep='.' )
-			x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( rep_missing(as.character(x$annotation[,colname] )) )
+			rownames(x$annotation) <- x$annotation[ , x$rownamescol ] <- x$forceAbsoluteUniqueSample( rep_missing(as.character(x$annotation[,colname] )) )
 		}else {
 			x$rownamescol = colname
 		}
@@ -49,7 +49,8 @@ setMethod('changeNames', signature = c ('BioData'),
 		}
 		if ( length(which(table(as.character(x$samples[,colname] ) ) > 1 ) ) > 0 ){
 			x$sampleNamesCol <- paste(colname, 'unique', sep='.' )
-			x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniquerep_missing(Sample( as.character(x$samples[,colname] )) )
+			rownames(x$samples) <- x$samples[ , x$sampleNamesCol ] <- x$forceAbsoluteUniquerep_missing(Sample( as.character(x$samples[,colname] )) )
+			
 		}else {
 			x$sampleNamesCol = colname
 		}

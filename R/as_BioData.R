@@ -327,6 +327,8 @@ setMethod('as_BioData', signature = c ('character'),
 			ret <- BioData$new( mat, annotation=gene_UMI ,
 					Samples= data.frame( 'cell_id' = colnames(mat) ), namecol='cell_id', namerow= 'gname', name='from.cellranger' )
 			class(ret) <- c( 'SingleCells', class(ret))
+			changeNames(ret, 'row', 'gname')
+			changeNames(ret, 'col', 'cell_id')
 			ret
 		}
 )

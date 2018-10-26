@@ -30,41 +30,43 @@ setMethod('mds', signature = c ('BioData'),
 			if ( mds.type=="PCA" ) {
 				seRaw=F
 			}
-			if(onwhat=="Expression"){
-				if ( onwhat == 'Expression'){
-					n = ncol(dataObj$data())
-					if ( n > 100) 
-						n = 100
-					rerun = 0
-					if ( is.null(dataObj$usedObj$pr) ){
-						rerun = 1	
-					}else if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
-						rerun = 1
-					}
-					if ( rerun == 1) {
-						tmp = dataObj$data()
-						bad = which(tmp@x == -1)
-						if ( length(bad) > 0 ) {
-							tmp[bad] = 0
-						}
-						dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
-						
-						#dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
-						
-						rm(tmp)
-						#rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
-						rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
-					}
+			if ( onwhat == 'Expression'){
+				n = ncol(dataObj$data())
+				if ( n > 100) 
+					n = 100
+				rerun = 0
+				if ( is.null(dataObj$usedObj$pr) ){
+					rerun = 1	
+				}else if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+					rerun = 1
 				}
-				if ( useRaw ) {
-					mds_store <- 'MDS'
-					tab=t(as.matrix(dataObj$data()))
-				}else {
-					mds_store <- 'MDS_PCA100'
-					#tab <- dataObj$usedObj$pr$x
-					tab <- dataObj$usedObj$pr@scores
+				if ( rerun == 1) {
+					tmp = dataObj$data()
+					bad = which(tmp@x == -1)
+					if ( length(bad) > 0 ) {
+						tmp[bad] = 0
+					}
+					dataObj$usedObj$pr <- bpca( t(as.matrix(tmp)), nPcs=100 )
+					
+					#dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n )
+					
+					rm(tmp)
+					#rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
+					rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
 				}
-			} 
+			}else {
+				stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
+			}
+			
+			if ( useRaw ) {
+				mds_store <- 'MDS'
+				tab=t(as.matrix(dataObj$data()))
+			}else {
+				mds_store <- 'MDS_PCA100'
+				#tab <- dataObj$usedObj$pr$x
+				tab <- dataObj$usedObj$pr@scores
+			}
+			
 			if ( genes ) {
 				n = ncol(dataObj$data())
 				if ( n > 100) 
@@ -88,8 +90,6 @@ setMethod('mds', signature = c ('BioData'),
 					mds_store <- 'MDSgene_PCA100'
 					tab <- dataObj$usedObj$prGenes@scores	
 				}	
-			}else {
-				stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 			}
 			if ( dim != 3){
 				mds_store = paste( mds_store, 'dim',dim, sep="_")
@@ -108,7 +108,7 @@ setMethod('mds', signature = c ('BioData'),
 				#system ( 'rm loadings.png' )
 				
 				if(mds.type == "PCA"){
-					mds.proj <- tab[,1:dims]
+					mds.proj <- tab[,1:dim]
 					try( {
 								png ( file=file.path( dataObj$outpath,'loadings.png'), width=1000, height=1000 )
 								plot (  pr$rotation[,1:2] , col='white' );
@@ -247,4 +247,5 @@ setMethod('mds', signature = c ('BioData'),
 			
 			
 			invisible(dataObj)
-		} )
+		} 
+		)

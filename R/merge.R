@@ -23,6 +23,9 @@ setMethod('merge', signature = c ('BioData'),
 		merged = x
 	objects = lapply(c(x, objects), function(x){if(is.null(x$rawData)) { x= renew(x) }; x } )
 	
+	#merge.Matrix( ldat[[paste(n)]], ldat1[[paste(n)]], rownames(ldat[[paste(n)]]), rownames(ldat1[[paste(n)]])  )
+	
+	
 	### checks and fixes in all objects
 		
 	lapply( objects , function(obj) { 

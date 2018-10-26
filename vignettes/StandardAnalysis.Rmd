@@ -44,7 +44,7 @@ In the first example you have seen that you can generate BioData objects from a 
 But not only matrix objects can be used you can create BioData objects from a seurat object, cellexalvrR object of simply Rsubread list objects.
 You can also read sqlite databases. The function call is always 
 
-``` { r , eval = FALSE}
+``` { r}
 TM_Heart_10x <- as_BioData( system.file("extdata", "droplet_Heart_TabulaMuris.sqlite", package = "BioData"))
 TM_Heart_10x$name = 'TM_Heart_10x'
 TM_Heart_10x

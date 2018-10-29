@@ -122,24 +122,27 @@ class(merged) = c( 'SingleCells', 'BioData', 'R6')
 
 We keep the SingleCells class here as that is what this dataset is.
 
-## Normalization
+## Normalization and z score
 
 Depending on the class of the BioData object different normalization steps are used:
 1. SingleCells: Use re-sampling to normalize the reads. This normalization is loosing information as I have experienced, that this is the only way to make single cell data really comparable.
 2. BioData: Use DEseq2 to normalize the data
 3. MicroArray: Use DEseq2 to normalize the data (missing implementation of anything else)
 
-I will go into more details for our merged dataset here:
+Example for our merged dataset here:
 
 ```{r}{
 mds(merged)
-## the 3D data is stored in merged$usedObj$
-merged$usedObj$MDS_PCA100[['Expression PCA']]
-names(merged$usedObj$MDS_PCA100) <- 'PCA not normalized'
 normalize(merged)
-mds(merged)
+z.score(merged)
+
+merged
 
 ```
+
+## Identify Genes Of Interest
+
+
 
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 

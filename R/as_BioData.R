@@ -284,14 +284,8 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	ret
 }
 
-#' @name as_BioData
-#' @rdname as_BioData-methods
-#' @docType methods
-#' @param dat a sqlite database as created by the cellexalvrR::export2cellexalvr() function
-#' @title description of function as_BioData
-#' @export 
-setMethod('as_BioData', signature = c ('character'),
-		definition = function ( dat, minUMI=100, minGexpr=NULL ) {
+load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
+	
 			path = dat
 			if ( ! file.exists( path ) ) {
 				stop( "please - I need an existsing sqlite db at start up!")
@@ -330,5 +324,77 @@ setMethod('as_BioData', signature = c ('character'),
 			changeNames(ret, 'row', 'gname')
 			changeNames(ret, 'col', 'cell_id')
 			ret
+}
+
+
+
+#' @name as_BioData
+#' @rdname as_BioData-methods
+#' @docType methods
+#' @param dat a sqlite database as created by the cellexalvrR::export2cellexalvr() function
+#' @title description of function as_BioData
+#' @export 
+setMethod('as_BioData', signature = c ('character'),
+		definition = function ( dat, minUMI=100, minGexpr=NULL ) {
+			if ( dir.exists(dat) ){
+				message("Process 10x output")
+				return( load_10x(dat, minUMI=minUMI, minGexpr=minGexpr ) ) 
+			}else { ## should be a sqlite databse then
+				message("Load sqlite database")
+				return( load_database(dat, minUMI=minUMI, minGexpr=minGexpr ) ) 
+			}
+			
 		}
 )
+
+load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
+	err = NULL
+	for( f in c('barcodes.tsv','genes.tsv','matrix.mtx') ) {
+		if ( ! file.exists(file.path(dat,f)) ) {
+			err = c( err, paste("file", file.path(dat,f), "does not exists" ) )
+		}
+	}
+	if ( ! is.null(err)) {
+		stop( paste(sep="\n", err))
+	}
+	head <- readLines( file.path(dat,'matrix.mtx'), 3)
+	
+	head =  unlist( str_split( head[3], ' ') )
+	
+	d = read.table( file.path(dat,'matrix.mtx') , skip = 3 , header=F )
+	
+	ma = Matrix::sparseMatrix( i=d[,1], j=d[,2], x=d[,3] )
+	message(paste("Matrix created with", ncol(ma) ,"cells and ", nrow(ma), "genes") )
+	
+	d = scan( file.path(dat,'barcodes.tsv') , what='character')
+	colnames(ma) = d[1:ncol(ma)]
+	
+	rm(d)
+	
+	d = read.table( file.path(dat,'genes.tsv'), header=F )
+
+	rownames(ma) = d[1:nrow(ma),1]
+	
+	message ( "Create BioData object" )
+	ret = as_BioData(matrix( 1, ncol=2, nrow=2, dimnames= list( c('A','B'), c('C','D')) ))
+	ret$dat = ma
+	ret$samples = data.frame( 'samples' = colnames(ma), 'nUMI' = Matrix::colSums(ma) )
+	ret$annotation= data.frame( GeneID= d[1:nrow(ma),1], 'gene_name' = d[1:nrow(ma),2], 'nUMI' = Matrix::rowSums(ma))
+	changeNames(ret, 'row', 'gene_name')
+	#ret$rownamescol = 'gene_name'
+	
+	reduceTo(ret, what='col', to=colnames(ret$dat)[which(ret$samples$nUMI >=  minUMI )], copy=F)
+	if ( ! is.null(minGexpr) ) {
+		reduceTo(ret, what='row', to=rownames(ret$dat)[which(ret$annotation$nUMI >=  minGexpr )], copy=F)
+	}
+	
+	rm(ma)
+	rm(d)
+	gc()
+	message( paste("Final object with",ncol(ret$dat),"cells and", nrow(ret$dat),"genes") )
+	return( ret )
+	
+	
+	
+	
+}

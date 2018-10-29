@@ -70,7 +70,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 						, collapse=" "
 				)
 			}
-			write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$usedObj$sessionPath, 'tables', filename(c( n, "GOgenes.csv") ) ) )
+			write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$usedObj$sessionPath, 'tables', file.path(x$outpath, "GOgenes.csv") ) )
 			
 			for ( i in 1:nrow(allRes) ) {
 				allRes[i,1] = rmdLink(allRes[i,1],"http://amigo.geneontology.org/amigo/term/" )

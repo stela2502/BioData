@@ -80,8 +80,9 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 				paste( sep="", 'cat(Sys.getpid(),file="', fname(ofile_base,'finished'),'")' ),
 				paste( sep="", "unlink('",fname(ofile_base,'pid'),"')", "" )
 		)
-		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'sh' ) ) ) )
-		cat(script, file= file.path( x$outpath, fname( ofile_base, 'sh' )) )
+		print (paste ("create and run script", file.path( x$outpath,fname( ofile_base, 'R' ) ) ) )
+		cat(script, file= file.path( x$outpath, fname( ofile_base, 'R' )) )
+		
 		## run the script
 		if ( ! is.null(settings) ) {
 			## easy and simple - use the Perl stefanls_libs::SLURM runCommand.pl script
@@ -89,12 +90,18 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			for ( n in names(settings) ){
 				opt= paste(opt, n," '" , settings[[n]], "' ", sep="" )
 			}
-			system( 
-					paste( sep='', "runCommand.pl -cmd '",cmd,
+			cmd = paste( sep='',
+					"cd ", x$outpath," && ", 
+					"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 -- ", 
+					fname(ofile_base, 'R')
+			)
+			real_cmd = paste( sep='', "runCommand.pl -I_have_loaded_all_modules -cmd '",cmd,
 							"' -options ", opt,
-							" -outfile ",file.path( x$outpath,fname( ofile_base, 'RData') ),
-							" -I_have_loaded_all_modules"
+							" -outfile ",file.path( x$outpath,fname( ofile_base, 'RData') )
 					)
+			message( real_cmd)
+			system( 
+					real_cmd
 			)
 			## Hope that works ;-)
 			## But set the PID file right here as the slurm might take some time to start
@@ -104,7 +111,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 			paste( sep='',
 				"cd ", x$outpath," && ", 
 				"R CMD BATCH --no-save --no-restore --no-readline --max-ppsize=500000 -- '", 
-				fname(ofile_base, 'sh') , "' &"
+				fname(ofile_base, 'R') , "' &"
 			)
 		)
 		}

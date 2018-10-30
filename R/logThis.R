@@ -18,6 +18,8 @@ if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
 setMethod('logThis', signature = c ('BioData'),
 	definition = function (x) {
 	if ( ! x$logged ) {
+		#pb <- progress_estimated(100)
+		#steps = ceiling(ncol(x$dat)/100)
 		if ( is.null(x$raw) ) {
 			x$raw = x$dat
 		}

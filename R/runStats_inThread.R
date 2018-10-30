@@ -28,7 +28,7 @@ setMethod('runStats_inThread', signature = c ('BioData'),
 	ofile_base <- paste(ofile_base,'_runStats_inThread', sep='_')
 	
 	ofile_base <- str_replace_all(ofile_base, "\\s+","_") 
-	fname <- function( name1, ext) { paste( name1, ext, sep=".") }
+	fname <- function( name1, ext) {ret = paste( name1, ext, sep="."); str_replace_all(ret, "\\s+","_") }
 	
 	if ( file.exists(file.path( x$outpath,fname(ofile_base,"pid" ))) ) {
 		stop( "The process is still running" )

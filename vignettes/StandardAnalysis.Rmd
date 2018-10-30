@@ -131,18 +131,45 @@ Depending on the class of the BioData object different normalization steps are u
 
 Example for our merged dataset here:
 
-```{r}{
+```{r}
 mds(merged)
 normalize(merged)
 z.score(merged)
 
-merged
+addCellCyclePhase(merged, gnameCol='gene_name' )
+
+saveObj(merged) ## required to allow the starts to access the new Phase column
+runStats_inThread( merged, 'sname' )
+
+runStats_inThread( merged, 'Phase' )
+
+## wait for a significant time (e.g. 10 min)
+
+runStats_inThread( merged, 'sname' )
+runStats_inThread( merged, 'Phase' )
+
 
 ```
 
+
 ## Identify Genes Of Interest
 
+The normalization did efficiently remove any influence of the library size on
+the raw data. This is one of the main differences to e.g. Seurat which only
+removes the influence from the PCA data (correct me if I am wrong
+stefan.lang@med.lu.se).
 
+In a normal setting there are multiple samples in one dataset and therefore the
+most straight forward analysis path is to check for differentail genes in this
+set.
+
+I have experienced the cell cycle phase as a huge problem and therefore I
+always access the Seurat Phase and access differentials for this grouping, too:
+
+```{r} 
+merged
+
+```
 
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 

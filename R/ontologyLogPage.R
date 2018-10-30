@@ -10,13 +10,13 @@
 #' @title description of function ontologyLogPage
 #' @export 
 setGeneric('ontologyLogPage', ## Name
-		function ( x, genes, ontology = 'BP', ... ) { 
+		function ( x, genes, ontology = 'BP', topNodes = 10, GOfname= "GOgenes.csv", ... ) { 
 			standardGeneric('ontologyLogPage')
 		}
 )
 
 setMethod('ontologyLogPage', signature = c ('BioData'),
-		definition = function ( x, genes, ontology = 'BP', ... ) {
+		definition = function ( x, genes, ontology = 'BP',  topNodes = 10, GOfname= "GOgenes.csv", ... ) {
 			## process the ontology for this gene list and add one ontology report page
 			error = ""
 			
@@ -59,7 +59,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 			resultKS.elim <- topGO::runTest(x$usedObj$analysis, algorithm = "elim", statistic = "ks")
 			
 			allRes <- topGO::GenTable(x$usedObj$analysis, classicFisher = resultFisher,classicKS = resultKS, elimKS = resultKS.elim,
-					orderBy = "elimKS", ranksOf = "classicFisher", topNodes = 10)
+					orderBy = "elimKS", ranksOf = "classicFisher", topNodes = topNodes)
 			GOI_2_genes <- matrix( 1, nrow=10, ncol=2)
 			colnames(GOI_2_genes) = c("GO ID", "Mapping Gene List")
 			for( i in 1:nrow(allRes) ) {
@@ -70,12 +70,15 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 						, collapse=" "
 				)
 			}
-			write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$usedObj$sessionPath, 'tables', file.path(x$outpath, "GOgenes.csv") ) )
-			
+			if ( !dir.exists( file.path( x$outpath, 'GOtables') ) ){
+				dir.create( file.path( x$outpath, 'GOtables') )
+			}
+			write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$outpath, 'tables',  GOfname ) )
+			browser()
 			for ( i in 1:nrow(allRes) ) {
 				allRes[i,1] = rmdLink(allRes[i,1],"http://amigo.geneontology.org/amigo/term/" )
 			}
-			allRes = allRes[,-c(4,5)] ## significant and expected columns do not contain info
+			#allRes = allRes[,-c(4,5)] ## significant and expected columns do not contain info
 			
 			
 			#write.table(allRes, sep='\t', quote=F, row.names=F, file= file.path( x$usedObj$sessionPath, 'tables', filename(c( n, "GOanalysis.csv") ) ) )

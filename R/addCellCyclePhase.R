@@ -22,9 +22,10 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 				call. = FALSE)
 	}
 	object <- NULL
+	message('Create Seurat object from raw data')
 	if (  ! is.null(x$raw)) {
 		object <- Seurat::CreateSeuratObject(
-			as.matrix(x$raw),
+			x$raw,
 			project = x$name,
 			min.cells =3,
 			min.genes =10,
@@ -33,7 +34,7 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 		)
 	}else {
 		object <- Seurat::CreateSeuratObject(
-				as.matrix(x$dat),
+				x$dat,
 				project = x$name,
 				min.cells =3,
 				min.genes =10,
@@ -59,9 +60,11 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 		stop(paste( "Sorry - I could not find enough S and G2M specific genes in the dataset (need to provide a gnameCol?)" ) )
 	}
 	old_m <- ncol(object@meta.data) + 1
-	print ( "addressing the cell cycle phase using Seurat::CellCycleScoring")
+	message ( "addressing the cell cycle phase using Seurat::CellCycleScoring")
 	object <- Seurat::CellCycleScoring(object, g2m.genes, s.genes)
 	x$samples <- cbind( x$samples, object@meta.data[, old_m:ncol(object@meta.data)])
+	rm(object)
+	gc()
 	#eval(detach( 'package:Seurat'))
 	invisible(x)
 } )

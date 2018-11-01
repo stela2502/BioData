@@ -21,27 +21,7 @@ setMethod('addCellCyclePhase', signature = c ('BioData'),
 		stop("Seurat needed for this function to work. Please install it.",
 				call. = FALSE)
 	}
-	object <- NULL
-	message('Create Seurat object from raw data')
-	if (  ! is.null(x$raw)) {
-		object <- Seurat::CreateSeuratObject(
-			x$raw,
-			project = x$name,
-			min.cells =3,
-			min.genes =10,
-			normalization.method = "LogNormalize",
-			scale.factor = 10000
-		)
-	}else {
-		object <- Seurat::CreateSeuratObject(
-				x$dat,
-				project = x$name,
-				min.cells =3,
-				min.genes =10,
-				normalization.method = "LogNormalize",
-				scale.factor = 10000
-		)
-	}
+	object <- as_Seurat( x )
 	
 	if ( is.null( s.genes ) ){
 		s.genes <- Seurat::cc.genes$s.genes

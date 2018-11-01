@@ -29,16 +29,20 @@ setMethod('clusters', signature = c ('BioData'),
 	
 			clusters <- NULL
 			hc <- NULL
-			if(onwhat=="Expression"){
+			if(onwhat=="Expression" & clusterby=="raw"){
 				tab <- as.matrix(dataObj$data())
 				m <- min(tab)
 				if ( m == -1 | m == -21 ){ ## get rid of them
-					tab[which( tab == m)] = m +1
+					bad = which( tab == m)
+					if ( length(bad) > 0 ){
+						tab[bad] = m +1
+					}
 				}
 			}
 			else {
 				stop( paste("Sorry, the data type onwhat = ",onwhat," is not supported", sep="'") )
 			}
+			
 			if ( ! is.null(useGrouping) ) {
 				clusters <- dataObj$samples[,useGrouping]
 				if ( is.factor( clusters)) {

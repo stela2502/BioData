@@ -89,7 +89,7 @@ setMethod('normalize', signature = c ('SingleCells'),
 			}
 			reads <- round(reads)
 			
-			normF <- function(x) {
+			normF <- function(x, n) {
 				x <- as.vector(x)
 				ok1 <- which( x > 0 )
 				d <- sample(rep ( 1:n, x) , reads, replace=T)
@@ -122,7 +122,7 @@ setMethod('normalize', signature = c ('SingleCells'),
 				#pb <- progress_estimated(100)
 				#steps = ceiling(ncol(object$raw)/100)
 				
-				object$dat <- Matrix(apply( object$raw,2, normF))
+				object$dat <- Matrix(apply( object$raw,2, normF, n ))
 				rownames(object$dat) <- rownames(object$raw)
 			}
 			else {

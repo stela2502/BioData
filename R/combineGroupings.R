@@ -33,9 +33,9 @@ setMethod('combineGroupings', signature = c ('BioData'),
 	if ( is.null(minCellsInReturnGroup)){
 		minCellsInReturnGroup =
 			max(
-				unlist(lapply( levels(merged$samples$sname), 
+				unlist(lapply( levels(x$samples$sname), 
 					function(n) { 
-						length( which( merged$samples$sname == n)) 
+						length( which( x$samples$sname == n)) 
 					} )) / 100
 		)
 		print (paste("minCellsInReturnGroup set to",minCellsInReturnGroup) )

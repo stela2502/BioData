@@ -6,12 +6,14 @@
 \alias{SQLite_SampleSummary,BioData-method}
 \title{description of function SQLite_SampleSummary}
 \usage{
-SQLite_SampleSummary(fname)
+SQLite_SampleSummary(fname, cells = list(table = "samples", rev = "sample_id",
+  name = "sname"))
 }
 \arguments{
 \item{fname}{the file to the sqlite db}
+
+\item{cells}{details about the cell storage table default list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname')}
 }
 \description{
 Connect to a sqlite database and retrieve a sample read count summary for all the stored genes.
 }
-

@@ -11,4 +11,3 @@
 \description{
 calculate the log for all data +1
 }
-

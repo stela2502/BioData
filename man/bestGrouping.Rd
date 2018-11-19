@@ -2,8 +2,8 @@
 % Please edit documentation in R/bestGrouping.R
 \docType{methods}
 \name{bestGrouping}
-\alias{'bestGrouping,BioData-method}
 \alias{bestGrouping}
+\alias{'bestGrouping,BioData-method}
 \title{description of function randomForest}
 \arguments{
 \item{x}{the single cells ngs object}
@@ -28,4 +28,3 @@ All groups that fail to be prediceted using the random forest are deemed ungroup
 
 All groups where less than 50 percent of the total samples geting classified as being from that group fail.
 }
-

@@ -15,4 +15,3 @@
 \description{
 Calculates a quality of fit
 }
-

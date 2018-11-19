@@ -19,4 +19,3 @@ mouse.tfs
 A list of mouse transcription factors. Used when generating TF networks
 }
 \keyword{datasets}
-

@@ -15,4 +15,3 @@
 \description{
 wrapper for rownames(x$dat)
 }
-

@@ -18,4 +18,3 @@ changeNames(x, what = "row", colname)
 \description{
 rename row- or colnames of the data tables
 }
-

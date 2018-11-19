@@ -37,4 +37,3 @@ complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
 \description{
 plot the PCR heatmap using the heatmap.3 function included in this package
 }
-

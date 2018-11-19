@@ -7,7 +7,7 @@
 \title{Auto re-order a (RF) grouping}
 \usage{
 auto_order_grouping(x, group, settings = list(A = "lsens2017-3-2", t =
-  "01:00:00", p = "dell", n = 1, N = 1), k = 5)
+  "01:00:00", p = "dell", n = 1, N = 1), k = 5, colapseBy = "median")
 }
 \arguments{
 \item{x}{The BioData object}
@@ -16,11 +16,12 @@ auto_order_grouping(x, group, settings = list(A = "lsens2017-3-2", t =
 
 \item{settings}{a list of slurm settings default}
 
-\item{k}{how many groups to put into one super group (default 5)
+\item{k}{how many groups to put into one super group (default 5)}
+
+\item{colapseBy}{which method to collapse the data by (default 'median') see function collaps
 list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)}
 }
 \description{
 This function uses the rfCluster_col function to order median collapsed data values.
 This RF order is then re-ordered twice using hclust 'ward.D2' and the final ordering is forced onto the original grouping.
 }
-

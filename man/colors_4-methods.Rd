@@ -17,4 +17,3 @@
 \description{
 Create the colour information for a samples or annotation column
 }
-

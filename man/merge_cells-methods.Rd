@@ -25,4 +25,3 @@ merge_cells(dataObj, group, mergeNcells = 10, gID = NULL, by = c("median",
 \description{
 merge cells to get summary values of median values or anything you want
 }
-

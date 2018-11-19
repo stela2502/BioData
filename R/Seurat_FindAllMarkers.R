@@ -21,6 +21,16 @@ setMethod('Seurat_FindAllMarkers', signature = c ('BioData'),
 
 	stats = Seurat::FindAllMarkers( object )
 	
+	add_to_stat <- function( x, stat, name ) {
+		if ( ! is.na( match( name, names(x$stats)))){
+			x$stats[[ match( name, names(x$stats)) ]] <- stat
+		}else {
+			x$stats[[ length( x$stats ) +1 ]] <- stat
+			names(x$stats)[length(x$stats) ] <- name
+		}
+		x
+	}
+	
 	x <- add_to_stat ( x, stats, paste(sep="_", "Seurat_FindAllMarkers", condition) )
 	
 	invisible(x)

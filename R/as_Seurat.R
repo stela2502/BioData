@@ -2,10 +2,10 @@
 #' @aliases as_Seurat,BioData-method
 #' @rdname as_Seurat-methods
 #' @docType methods
-#' @description 
-#' @param x  TEXT MISSING
-#' @param group  TEXT MISSING default=NULL
-#' @title description of function as_Seurat
+#' @description convert BioData to Seurat object but keeping the BioData normalized information.
+#' @param x The BioData object
+#' @param group Which group should be used as identity in the seurat object (default=NULL)
+#' @title convert BioData to Seurat
 #' @export 
 setGeneric('as_Seurat', ## Name
 	function ( x , group=NULL, fromRaw = T ) { ## Argumente der generischen Funktion

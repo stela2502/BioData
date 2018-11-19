@@ -2,9 +2,9 @@
 #' @aliases Seurat_FindAllMarkers,BioData-method
 #' @rdname Seurat_FindAllMarkers-methods
 #' @docType methods
-#' @description 
-#' @param x  TEXT MISSING
-#' @param condition  TEXT MISSING
+#' @description  Use Seurat's FindAllMarkers function
+#' @param x the BioData object
+#' @param condition The grouping you wat to analyze
 #' @title description of function Seurat_FindAllMarkers
 #' @export 
 setGeneric('Seurat_FindAllMarkers', ## Name

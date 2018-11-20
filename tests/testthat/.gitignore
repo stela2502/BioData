@@ -1,3 +1,7 @@
 /gene_loadings.xls
 /loadings.png
 /testObject/
+/Split4Geo/
+*.err
+*.out
+*.Rout

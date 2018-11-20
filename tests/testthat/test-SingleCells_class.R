@@ -1,4 +1,6 @@
 #library(BioData)
+context( "single cells" )
+
 set.seed(1)
 norm <- matrix(rnorm(1000, mean=20),ncol=10)
 null_indx <- c(
@@ -14,7 +16,7 @@ null_indx <- c(
 		354, 828, 111, 895, 684, 281, 18, 616, 396
 )
 norm[null_indx] = 0
-
+norm[null_indx[1:3]] = -1 # lost in the norm process
 dat = Matrix( norm )
 
 
@@ -36,7 +38,23 @@ expect_equal( class( x ), c( "SingleCells", 'BioData', 'R6') , info="class OK af
 expect_equal( x$data(),x$dat, info ="the data accessory function is OK" ) 
 ## z.score 
 
+context( "single cells z.score" )
+
 z.score(x)
-expect_true ( length(which(as.matrix(x$zscored)[null_indx] != -20)) == 0, "null normalized as -20")
+
+expect_true ( length(which(as.matrix(x$zscored)[null_indx[4:length(null_indx)]] != 0)) == 0, "null normalized as 0")
+
+expect_true ( length(which(as.matrix(x$zscored)[null_indx[1:3]] != -1)) == 0, "-1 values keept")
 
 expect_equal( x$data(), x$zscored, info = "the data accessory function returns the z.scored data" ) 
+
+expect_true ( round(sd(x$zscored@x[which( x$zscored@x > 0)])) == 1, paste("z.scored sd not 1!", sd(x$zscored@x[which( x$zscored@x > 0)])) )
+
+context( "single cells mds" )
+
+mds(x)
+
+expect_true( ! is.null(x$usedObj$pr), "initial pca speed up not existing" )
+
+expect_true( ! is.null(x$usedObj$MDS_PCA100[['Expression PCA']]), "PCA data not existing" )
+

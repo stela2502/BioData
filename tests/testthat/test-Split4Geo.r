@@ -1,4 +1,6 @@
 #library(BioData)
+context( "split for GEO" )
+
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
 colnames(dat) <- paste('Sample', 1:10)

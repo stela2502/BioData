@@ -1,4 +1,6 @@
 #library(BioData)
+skip( "tRNA support depricated")
+
 x <- loadObj('TestData.tRNAMINT.RData')
 x <- renew(x)
 #all the different sample norm types have to be z.scored separately!

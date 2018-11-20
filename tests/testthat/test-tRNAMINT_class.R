@@ -1,4 +1,5 @@
 #library(BioData)
+skip( "tRNA support depricated")
 x <- loadObj('TestData.tRNAMINT.RData')
 
 x <- renew(x)

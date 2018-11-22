@@ -33,9 +33,9 @@ setMethod('combineGroupings', signature = c ('BioData'),
 	if ( is.null(minCellsInReturnGroup)){
 		minCellsInReturnGroup =
 			max(
-				unlist(lapply( levels(merged$samples$sname), 
+				unlist(lapply( levels(x$samples$sname), 
 					function(n) { 
-						length( which( merged$samples$sname == n)) 
+						length( which( x$samples$sname == n)) 
 					} )) / 100
 		)
 		print (paste("minCellsInReturnGroup set to",minCellsInReturnGroup) )
@@ -139,40 +139,8 @@ setMethod('combineGroupings', signature = c ('BioData'),
 	RFobj = bestGrouping( OK, 'tmp_Group')
 	print ("apply grouping on the whole dataset")
 	x$samples[, new_name] <- factor(predict( RFobj , t(as.matrix(x$data())) ) )
-	
+	colors_4(x, new_name)	
 	print ( paste("remapping", length(IDS),"small group cells with lowered group overlap to ", minGroupOverlap) )
-#	
-#	steps = ceiling(length(IDS)/100)
-#	pb <- progress_estimated(100)
-#	a= 0;
-#	for ( i in IDS ) {
-#		closestCells(i, orNULL=TRUE)
-#		a = a+1
-#		if ( a %% steps == 0 ) {
-#			pb$tick()$print()
-#			#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
-#		}
-#	}
-#	pb$stop()
-#	#pb$tick()$print()
-#	
-#	x$usedObj$tmpres[which(is.na(x$usedObj$tmpres))] = 0
-#	
-#	x$usedObj$tmpgroupID = max(as.numeric(x$usedObj$tmpres))
-#	rname = which( as.numeric(x$usedObj$tmpres) == 0 )
-#	print ( paste( length(ungroup), "tiny groups with less than" , 
-#					minCellsInReturnGroup,"cells per group have been combined into the 'ungrouped' group (n=",
-#					length(rname),")"
-#			))
-#	if ( length(rname) > 0 ){
-#		x$usedObj$tmpres[rname] = "ungrouped"
-#		rname = c(1:x$usedObj$tmpgroupID, "ungrouped")
-#	}else {
-#		rname = c(1:x$usedObj$tmpgroupID)
-#	}
-#	
-#	x$samples[,new_name] = factor(x$usedObj$tmpres, levels=rname)
-#	x$usedObj$tmpres = NULL
-#	x$usedObj$tmpgroupID = NULL
+
 	res
 } )

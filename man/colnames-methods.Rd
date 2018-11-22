@@ -15,4 +15,3 @@
 \description{
 simple wrapper around colnames(x$dat)
 }
-

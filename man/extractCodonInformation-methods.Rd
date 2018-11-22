@@ -13,4 +13,3 @@
 \description{
 Converts the MINT tRNA annoation strings into codon information stored in the annotation.
 }
-

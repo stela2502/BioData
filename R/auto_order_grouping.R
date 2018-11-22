@@ -8,6 +8,7 @@
 #' @param group the sample grouping that should become reordered (min 15 groups)
 #' @param settings a list of slurm settings default 
 #' @param k how many groups to put into one super group (default 5)
+#' @param colapseBy which method to collapse the data by (default 'median') see function collaps
 #' list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)
 #' @title Auto re-order a (RF) grouping
 #' @export 
@@ -18,21 +19,22 @@ setGeneric('auto_order_grouping', ## Name
 )
 
 setMethod('auto_order_grouping', signature = c ('BioData'),
-	definition = function ( x, group,  settings=list( 'A' = 'lsens2018-3-3', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5 ) {
+	definition = function ( x, group,  settings=list( 'A' = 'lsens2018-3-3', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5, 
+			colapseBy = 'median' ) {
 	
 	k = ceil(length( unique(x$samples[,group])) / k )
 	if ( k < 3) {
 		stop( "too view groups to try an automatic grouping here" )
 	}
 	print ("Collapsing the data")
-	x_collapsed = collaps( x, by='median', groupCol= group, copy= TRUE )
+	x_collapsed = collaps( x, by= colapseBy , groupCol= group, copy= TRUE )
 	x_collapsed$name='AutoOrder1'
 	
 	tab <- x_collapsed$data()
 	p <- apply(tab, 2, var)
 	problem = which(p == 0 | is.na(p) )
 	if ( length(problem) > 0 ){
-		stop(paste("The groups", paste( collapse=', ', problem), "have a var of 0 or NA in the collapsed dataset - please add more genes and re-run") )
+		stop(paste("The group(s)", paste( collapse=', ', names(problem)), "have a var of 0 or NA in the collapsed dataset - please add more genes and re-run or cange the colapseBy option to 'sum'") )
 	}
 	
 	print ( "Starting RF clustering process")

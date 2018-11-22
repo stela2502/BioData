@@ -32,11 +32,11 @@ setMethod('mds', signature = c ('BioData'),
 				seRaw=F
 			}
 			if ( onwhat == 'Expression'){
-				n = ncol(dataObj$data())
+				n = ncol(dataObj$data()) -2
 				if ( n > 100) 
 					n = 100
 				rerun = 0
-				
+				message( paste("N set to",n))
 				if ( is.null(dataObj$usedObj$pr) ){
 					rerun = 1	
 				}else{
@@ -90,20 +90,45 @@ setMethod('mds', signature = c ('BioData'),
 			}
 			
 			if ( genes ) {
-				n = ncol(dataObj$data())
+				n = ncol(dataObj$data()) -2
 				if ( n > 100) 
 					n = 100
-				if ( is.null(dataObj$usedObj$prGenes) |  all.equal( rownames(dataObj$usedObj$prGenes@scores), rownames(dataObj$dat) ) == F ) {
+				
+				rerun = 0
+				if ( is.null(dataObj$usedObj$prGenes) ){
+					rerun = 1	
+				}else{
+					if (isS4(dataObj$usedObj$prGenes)) {
+						if ( all.equal( rownames(dataObj$usedObj$prGenes@scores), colnames(dataObj$dat) ) == F ) {
+							rerun = 1
+						}
+					}else {
+						if ( all.equal( rownames(dataObj$usedObj$prGenes$x), colnames(dataObj$dat) ) == F ) {
+							rerun = 1
+						}
+					}
+				}
+				if ( rerun == 1 ) {
 					tmp = dataObj$data()
 					bad = which(tmp@x  == -1)
 					if ( length(bad) > 0 ) {
 						tmp[bad] = 0
 					}
-					dataObj$usedObj$prGenes <- pcaMethods::bpca( as.matrix(tmp), nPcs=100 )
-					#dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n )
+					if ( nrow(dataObj$samples) > 2000 ) {
+						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 samples)" )
+						dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n+1 )
+						#dataObj$usedObj$prGenes$x <- apply(dataObj$usedObj$prGenes$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$prGenes$x[,2] ) ) } )
+						#dataObj$usedObj$prGenes$x <- dataObj$usedObj$prGenes$x[,-2]
+						rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
+						
+					}else {
+						dataObj$usedObj$prGenes <- pcaMethods::bpca( as.matrix(tmp), nPcs=n+1 )
+						#dataObj$usedObj$prGenes@scores <- apply( dataObj$usedObj$prGenes@scores,2, function(x) { resid( lm(x ~ dataObj$usedObj$prGenes@scores[,2] ) ) } )
+						#dataObj$usedObj$prGenes@scores <- dataObj$usedObj$prGenes@scores[,-2]
+						rownames(dataObj$usedObj$prGenes@scores) = rownames(dataObj$dat)
+					}
 					rm(tmp)
 					#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
-					rownames(dataObj$usedObj$prGenes@scores) = rownames(dataObj$dat)
 				}
 				if ( useRaw ) {
 					mds_store <- 'MDSgene'

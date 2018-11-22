@@ -98,6 +98,10 @@ setMethod('z.score', signature = c ('SingleCells'),
 										}
 										else {
 											x[-n] <- 10 + scale(as.vector(t(x[-n])))
+											b = which(is.na(x))
+											if ( length(b) > 0 ){
+												x[b] = 10
+											}
 								#			x[n] <- 0
 								#			if ( length(dropped) > 0) {
 								#				x[dropped] <- -1
@@ -112,18 +116,10 @@ setMethod('z.score', signature = c ('SingleCells'),
 						)
 				))
 				#ret[which(is.na(ret)==T)] <- 0
-				bad <- which(is.na(m$zscored) )
-				if ( length( bad ) >0 ) {
-					m$zscored[bad] <- 0
-				}
 				colnames(m$zscored) <- colnames(m$dat)
 				rownames(m$zscored) <- rownames(m$dat)
 			}
 			gc()
-			bad <- which(is.na( m$zscored))
-			if (length(bad) > 0 ) {
-				m$zscored[bad] = 0
-			}
 			invisible(m)
 		})
 

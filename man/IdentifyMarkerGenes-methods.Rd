@@ -22,4 +22,3 @@ This method uses whichever stats function was selected for this class using the 
 But it compares one group versus all other groups to find marker genes for this group only.
 This function will add length(group) new stats tables.
 }
-

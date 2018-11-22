@@ -1,3 +1,10 @@
 /gene_loadings.xls
 /loadings.png
 /testObject/
+/Split4Geo/
+*.err
+*.out
+*.Rout
+/runTSNE.py
+/TSNE_data.csv
+/tSNE_dim3_coods.csv

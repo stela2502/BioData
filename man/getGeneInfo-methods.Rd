@@ -37,4 +37,3 @@ A vector of ids
 \description{
 getGeneInfo is a poverful function, that uses the annotation packages RSQLite tables to select information.
 }
-

@@ -2,10 +2,10 @@
 #' @aliases as_Seurat,BioData-method
 #' @rdname as_Seurat-methods
 #' @docType methods
-#' @description 
-#' @param x  TEXT MISSING
-#' @param group  TEXT MISSING default=NULL
-#' @title description of function as_Seurat
+#' @description convert BioData to Seurat object but keeping the BioData normalized information.
+#' @param x The BioData object
+#' @param group Which group should be used as identity in the seurat object (default=NULL)
+#' @title convert BioData to Seurat
 #' @export 
 setGeneric('as_Seurat', ## Name
 	function ( x , group=NULL, fromRaw = T ) { 
@@ -40,19 +40,23 @@ setMethod('as_Seurat', signature = c ('BioData'),
 	if ( ! fromRaw ) {
 		message("replacing Seurat norm data with BioData norm data")
 		mr = match(rownames(x$dat), rownames(object@data))
-		mr = mr[which( ! is.na(rm) ) ]
+		mr = mr[which( ! is.na(mr) ) ]
 		mc = match(colnames(x$dat), colnames(object@data))
-		object@data = x$data()[mr,mc]
-		bad = which(object@data@x == -1)
+		mc = mc[which( ! is.na(mc))]
+		tmp = x$data()
+		bad = which(tmp@x == -1)
 		if ( length(bad ) > 0 ){
-			object@data@x[bad] =0;
+			tmp@x[bad] = 0
 		}
+		object@data = tmp[mr,mc]
+		rm(tmp)
 	}
 	if ( ! is.null(group) ) {
 		if ( ! is.null(x$samples[,group])) {
 			object <- Seurat::SetIdent(object, cells.use = colnames(x$dat), ident.use = as.vector(x$samples[,group]) )
 		}
 	}
-	
+	gc()
+	message("Seurat object ready")
 	object
 } )

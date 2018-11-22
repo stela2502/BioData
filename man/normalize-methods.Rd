@@ -4,7 +4,9 @@
 \name{normalize}
 \alias{normalize}
 \alias{normalize,BioData-method}
-\alias{normalize,NGSexpressionSet-method}
+\alias{normalize}
+\alias{normalize,BioData-method}
+\alias{normalize}
 \alias{normalize,SingleCells-method}
 \title{description of function normalize}
 \usage{
@@ -30,7 +32,7 @@
 
 \item{x}{The NGSexpressionSet}
 
-\item{x}{The NGSexpressionSet}
+\item{x}{The BioData object (NGS expression data, not single cells)}
 
 \item{name}{the new name of the object (deafule old name + normalized)}
 
@@ -56,4 +58,3 @@ normalize the expression data (sample wise)
 
 normalize the expression data by subsampling as described in PMID 24531970
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/rfCluster_row.R
 \docType{methods}
 \name{rfCluster_row}
-\alias{'rfCluster_row,BioData-method}
 \alias{rfCluster_row}
+\alias{'rfCluster_row,BioData-method}
 \title{rfCluster_row}
 \arguments{
 \item{x}{the single cells ngs object}
@@ -48,4 +48,3 @@ all clusters with less than 10 cells have been merged into the 'gr. 0'.
 
 The final results will be reported as new columns in the samples table containing the 'name'
 }
-

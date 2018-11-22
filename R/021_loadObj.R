@@ -8,8 +8,8 @@
 #' @title description of function loadObj
 #' @export 
 if ( ! isGeneric('loadObj') ){ setGeneric('loadObj', ## Name
-		function ( file=NULL ){	## Argumente der generischen Funktion
-			standardGeneric('loadObj') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( file=NULL ){	
+			standardGeneric('loadObj')
 		}
 )
 }else {

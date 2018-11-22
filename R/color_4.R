@@ -10,8 +10,8 @@
 #' @title description of function createRFgrouping_col
 #' @export 
 if ( ! isGeneric('colors_4') ){ setGeneric('colors_4', ## Name
-		function ( x, name,  colFunc = NULL, force=FALSE  ) { ## Argumente der generischen Funktion
-			standardGeneric('colors_4') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, name,  colFunc = NULL, force=FALSE  ) { 
+			standardGeneric('colors_4')
 		}
 )
 }else {

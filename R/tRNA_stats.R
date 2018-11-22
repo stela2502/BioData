@@ -14,8 +14,8 @@
 #' @title description of function tRNA_stats
 #' @export 
 if ( ! isGeneric('tRNA_stats') ){ setGeneric('tRNA_stats', ## Name
-	function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) { ## Argumente der generischen Funktion
-		standardGeneric('tRNA_stats') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) { 
+		standardGeneric('tRNA_stats')
 	}
 )
 }else {

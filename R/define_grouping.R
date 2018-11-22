@@ -15,8 +15,8 @@
 #' # will create a 'newGrouping' column in the $samples table with the entries A and B
 #' @export 
 setGeneric('define_grouping', ## Name
-	function ( x, basedOn, colname, newNames, what='col' ) { ## Argumente der generischen Funktion
-		standardGeneric('define_grouping') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, basedOn, colname, newNames, what='col' ) { 
+		standardGeneric('define_grouping')
 	}
 )
 

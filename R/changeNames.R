@@ -9,8 +9,8 @@
 #' @title description of function changeNames
 #' @export 
 setGeneric('changeNames', ## Name
-	function ( x, what='row', colname ) { ## Argumente der generischen Funktion
-		standardGeneric('changeNames') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, what='row', colname ) { 
+		standardGeneric('changeNames')
 	}
 )
 

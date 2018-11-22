@@ -13,8 +13,8 @@
 #' merged <- merge ( data, objects)
 #' @export 
 setGeneric('merge', ## Name
-	function ( x, objects=list() ) { ## Argumente der generischen Funktion
-		standardGeneric('merge') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, objects=list() ) { 
+		standardGeneric('merge')
 	}
 )
 

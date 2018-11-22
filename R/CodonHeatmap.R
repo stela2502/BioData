@@ -16,8 +16,8 @@
 #' @title description of function heatmap
 #' @export 
 if ( ! isGeneric('CodonHeatmap') ){ setGeneric('CodonHeatmap', ## Name
-	function ( x, colGroup,  rowGroup=c('tRF.type.s.'), norm.type=NULL, codon=NULL, fname=NULL, main="Heatmap", fun=NULL) { ## Argumente der generischen Funktion
-		standardGeneric('CodonHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, colGroup,  rowGroup=c('tRF.type.s.'), norm.type=NULL, codon=NULL, fname=NULL, main="Heatmap", fun=NULL) { 
+		standardGeneric('CodonHeatmap')
 	}
 )
 }else {

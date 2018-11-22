@@ -11,8 +11,8 @@
 #' @title description of function normalize
 #' @export 
 if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
-	function ( object, ... , name=NULL) { ## Argumente der generischen Funktion
-		standardGeneric('normalize') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( object, ... , name=NULL) { 
+		standardGeneric('normalize')
 	}
 )
 }else {

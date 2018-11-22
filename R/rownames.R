@@ -9,8 +9,8 @@
 #' @title wrapper for rownames(x$dat)
 #' @export 
 if ( ! isGeneric('rownames') ){ setGeneric('rownames', ## Name
-	function ( x, do.NULL = TRUE, prefix = "row") { ## Argumente der generischen Funktion
-		standardGeneric('rownames') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, do.NULL = TRUE, prefix = "row") { 
+		standardGeneric('rownames')
 	}
 )}
 

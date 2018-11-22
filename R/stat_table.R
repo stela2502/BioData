@@ -8,8 +8,8 @@
 #' @title description of function stat_table
 #' @export 
 if ( ! isGeneric('stat_table') ){ setGeneric('stat_table', ## Name
-	function ( l, padjMethod='BH' ) { ## Argumente der generischen Funktion
-		standardGeneric('stat_table') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( l, padjMethod='BH' ) { 
+		standardGeneric('stat_table')
 	}
 )
 }else {

@@ -12,8 +12,8 @@
 #' @title Auto re-order a (RF) grouping
 #' @export 
 setGeneric('auto_order_grouping', ## Name
-	function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1) , k=5) { ## Argumente der generischen Funktion
-		standardGeneric('auto_order_grouping') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, group,  settings=list( 'A' = 'lsens2017-3-2', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1) , k=5) { 
+		standardGeneric('auto_order_grouping')
 	}
 )
 

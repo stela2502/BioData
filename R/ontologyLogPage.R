@@ -113,8 +113,8 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 #' @title easily create an Rmd link that opens in a new window.
 #' @export 
 if ( ! isGeneric('rmdLink') ){setGeneric('rmdLink', ## Name
-			function ( name, link, lineEnd = T ) { ## Argumente der generischen Funktion
-				standardGeneric('rmdLink') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			function ( name, link, lineEnd = T ) { 
+				standardGeneric('rmdLink')
 			}
 	) }
 

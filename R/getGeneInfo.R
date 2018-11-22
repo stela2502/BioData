@@ -23,8 +23,8 @@
 #' 			'04610', species = 'Hs', from = 'path_id', what= 'symbol' )
 #' @export 
 setGeneric('getGeneInfo', ## Name
-	function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL, tab.res=FALSE) { ## Argumente der generischen Funktion
-		standardGeneric('getGeneInfo') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, species = 'mMus', from, from_tab=NULL, what='symbol', what_tab=NULL, tab.res=FALSE) { 
+		standardGeneric('getGeneInfo')
 	}
 )
 

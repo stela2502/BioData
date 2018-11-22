@@ -15,8 +15,8 @@
 #' @return a list of velocyto.R results (reusable)
 #' @export 
 setGeneric('plot_velocyto', ## Name
-	function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) { ## Argumente der generischen Funktion
-		standardGeneric('plot_velocyto') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, velo, translation, group, mds_name = "Expression PCA", ret=list(), ofile = NULL, ... ) { 
+		standardGeneric('plot_velocyto')
 	}
 )
 

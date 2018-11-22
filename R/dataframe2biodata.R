@@ -9,8 +9,8 @@
 #' @title description of function dataframe2biodata
 #' @export 
 if ( ! isGeneric('dataframe2biodata') ){ setGeneric('dataframe2biodata', ## Name
-	function (x, name="BioData") { ## Argumente der generischen Funktion
-		standardGeneric('dataframe2biodata') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, name="BioData") { 
+		standardGeneric('dataframe2biodata')
 	}
 )
 }else {

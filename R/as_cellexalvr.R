@@ -7,8 +7,8 @@
 #' @title description of function as_cellexalvr
 #' @export 
 setGeneric('as_cellexalvr', ## Name
-		function ( x, ... ) { ## Argumente der generischen Funktion
-			standardGeneric('as_cellexalvr') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, ... ) { 
+			standardGeneric('as_cellexalvr')
 		}
 )
 #' @name as_cellexalvr.BioData

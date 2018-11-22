@@ -10,8 +10,8 @@
 #' @title description of function collapse2codons
 #' @export 
 if ( ! isGeneric('collapse2codons') ){ setGeneric('collapse2codons', ## Name
-	function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") { ## Argumente der generischen Funktion
-		standardGeneric('collapse2codons') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") { 
+		standardGeneric('collapse2codons')
 	}
 )
 }else {

@@ -12,8 +12,8 @@
 #' @title description of function cleanUpGroup
 #' @export 
 setGeneric('cleanUpGroup', ## Name
-		function ( x, group, otherGroup, max_cells=10, min_cells=10, ...) { ## Argumente der generischen Funktion
-			standardGeneric('cleanUpGroup') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, group, otherGroup, max_cells=10, min_cells=10, ...) { 
+			standardGeneric('cleanUpGroup')
 		}
 )
 

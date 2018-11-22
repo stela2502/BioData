@@ -9,8 +9,8 @@
 #' @title description of function group_intersect_order
 #' @export 
 setGeneric('group_intersect_order', ## Name
-	function ( x, group, otherGroup ) { ## Argumente der generischen Funktion
-		standardGeneric('group_intersect_order') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, group, otherGroup ) { 
+		standardGeneric('group_intersect_order')
 	}
 )
 

@@ -8,8 +8,8 @@
 #' @title description of function extractCodonInformation
 #' @export 
 if ( ! isGeneric('extractCodonInformation') ){ setGeneric('extractCodonInformation', ## Name
-		function ( x, col= "Sequence.locations.in.tRNA.space..comma.deliminated." ) { ## Argumente der generischen Funktion
-			standardGeneric('extractCodonInformation') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, col= "Sequence.locations.in.tRNA.space..comma.deliminated." ) { 
+			standardGeneric('extractCodonInformation')
 		}
 )
 }else {

@@ -14,8 +14,8 @@
 #' @title description of function plot.legend
 #' @export 
 if ( ! isGeneric('plotLegend') ){ setGeneric('plotLegend', ## Name
-		function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' ) { ## Argumente der generischen Funktion
-			standardGeneric('plotLegend') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' ) { 
+			standardGeneric('plotLegend')
 		}
 )
 }else {

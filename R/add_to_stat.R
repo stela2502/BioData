@@ -9,8 +9,8 @@
 #' @title Add a stsitics table to the $stats slot
 #' @export 
 setGeneric('add_to_stat', ## Name
-	function ( x, stat, name ) { ## Argumente der generischen Funktion
-		standardGeneric('add_to_stat') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, stat, name ) { 
+		standardGeneric('add_to_stat')
 	}
 )
 

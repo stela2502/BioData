@@ -8,8 +8,8 @@
 #' @title description of function SQLite_SampleSummary
 #' @export 
 setGeneric('SQLite_SampleSummary', ## Name
-	function (fname , cells= list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname') ) { ## Argumente der generischen Funktion
-		standardGeneric('SQLite_SampleSummary') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (fname , cells= list( 'table' = 'samples', 'rev' = 'sample_id', 'name' = 'sname') ) { 
+		standardGeneric('SQLite_SampleSummary')
 	}
 )
 

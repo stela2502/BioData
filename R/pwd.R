@@ -7,8 +7,8 @@
 #' @title description of function pwd
 #' @export 
 setGeneric('pwd', ## Name
-	function ( a ) { ## Argumente der generischen Funktion
-		standardGeneric('pwd') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( a ) { 
+		standardGeneric('pwd')
 	}
 )
 

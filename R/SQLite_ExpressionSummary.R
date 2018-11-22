@@ -7,8 +7,8 @@
 #' @title description of function SQLite_ExpressionSummary
 #' @export 
 setGeneric('SQLite_ExpressionSummary', ## Name
-	function (fname ) { ## Argumente der generischen Funktion
-		standardGeneric('SQLite_ExpressionSummary') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (fname ) { 
+		standardGeneric('SQLite_ExpressionSummary')
 	}
 )
 

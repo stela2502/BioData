@@ -8,8 +8,8 @@
 #' @title Reduce memory footprint and -1 values from a BioData object
 #' @export 
 setGeneric('fit_4_rf', ## Name
-	function ( x, copy= TRUE ) { ## Argumente der generischen Funktion
-		standardGeneric('fit_4_rf') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, copy= TRUE ) { 
+		standardGeneric('fit_4_rf')
 	}
 )
 

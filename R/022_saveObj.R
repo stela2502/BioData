@@ -8,8 +8,8 @@
 #' @title description of function saveObj
 #' @export 
 if ( ! isGeneric('saveObj') ){ setGeneric('saveObj', ## Name
-		function ( data, file=NULL ){	## Argumente der generischen Funktion
-			standardGeneric('saveObj') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( data, file=NULL ){	
+			standardGeneric('saveObj')
 		}
 )
 }else {

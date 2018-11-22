@@ -4,7 +4,7 @@
 #' @description create a NGSexpressionSet from an other object
 #' @export 
 if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
-	function ( dat, ... ) { ## Argumente der generischen Funktion
+	function ( dat, ... ) { 
 		standardGeneric('as_BioData') ## der Aufruf von standardGeneric sorgt für das_BioData Dispatching
 	}
 )

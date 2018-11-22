@@ -11,8 +11,8 @@
 #' @title description of function useInbuiltGOIlists
 #' @export useInbuiltGOIlists
 setGeneric('useInbuiltGOIlists', ## Name
-		function (x, name, ...) { ## Argumente der generischen Funktion
-			standardGeneric('useInbuiltGOIlists') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function (x, name, ...) { 
+			standardGeneric('useInbuiltGOIlists')
 		}
 )
 

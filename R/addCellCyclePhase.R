@@ -10,8 +10,8 @@
 #' @title description of function addCellCyclePhase
 #' @export 
 setGeneric('addCellCyclePhase', ## Name
-	function ( x, s.genes = NULL, g2m.genes = NULL, gnameCol=NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('addCellCyclePhase') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, s.genes = NULL, g2m.genes = NULL, gnameCol=NULL ) { 
+		standardGeneric('addCellCyclePhase')
 	}
 )
 

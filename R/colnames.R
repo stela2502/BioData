@@ -9,8 +9,8 @@
 #' @title warpper for colnames(x$dat)
 #' @export 
 if ( ! isGeneric('colnames') ){setGeneric('colnames', ## Name
-	function ( x, do.NULL = TRUE, prefix = "col") { ## Argumente der generischen Funktion
-		standardGeneric('colnames') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, do.NULL = TRUE, prefix = "col") { 
+		standardGeneric('colnames')
 	}
 )}
 

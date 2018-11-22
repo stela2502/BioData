@@ -19,8 +19,8 @@
 #' @export 
 setGeneric('complexHeatmap', ## Name
 		function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE, subpath='', 
-				main = '',  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo', green = F ) { ## Argumente der generischen Funktion
-			standardGeneric('complexHeatmap') ## der Aufruf von standardGeneric sorgt für das Dispatching
+				main = '',  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo', green = F ) { 
+			standardGeneric('complexHeatmap')
 		}
 )
 

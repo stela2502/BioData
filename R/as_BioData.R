@@ -300,7 +300,7 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 			useG = NULL
 			gene_UMI <- SQLite_ExpressionSummary( dat )
 			if ( ! is.null(minGexpr)) {
-				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr )]
+				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr ),]
 			}
 			useG = length(gene_UMI$gene_id)
 			

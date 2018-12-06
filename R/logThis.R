@@ -7,8 +7,8 @@
 #' @title description of function log
 #' @export 
 if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
-	function (x) { ## Argumente der generischen Funktion
-		standardGeneric('logThis') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x) { 
+		standardGeneric('logThis')
 	}
 )
 }else {

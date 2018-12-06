@@ -10,8 +10,8 @@
 #' @export 
 if ( ! isGeneric('reorder.samples') ){ 
 	setGeneric('reorder.samples', ## Name
-		function ( x, column, ... ) { ## Argumente der generischen Funktion
-			standardGeneric('reorder.samples') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, column, ... ) { 
+			standardGeneric('reorder.samples')
 		}
 )
 }else {
@@ -48,8 +48,8 @@ reorder.mds <- function ( mds.name, idx, obj, mds.type) {
 #' @title description of function remove.genes
 #' @export 
 if ( ! isGeneric('reorder.genes') ){ setGeneric('reorder.genes', ## Name
-		function ( x, column, ... ) { ## Argumente der generischen Funktion
-			standardGeneric('reorder.genes') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, column, ... ) { 
+			standardGeneric('reorder.genes')
 		}
 )
 }else {

@@ -8,8 +8,8 @@
 #' @title convert BioData to Seurat
 #' @export 
 setGeneric('as_Seurat', ## Name
-	function ( x , group=NULL, fromRaw = T ) { ## Argumente der generischen Funktion
-		standardGeneric('as_Seurat') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x , group=NULL, fromRaw = T ) { 
+		standardGeneric('as_Seurat')
 	}
 )
 

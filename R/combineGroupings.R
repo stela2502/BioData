@@ -18,8 +18,8 @@
 #' @examples combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 #' @export 
 setGeneric('combineGroupings', ## Name
-	function ( x, colGroups, new_name="Merged Group 1", minCellOverlap=5 , minGroupOverlap=length(colGroups)-2, minCellsInReturnGroup=NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('combineGroupings') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, colGroups, new_name="Merged Group 1", minCellOverlap=5 , minGroupOverlap=length(colGroups)-2, minCellsInReturnGroup=NULL ) { 
+		standardGeneric('combineGroupings')
 	}
 )
 

@@ -10,8 +10,8 @@
 #' @title description of function convert_to
 #' @export 
 setGeneric('convert_to', ## Name
-	function (x, type=c("MAST", "DESeq2", "scran") , species=NULL, ...) { ## Argumente der generischen Funktion
-		standardGeneric('convert_to') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, type=c("MAST", "DESeq2", "scran") , species=NULL, ...) { 
+		standardGeneric('convert_to')
 	}
 )
 

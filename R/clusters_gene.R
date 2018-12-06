@@ -15,8 +15,8 @@
 #' @export 
 if ( ! isGeneric('clusters_gene') ){ setGeneric('clusters_gene', ## Name
 	function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3, 
-			ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {## Argumente der generischen Funktion
-		standardGeneric('clusters_gene') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {
+		standardGeneric('clusters_gene')
 	}
 )
 }else {

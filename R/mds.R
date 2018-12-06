@@ -15,8 +15,8 @@
 #' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 
 if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
-			function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F, pythonEnv=NULL, dim=3) { ## Argumente der generischen Funktion
-				standardGeneric('mds') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F, pythonEnv=NULL, dim=3) { 
+				standardGeneric('mds')
 			}
 	)
 }else {

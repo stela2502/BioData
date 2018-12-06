@@ -10,8 +10,8 @@
 #' @title description of function reorder_grouping
 #' @export 
 setGeneric('reorder_grouping', ## Name
-	function (obj, group, new_order, what='col' ) { ## Argumente der generischen Funktion
-		standardGeneric('reorder_grouping') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (obj, group, new_order, what='col' ) { 
+		standardGeneric('reorder_grouping')
 	}
 )
 

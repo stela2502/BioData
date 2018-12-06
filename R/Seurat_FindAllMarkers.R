@@ -8,8 +8,8 @@
 #' @title description of function Seurat_FindAllMarkers
 #' @export 
 setGeneric('Seurat_FindAllMarkers', ## Name
-	function ( x , condition) { ## Argumente der generischen Funktion
-		standardGeneric('Seurat_FindAllMarkers') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x , condition) { 
+		standardGeneric('Seurat_FindAllMarkers')
 	}
 )
 

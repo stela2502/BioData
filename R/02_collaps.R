@@ -11,8 +11,8 @@
 #' @title description of function collaps
 #' @export 
 if ( ! isGeneric('collaps') ){ setGeneric('collaps', ## Name
-		function (dataObj, by=c('median','mean','sd','sum' ), groupCol='GroupID', copy=FALSE ) { ## Argumente der generischen Funktion
-			standardGeneric('collaps') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function (dataObj, by=c('median','mean','sd','sum' ), groupCol='GroupID', copy=FALSE ) { 
+			standardGeneric('collaps')
 		}
 )
 }else {

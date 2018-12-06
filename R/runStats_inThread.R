@@ -13,8 +13,8 @@
 #' @title description of function runStats_inThread
 #' @export 
 setGeneric('runStats_inThread', ## Name
-	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings = NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('runStats_inThread') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL, settings = NULL ) { 
+		standardGeneric('runStats_inThread')
 	}
 )
 

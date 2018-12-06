@@ -10,8 +10,8 @@
 #' @title Create a binned annotation column from numeric data
 #' @export 
 setGeneric('CreateBin', ## Name
-	function (x, group = 'nUMI', where='sample', colFun =  bluered ) { ## Argumente der generischen Funktion
-		standardGeneric('CreateBin') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, group = 'nUMI', where='sample', colFun =  bluered ) { 
+		standardGeneric('CreateBin')
 	}
 )
 

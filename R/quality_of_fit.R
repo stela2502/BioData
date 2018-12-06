@@ -9,8 +9,8 @@
 #' @title description of function quality_of_fit
 #' @export 
 if ( ! isGeneric('quality_of_fit') ){ setGeneric('quality_of_fit', ## Name
-			function ( x, col, what='cells' ) { ## Argumente der generischen Funktion
-				standardGeneric('quality_of_fit') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			function ( x, col, what='cells' ) { 
+				standardGeneric('quality_of_fit')
 			}
 	)
 }else {

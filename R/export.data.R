@@ -7,8 +7,8 @@
 #' @title description of function write.data
 #' @export 
 if ( ! isGeneric('export.data') ){ setGeneric('export.data', ## Name
-		function ( x ) { ## Argumente der generischen Funktion
-			standardGeneric('export.data') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x ) { 
+			standardGeneric('export.data')
 		}
 )
 }else {

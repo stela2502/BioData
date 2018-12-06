@@ -12,8 +12,8 @@
 #' @title description of function IdentifyMarkerGenes
 #' @export 
 setGeneric('IdentifyMarkerGenes', ## Name
-	function ( x, gname, ... ) { ## Argumente der generischen Funktion
-		standardGeneric('IdentifyMarkerGenes') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, gname, ... ) { 
+		standardGeneric('IdentifyMarkerGenes')
 	}
 )
 

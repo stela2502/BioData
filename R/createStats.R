@@ -13,8 +13,8 @@
 #' @title description of function createStats
 #' @export 
 if ( ! isGeneric('createStats') ){ setGeneric('createStats', ## Name
-	function (x, condition, files=F, A=NULL, B=NULL, ...) { ## Argumente der generischen Funktion
-		standardGeneric('createStats') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, condition, files=F, A=NULL, B=NULL, ...) { 
+		standardGeneric('createStats')
 	}
 )
 }else {

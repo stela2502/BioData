@@ -16,8 +16,8 @@
 #' @title description of function plotCodonUsage
 #' @export 
 if ( ! isGeneric('plotCodonUsage') ){ setGeneric('plotCodonUsage', ## Name
-	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('plotCodonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) { 
+		standardGeneric('plotCodonUsage')
 	}
 )
 }else {

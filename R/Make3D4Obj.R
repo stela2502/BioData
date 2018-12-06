@@ -21,8 +21,8 @@
 #' @export 
 if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, 
-			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE, useRaw=FALSE ) { ## Argumente der generischen Funktion
-		standardGeneric('Make3D4obj') ## der Aufruf von standardGeneric sorgt für das Dispatching
+			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE, useRaw=FALSE ) { 
+		standardGeneric('Make3D4obj')
 	}
 )
 }else {

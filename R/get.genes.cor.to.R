@@ -9,8 +9,8 @@
 #' @title description of function get.genes.cor.to
 #' @export 
 if ( ! isGeneric('get.genes.cor.to') ){ setGeneric('get.genes.cor.to', ## Name
-	function (x,gname,output) { ## Argumente der generischen Funktion
-		standardGeneric('get.genes.cor.to') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x,gname,output) { 
+		standardGeneric('get.genes.cor.to')
 	}
 )
 }else {

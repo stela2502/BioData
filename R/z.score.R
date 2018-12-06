@@ -8,8 +8,8 @@
 #' @title description of function z.score
 #' @export 
 if ( ! isGeneric('z.score') ){ setGeneric('z.score', ## Name
-		function (m) { ## Argumente der generischen Funktion
-			standardGeneric('z.score') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function (m) { 
+			standardGeneric('z.score')
 		}
 )
 }else {

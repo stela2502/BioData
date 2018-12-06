@@ -12,8 +12,8 @@
 #' @title description of function sampleCodonUsage
 #' @export 
 if ( ! isGeneric('sampleCodonUsage') ){ setGeneric('sampleCodonUsage', ## Name
-	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ) { ## Argumente der generischen Funktion
-		standardGeneric('sampleCodonUsage') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ) { 
+		standardGeneric('sampleCodonUsage')
 	}
 )
 }else {

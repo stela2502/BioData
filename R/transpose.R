@@ -7,8 +7,8 @@
 #' @title description of function t
 #' @export 
 if ( ! isGeneric('transpose') ){ setGeneric('transpose', ## Name
-		function (x) { ## Argumente der generischen Funktion
-			standardGeneric('transpose') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function (x) { 
+			standardGeneric('transpose')
 		}
 )
 }else {

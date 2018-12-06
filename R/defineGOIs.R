@@ -12,8 +12,8 @@
 #' @title description of function defineGOIs
 #' @export defineGOIs
 setGeneric('defineGOIs', ## Name
-	function ( x,name, genes, lables=NULL, ...) { ## Argumente der generischen Funktion
-		standardGeneric('defineGOIs') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x,name, genes, lables=NULL, ...) { 
+		standardGeneric('defineGOIs')
 	}
 )
 

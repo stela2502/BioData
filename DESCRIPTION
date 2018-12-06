@@ -27,7 +27,8 @@ Depends:
     pcaMethods,
     destiny,
     org.Mm.eg.db,
-    org.Hs.eg.db
+    org.Hs.eg.db,
+LinkingTo: Rcpp (>= 0.11.0), RcppEigen, RcppProgress
 biocViews: RDRToolbox,
     pcaMethods,
     destiny,
@@ -44,5 +45,5 @@ Suggests:
     Seurat,
     knitr,
     rmarkdown
-RoxygenNote: 6.1.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr

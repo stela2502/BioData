@@ -10,8 +10,8 @@
 #' @title description of function Split4Geo
 #' @export 
 if ( ! isGeneric('Split4Geo') ){ setGeneric('Split4Geo', ## Name
-	function (x, opath = x$outpath ) { ## Argumente der generischen Funktion
-		standardGeneric('Split4Geo') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function (x, opath = x$outpath ) { 
+		standardGeneric('Split4Geo')
 	}
 )
 }else {

@@ -14,8 +14,8 @@
 #' @title description of function groups.boxplot
 #' @export 
 if ( ! isGeneric('groups.boxplot') ){ setGeneric('groups.boxplot', ## Name
-	function ( x, groupCol='GroupName', clusters, svg=F, fname='group_', width=800, height=800,mar=NULL, Collapse=NULL, ...) { ## Argumente der generischen Funktion
-		standardGeneric('groups.boxplot') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( x, groupCol='GroupName', clusters, svg=F, fname='group_', width=800, height=800,mar=NULL, Collapse=NULL, ...) { 
+		standardGeneric('groups.boxplot')
 	}
 )
 }else {

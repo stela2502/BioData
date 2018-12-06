@@ -149,8 +149,8 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 #' @title description of function createRFgrouping_row
 #' @export 
 if ( ! isGeneric('createRFgrouping_row') ){ setGeneric('createRFgrouping_row', ## Name
-		function ( x, RFname='notExisting', k=10, single_res_row = paste('RFgrouping',RFname), colFunc=NULL) { ## Argumente der generischen Funktion
-			standardGeneric('createRFgrouping_row') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function ( x, RFname='notExisting', k=10, single_res_row = paste('RFgrouping',RFname), colFunc=NULL) { 
+			standardGeneric('createRFgrouping_row')
 		}
 )
 }else {

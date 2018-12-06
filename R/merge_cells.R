@@ -12,8 +12,8 @@
 #' @title description of function merge_cells
 #' @export 
 setGeneric('merge_cells', ## Name
-	function ( dataObj, group, mergeNcells=10, gID=NULL, by=c('median','mean','sd','sum', 'var' ), copy=TRUE ) { ## Argumente der generischen Funktion
-		standardGeneric('merge_cells') ## der Aufruf von standardGeneric sorgt für das Dispatching
+	function ( dataObj, group, mergeNcells=10, gID=NULL, by=c('median','mean','sd','sum', 'var' ), copy=TRUE ) { 
+		standardGeneric('merge_cells')
 	}
 )
 

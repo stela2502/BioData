@@ -9,8 +9,8 @@
 #' @title description of function preprocess
 #' @export
 if ( ! isGeneric('preprocess') ){ setGeneric('preprocess', ## Name
-		function (x, condition ) { ## Argumente der generischen Funktion
-			standardGeneric('preprocess') ## der Aufruf von standardGeneric sorgt für das Dispatching
+		function (x, condition ) { 
+			standardGeneric('preprocess')
 		}
 )
 }else {

@@ -88,7 +88,7 @@ setMethod('mds', signature = c ('BioData'),
 						tmp = t(tmp)
 					}
 					if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 1e6 ) {
-						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 * 2000 values)" )
+						message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
 						dataObj$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( t(tmp), center=T, n=n+1 )
 						#dataObj$usedObj$pr$x <- apply(dataObj$usedObj$pr$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr$x[,2] ) ) } )
 						#dataObj$usedObj$pr$x <- dataObj$usedObj$pr$x[,-2]

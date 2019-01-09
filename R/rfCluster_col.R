@@ -21,10 +21,11 @@
 #' @param nforest the numer of forests to grow for each rep (defualt = 500)
 #' @param ntree the numer of trees per forest (default = 500)
 #' @param settings slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend
+#' @param ids the ids for a subset of samples to be analyzed (default NULL)
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
-			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust',settings=list()){
+			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust',settings=list(), ids=NULL){
 				standardGeneric('rfCluster_col')
 			}
 	)
@@ -32,13 +33,13 @@ if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
 	print ("Onload warn generic function 'rfCluster_col' already defined - no overloading here!")
 }
 setMethod('rfCluster_col', signature = c ('BioData'),
-		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list()) {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list(), ids=NULL) {
 			if ( rep > 1) {
 				lapply(1:rep, function(i) { 
 							rfCluster_col(
 									x, rep=1, SGE=SGE, email=email, 
 									k=k, slice=slice, subset=subset ,nforest=nforest, 
-									ntree=ntree, name=paste(sep="_",name, i ), settings=settings ) 
+									ntree=ntree, name=paste(sep="_",name, i ), settings=settings, ids= ids ) 
 						} )
 			}
 			x$name <- str_replace_all( x$name, '\\s+', '_')
@@ -86,7 +87,11 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 				}
 				
 				if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
-					x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
+					if ( ! is.null(ids) ) {
+						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[ids], name=tname, copy=TRUE )
+					}else {
+						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
+					}
 					## here I need to get rid of the -1 values!
 					fit_4_rf(x$usedObj[['rfExpressionSets']][[ i ]], copy=F)
 					if ( length(settings) > 0 ) {

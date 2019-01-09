@@ -31,7 +31,7 @@ if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
 
 
 setMethod('Make3D4obj', signature = c ('BioData'),
-	definition = function ( x, group, mds.type='Expression PCA', cex=0.5, 
+	definition = function ( x, group, mds.type='PCA', cex=0.5, 
 			colFunc = function(x) {rainbow(x)}, cut=F, names=F, opath=NULL, main='', genes=F , plotType=1, size=3.0 , green=FALSE, useRaw=FALSE ) {
 
 		MDS_NAME = 'MDS_PCA100'
@@ -49,41 +49,26 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		check_and_replace <- function( name, list) {
 			if ( length(grep(name, names(list) )) ==1 ){
 				name = names(list)[grep(name, names(list) )]
+				print ( paste( "name changed to",name))
 			}
 			name
 		}
 		if ( genes ) {
-			MDS_NAME = 'MDSgene_PCA100'
-			if ( useRaw ){
-				MDS_NAME = 'MDSgene'
-			}
-			mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
-			if ( is.null (x$usedObj[[MDS_NAME]][[mds.type]] )){
-				mds(x, mds.type=mds.type, genes=T, useRaw = useRaw)
-				mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
-			}
-		}else {
-			MDS_NAME = 'MDS_PCA100'
-			if ( useRaw ){
-				MDS_NAME = 'MDS'
-			}
-			mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+			x = transpose(x$clone())
+		}
+		MDS_NAME = 'MDS_PCA100'
+		if ( useRaw ){
+			MDS_NAME = 'MDS'
+		}
+		mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
 
-			if ( is.null (x$usedObj[[MDS_NAME]][[mds.type]] )){
-				x <- mds(x, mds.type=mds.type, useRaw = useRaw)
-				mds.type = check_and_replace( mds.type, x$usedObj$MDS )
-			}
-			
+		if ( is.null (x$usedObj[[MDS_NAME]][[mds.type]] )){
+			mds(x, mds.type=mds.type, useRaw = useRaw)
+			mds.type = check_and_replace( mds.type, x$usedObj$MDS )
 		}
 		
 		title = paste( group, mds.type )
 		
-		#browser()
-		if ( genes ) {
-			x <- x$clone()
-			t <- transpose(x)
-			#browser()
-		}
         if ( cut ) {
                 ## this is a gene expression value!
                 n <- as.numeric(x$data()[group,] )

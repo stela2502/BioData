@@ -22,10 +22,11 @@
 #' @param nforest the numer of forests to grow for each rep (defualt = 500)
 #' @param ntree the numer of trees per forest (default = 500)
 #' @param settings slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend
+#' @param ids the ids for a subset of genes to be analyzed (default NULL)
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
-		function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust', settings=list()){
+		function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust', settings=list(), ids=NULL){
 			standardGeneric('rfCluster_row')
 		}
 )
@@ -33,7 +34,7 @@ if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
 	print ("Onload warn generic function 'rfCluster_row' already defined - no overloading here!")
 }
 setMethod('rfCluster_row', signature = c ('BioData'),
-		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row', settings=list()) {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row', settings=list(), ids=NULL) {
 			x$name <- str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
@@ -78,6 +79,9 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 						x$usedObj[['rfObj_row']] <- list()
 					}
 					if ( length( x$usedObj[['rfExpressionSets_row']] ) < i  ) {
+						if ( ! is.null(ids) ) {
+							x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x, what='row',to= rownames(x$dat)[ids], name=tname, copy=TRUE ))
+						}
 						x$usedObj[['rfExpressionSets_row']][[ i ]] <- transpose(reduceTo( x,'row',to= rownames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE ))
 						fit_4_rf(x$usedObj[['rfExpressionSets_row']][[ i ]], copy=F)
 						if ( length(settings) > 0 ) {
@@ -174,6 +178,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				## use the column in grouping
 				print ( "using the calcualted grouping")
 				for ( id in 1:length(k) ){
+					### needs a fix for second third and so on!
 					mat <- match(rownames(x$dat), colnames(x$usedObj[['rfObj_row']][[RFname]]@dat))
 					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
 					x <- colors_4( x, paste( single_res_row, ' n=', k[id], sep="")  )	

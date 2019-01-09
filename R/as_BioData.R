@@ -349,10 +349,13 @@ setMethod('as_BioData', signature = c ('character'),
 
 load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	err = NULL
-	for( f in c('barcodes.tsv','genes.tsv','matrix.mtx') ) {
+	for( f in c('barcodes.tsv','matrix.mtx') ) {
 		if ( ! file.exists(file.path(dat,f)) ) {
 			err = c( err, paste("file", file.path(dat,f), "does not exists" ) )
 		}
+	}
+	if ( ! file.exists(file.path(dat,'genes.tsv')) &&  ! file.exists(file.path(dat,'features.tsv'))  ){
+		err = c( err, paste("file genes.tsv or features.tsv does not exists in path" ,dat) )
 	}
 	if ( ! is.null(err)) {
 		stop( paste(sep="\n", err))
@@ -370,8 +373,13 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	colnames(ma) = d[1:ncol(ma)]
 	
 	rm(d)
+	d= NULL
+	if ( file.exists( file.path(dat,'genes.tsv'))){
+		d = read.table( file.path(dat,'genes.tsv'), header=F )
+	}else {
+		d = read.table( file.path(dat,'features.tsv'), header=F )
+	}
 	
-	d = read.table( file.path(dat,'genes.tsv'), header=F )
 
 	rownames(ma) = d[1:nrow(ma),1]
 	

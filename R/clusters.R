@@ -29,6 +29,7 @@ setMethod('clusters', signature = c ('BioData'),
 	
 			clusters <- NULL
 			hc <- NULL
+			MDS_TYPE <- NULL
 			if(onwhat=="Expression" & clusterby=="raw"){
 				tab <- as.matrix(dataObj$data())
 				m <- min(tab)
@@ -38,6 +39,29 @@ setMethod('clusters', signature = c ('BioData'),
 						tab[bad] = m +1
 					}
 				}
+			}else if ( onwhat=="MDS" ) {
+				check_and_replace <- function( name, list) {
+					if ( length(grep(name, names(list) )) ==1 ){
+						name = names(list)[grep(name, names(list) )]
+						print ( paste( "name changed to",name))
+					}
+					name
+				}
+				MDS_TYPE= 'MDS'
+				test = check_and_replace(clusterby, dataObj$usedObj[[MDS_TYPE]] )
+				if ( is.na( match( test, names(dataObj$usedObj[[MDS_TYPE]] )))){
+					MDS_TYPE= 'MDS_PCA100'
+					test = check_and_replace(clusterby, dataObj$usedObj[[MDS_TYPE]] )
+				}
+				cn <- names(dataObj$usedObj[[MDS_TYPE]])
+				if ( length(grep(test, cn  )) == 0) {
+					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
+				}else if (length(grep(test, cn  )) > 1 ) {
+					stop( paste("Sorry, but I have more than one MDS type like = '",clusterby,"' :",paste(sep=",",cn[grep(clusterby, cn  )] ), sep="") )
+				}
+				clusterby = check_and_replace(clusterby, dataObj$usedObj[[MDS_TYPE]] )
+				#browser()
+				tab <- t(as.matrix(dataObj$usedObj[[MDS_TYPE]][[clusterby]]))
 			}
 			else {
 				stop( paste("Sorry, the data type onwhat = ",onwhat," is not supported", sep="'") )
@@ -50,47 +74,26 @@ setMethod('clusters', signature = c ('BioData'),
 				}
 				dataObj <- colors_4 (dataObj, useGrouping )
 			}
-			else if ( clusterby=="raw"){#...do mds on tab
-				## here I need to check that I have no var == 0 samples
-				prob <- which(apply(tab, 2, var) == 0)
-				if ( length(prob) > 0 ){
-					for ( id in prob ){
-						tab[,id] = runif(nrow(tab), -19, -16)
-					}
+
+			## here I need to check that I have no var == 0 samples
+			prob <- which(apply(tab, 2, var) == 0)
+			if ( length(prob) > 0 ){
+				for ( id in prob ){
+					tab[,id] = runif(nrow(tab), -19, -16)
 				}
-				if ( ctype=='hierarchical clust'){
-					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-					clusters <- cutree(hc,k=groups.n)
-				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-					clusters <- kmeans( t(tab) ,centers=groups.n)$cluster
-				}else if ( ctype =='mclust' ) {
-					hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
-					clusters <- hclass(hc, 12)
-				}
-				else { stop( paste('ctype',ctype, 'unknown!' ) )}
-			}else { ## now the clusterby is a MDS algorithm name / MDS dataset name
-				cn <- names(dataObj$usedObj$MDS)
-				if ( length(grep(clusterby, cn  )) == 0) {
-				#if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
-					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
-				}else if (length(grep(clusterby, cn  )) > 1 ) {
-					stop( paste("Sorry, but I have more than one MDS type like = '",clusterby,"' :",paste(sep=",",cn[grep(clusterby, cn  )] ), sep="") )
-				}else {
-					clusterby = cn[grep(clusterby, cn  )]
-				}
-				if ( ctype=='hierarchical clust'){
-					hc <- hclust(dist( dataObj$usedObj$MDS[[clusterby]] ),method = cmethod)
-					clusters <- cutree(hc,k=groups.n)
-				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(dist( dataObj$usedObj$MDS[[clusterby]] ),method = cmethod)
-					clusters <- kmeans( dataObj$usedObj$MDS[[clusterby]] ,centers=groups.n)$cluster
-				}else if ( ctype =='mclust' ) {
-					hc <- hc( dataObj$usedObj$MDS[[clusterby]] )
-					clusters <- hclass(hc, groups.n)
-				}
-				else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			}
+			if ( ctype=='hierarchical clust'){
+				hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
+				clusters <- cutree(hc,k=groups.n)
+			}else if (  ctype=='kmeans' ) {
+				hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
+				clusters <- kmeans( t(tab) ,centers=groups.n)$cluster
+			}else if ( ctype =='mclust' ) {
+				hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
+				clusters <- hclass(hc, 12)
+			}
+			else { stop( paste('ctype',ctype, 'unknown!' ) )}
+			
 			if ( is.null(useGrouping) ){
 				## define the group name n and populate the samples table
 				if ( is.null(name)){

@@ -35,9 +35,29 @@ setMethod('transpose', signature = c ('BioData'),
 			if ( ! is.null(x$zscored) ) {
 				x$zscored <- Matrix::t(x$zscored)
 			}
-			tmp = x$usedObj$MDS
-			x$usedObj$MDS = x$usedObj$MDSgene
-			x$usedObj$MDSgene = tmp
+			new = list()
+			for ( id in grep ( 'MDS', names(x$usedObj)) ) {
+				n = names(x$usedObj)[id]
+				new_N = NULL
+				if ( length(grep('MDSgenes',n)) == 1 ) {
+					new_N = str_replace(n, 'MDSgenes', 'MDS' )
+				}else {
+					new_N = str_replace(n, 'MDS', 'MDSgenes' )
+				}
+				new[[new_N]] = x$usedObj[[n]]
+				x$usedObj[[n]] = NULL
+			}
+			if ( !is.na( match( 'pr', names(x$usedObj)))){
+				new[['prGenes']] = x$usedObj[['pr']]
+				x$usedObj[['pr']] = NULL
+			}
+			if ( !is.na( match( 'prGenes', names(x$usedObj)))){
+				new[['pr']] = x$usedObj[['prGenes']]
+				x$usedObj[['prGenes']] = NULL
+			}
+			lapply( names(new) , function(n) { x$usedObj[[n]] = new[[n]] })
+			rm(new)
+		
 			invisible(x)
 		} 
 )

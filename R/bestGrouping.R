@@ -23,7 +23,7 @@ if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
 }
 setMethod('bestGrouping', signature = c ('BioData'),
 		definition = function (x, group, bestColname='QualifiedGrouping' , cutoff=0.5, ... ) {
-			uObj <- paste( 'predictive RFobj', group )
+			uObj <- paste( 'Predictive RFobj', group )
 			rf <- NULL
 			
 			if (  is.null( x$usedObj[[uObj]])){

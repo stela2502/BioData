@@ -29,25 +29,52 @@ setMethod('mds', signature = c ('BioData'),
 			mds_store = NULL
 			mds.proj = NULL
 			if ( mds.type=="PCA" ) {
-				seRaw=F
+				useRaw=F
 			}
-			if ( onwhat == 'Expression'){
+			
+			PCA_name = 'pr'
+			n = ncol(dataObj$data()) -2
+			
+			if ( genes ){ 
+				PCA_name = 'prGenes'
+				n = nrow(dataObj$data()) -2
+			}
+			
+			if ( n > 100) 
+				n = 100
+			
+			if ( !genes )
+				cmpTo = colnames(dataObj$dat)
+			else
+				cmpTo = rownames(dataObj$dat)
+			
+			## fist fix the initial matrix
+			if ( length( grep('Expression', onwhat )) ==  1){
+				PCA_name = 'pr'
 				n = ncol(dataObj$data()) -2
+				
+				if ( genes ){ 
+					PCA_name = 'prGenes'
+					n = nrow(dataObj$data()) -2
+				}
+				
 				if ( n > 100) 
 					n = 100
 				rerun = 0
 				message( paste("N set to",n))
-				if ( is.null(dataObj$usedObj$pr) ){
-					rerun = 1	
+				
+				if ( is.na(match( PCA_name , names(GOI3$usedObj))) ){
+					rerun = 1
 				}else{
-					if (isS4(dataObj$usedObj$pr)) {
-						if ( all.equal( rownames(dataObj$usedObj$pr@scores), colnames(dataObj$dat) ) == F ) {
+					if (isS4(dataObj$usedObj[[PCA_name]])) {
+						## check that this object comes from the right dataset
+						if ( all.equal( rownames(dataObj$usedObj[[PCA_name]]@scores), cmpTo ) == F ) {
 							rerun = 1
 						}
 					}else {
-						if ( all.equal( rownames(dataObj$usedObj$pr$x), colnames(dataObj$dat) ) == F ) {
-							rerun = 1
-						}
+							if ( all.equal( rownames(dataObj$usedObj[[PCA_name]]$x), cmpTo ) == F ) {
+								rerun = 1
+							}
 					}
 				}
 				
@@ -57,19 +84,22 @@ setMethod('mds', signature = c ('BioData'),
 					if ( length(bad) > 0 ) {
 						tmp[bad] = 0
 					}
-					
-					if ( nrow(dataObj$annotation) > 2000 ) {
-						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 genes)" )
-						dataObj$usedObj$pr <- irlba::prcomp_irlba ( t(tmp), center=T, n=n+1 )
+					if ( genes ) {
+						tmp = t(tmp)
+					}
+					if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 2000^2 ) {
+						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 * 2000 values)" )
+						dataObj$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( t(tmp), center=T, n=n+1 )
 						#dataObj$usedObj$pr$x <- apply(dataObj$usedObj$pr$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr$x[,2] ) ) } )
 						#dataObj$usedObj$pr$x <- dataObj$usedObj$pr$x[,-2]
-						rownames(dataObj$usedObj$pr$x) = colnames(dataObj$dat)
+						rownames(dataObj$usedObj[[PCA_name]]$x) = cmpTo
 						
 					}else {
-						dataObj$usedObj$pr <- pcaMethods::bpca( t(as.matrix(tmp)), nPcs=n+1 )
+						message ( "pcaMethods::bpca to also use the holes (0 values)" )
+						dataObj$usedObj[[PCA_name]] <- pcaMethods::bpca( t(as.matrix(tmp)), nPcs=n+1 )
 						#dataObj$usedObj$pr@scores <- apply( dataObj$usedObj$pr@scores,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr@scores[,2] ) ) } )
 						#dataObj$usedObj$pr@scores <- dataObj$usedObj$pr@scores[,-2]
-						rownames(dataObj$usedObj$pr@scores) = colnames(dataObj$dat)
+						rownames(dataObj$usedObj[[PCA_name]]@scores) = cmpTo
 					}
 					rm(tmp)
 				}
@@ -79,65 +109,25 @@ setMethod('mds', signature = c ('BioData'),
 			
 			if ( useRaw ) {
 				mds_store <- 'MDS'
+				if ( genes )
+					mds_store <- 'MDSgenes'
+				
 				tab=t(as.matrix(dataObj$data()))
+				if ( genes) {
+					tab = t(tab)
+				}
 			}else {
 				mds_store <- 'MDS_PCA100'
-				if ( nrow(dataObj$annotation) > 2000 ){
-					tab <- dataObj$usedObj$pr$x
+				if ( genes )
+					mds_store <- 'MDSgenes_PCA100'
+				
+				if ( nrow(dataObj$dat) * ncol(dataObj$dat)  > 2000^2 ){
+					tab <- dataObj$usedObj[[PCA_name]]$x
 				}else {
-					tab <- dataObj$usedObj$pr@scores
+					tab <- dataObj$usedObj[[PCA_name]]@scores
 				}
 			}
 			
-			if ( genes ) {
-				n = ncol(dataObj$data()) -2
-				if ( n > 100) 
-					n = 100
-				
-				rerun = 0
-				if ( is.null(dataObj$usedObj$prGenes) ){
-					rerun = 1	
-				}else{
-					if (isS4(dataObj$usedObj$prGenes)) {
-						if ( all.equal( rownames(dataObj$usedObj$prGenes@scores), colnames(dataObj$dat) ) == F ) {
-							rerun = 1
-						}
-					}else {
-						if ( all.equal( rownames(dataObj$usedObj$prGenes$x), colnames(dataObj$dat) ) == F ) {
-							rerun = 1
-						}
-					}
-				}
-				if ( rerun == 1 ) {
-					tmp = dataObj$data()
-					bad = which(tmp@x  == -1)
-					if ( length(bad) > 0 ) {
-						tmp[bad] = 0
-					}
-					if ( nrow(dataObj$samples) > 2000 ) {
-						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 samples)" )
-						dataObj$usedObj$prGenes <- irlba::prcomp_irlba ( tmp, center=T, n=n+1 )
-						#dataObj$usedObj$prGenes$x <- apply(dataObj$usedObj$prGenes$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$prGenes$x[,2] ) ) } )
-						#dataObj$usedObj$prGenes$x <- dataObj$usedObj$prGenes$x[,-2]
-						rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
-						
-					}else {
-						dataObj$usedObj$prGenes <- pcaMethods::bpca( as.matrix(tmp), nPcs=n+1 )
-						#dataObj$usedObj$prGenes@scores <- apply( dataObj$usedObj$prGenes@scores,2, function(x) { resid( lm(x ~ dataObj$usedObj$prGenes@scores[,2] ) ) } )
-						#dataObj$usedObj$prGenes@scores <- dataObj$usedObj$prGenes@scores[,-2]
-						rownames(dataObj$usedObj$prGenes@scores) = rownames(dataObj$dat)
-					}
-					rm(tmp)
-					#rownames(dataObj$usedObj$prGenes$x) = rownames(dataObj$dat)
-				}
-				if ( useRaw ) {
-					mds_store <- 'MDSgene'
-					tab <- t(tab)
-				}else {
-					mds_store <- 'MDSgene_PCA100'
-					tab <- dataObj$usedObj$prGenes@scores	
-				}	
-			}
 			if ( dim != 3){
 				mds_store = paste( mds_store, 'dim',dim, sep="_")
 			}
@@ -276,16 +266,11 @@ setMethod('mds', signature = c ('BioData'),
 				else {
 					print( paste("Sory I can not work on the mds.type option",mds.type) )
 				}
-				if ( genes ) {
-					rownames(mds.proj) <- rownames(dataObj$dat)
-				}else{
-					if ( is.null(mds.proj) ) {
-						print ("An error has occured - mds.proj == NULL\n")
-						browser()
-					}
-					
-					rownames(mds.proj) <- make.names(colnames(dataObj$dat))
+				if ( is.null(mds.proj) ) {
+					print ("An error has occured - mds.proj == NULL\n")
+					browser()
 				}
+				rownames(mds.proj) <- make.names(cmpTo)
 				
 				dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 			}

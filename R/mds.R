@@ -63,7 +63,7 @@ setMethod('mds', signature = c ('BioData'),
 				rerun = 0
 				message( paste("N set to",n))
 				
-				if ( is.na(match( PCA_name , names(GOI3$usedObj))) ){
+				if ( is.na(match( PCA_name , names(dataObj$usedObj))) ){
 					rerun = 1
 				}else{
 					if (isS4(dataObj$usedObj[[PCA_name]])) {

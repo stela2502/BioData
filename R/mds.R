@@ -87,7 +87,7 @@ setMethod('mds', signature = c ('BioData'),
 					if ( genes ) {
 						tmp = t(tmp)
 					}
-					if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 2000^2 ) {
+					if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 1e6 ) {
 						message ( "irlba::prcomp_irlba is used to save memory and time (more than 2000 * 2000 values)" )
 						dataObj$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( t(tmp), center=T, n=n+1 )
 						#dataObj$usedObj$pr$x <- apply(dataObj$usedObj$pr$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr$x[,2] ) ) } )
@@ -121,7 +121,7 @@ setMethod('mds', signature = c ('BioData'),
 				if ( genes )
 					mds_store <- 'MDSgenes_PCA100'
 				
-				if ( nrow(dataObj$dat) * ncol(dataObj$dat)  > 2000^2 ){
+				if ( nrow(dataObj$dat) * ncol(dataObj$dat)  > 1e6  ){
 					tab <- dataObj$usedObj[[PCA_name]]$x
 				}else {
 					tab <- dataObj$usedObj[[PCA_name]]@scores

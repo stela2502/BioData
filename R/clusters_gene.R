@@ -27,91 +27,9 @@ setMethod('clusters_gene', signature = c ('BioData'),
 	definition = function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3,
 				ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {
 	
-			clusters_gene <- NULL
-			hc <- NULL
-			if(onwhat=="Expression"){
-				tab <- t(dataObj$data())
-			}
-			else {
-				stop( paste("Sorry, the data type",mds.type,"is not supported") )
-			}
-			if ( ! is.null(useGrouping) ) {
-				clusters_gene <- dataObj$annotation[,useGrouping]
-				if ( is.factor( clusters_gene)) {
-					clusters_gene = as.numeric(clusters_gene)
-				}
-				dataObj <- colors_4 (dataObj, useGrouping )
-			}
-			else if ( clusterby=="raw"){#...do mds on tab
-				if ( ctype=='hierarchical clust'){
-					hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-					clusters_gene <- cutree(hc,k=groups.n)
-				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(as.dist( 1- cor(t(tab), method='pearson') ),method = cmethod)
-					clusters_gene <- kmeans( dataObj$usedObj[['mds.proj']] ,centers=groups.n)$cluster
-				}else if ( ctype =='mclust' ) {
-					hc <- hc( as.dist( 1- cor(t(tab), method='pearson') ) )
-					clusters_gene <- hclass(hc, 12)
-				}
-				else { stop( paste('ctype',ctype, 'unknown!' ) )}
-			}else { ## now the clusterby is a MDS algorithm name / MDS dataset name
-				cn <- names(dataObj$usedObj$MDSgene)
-				if ( length(grep(clusterby, cn  )) == 0) {
-					#if ( is.null( dataObj$usedObj$MDS[[clusterby]] ) ) {
-					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby)
-				}else if (length(grep(clusterby, cn  )) > 1 ) {
-					stop( paste("Sorry, but I have more than one MDS type like = '",clusterby,"' :",paste(sep=",",cn[grep(clusterby, cn  )] ), sep="") )
-				}else {
-					clusterby = cn[grep(clusterby, cn  )]
-				}
-				if ( is.null( dataObj$usedObj$MDSgene[[clusterby]] ) ) {
-					dataObj <- mds( dataObj, onwhat="Expression", mds.type=clusterby, genes=T)
-					clusterby = cn[grep(clusterby, cn  )]
-				}
-				if ( ctype=='hierarchical clust'){
-					hc <- hclust(dist( dataObj$usedObj$MDSgene[[clusterby]] ),method = cmethod)
-					clusters_gene <- cutree(hc,k=groups.n)
-				}else if (  ctype=='kmeans' ) {
-					hc <- hclust(dist( dataObj$usedObj$MDSgene[[clusterby]] ),method = cmethod)
-					clusters_gene <- kmeans( dataObj$usedObj$MDSgene[[clusterby]] ,centers=groups.n)$cluster
-				}else if ( ctype =='mclust' ) {
-					browser()
-					hc <- hc( dataObj$usedObj$MDSgene[[clusterby]] )
-					clusters_gene <- hclass(hc, groups.n)
-				}
-				else { stop( paste('ctype',ctype, 'unknown!' ) )}
-			}
-			if ( is.null(useGrouping) ){
-				## define the group name n and populate the annotation table
-				if ( is.null(name)){
-					if(is.null(dataObj$usedObj[['auto_clusters_gene']])){
-					dataObj$usedObj[['auto_clusters_gene']] = 0
-				}
-				dataObj$usedObj[['auto_clusters_gene']] <- dataObj$usedObj[['auto_clusters_gene']] +1
-				name <- paste( 'auto_clusters_gene', 
-						dataObj$usedObj[['auto_clusters_gene']] ,sep='.')
-				}
-				dataObj$annotation <- cbind ( dataObj$annotation, clusters_gene )
-				colnames(dataObj$annotation)[ncol(dataObj$annotation)] = name
-				clusters_gene <- dataObj$usedObj[['clusters_gene']]
-				dataObj$usedObj$usedGroupingGene <- name
-				dataObj <- colors_4(dataObj, name )
-				print ("used a new grouing")
-			}else {
-				print ( "reusing old grouping" )
-				dataObj$usedObj$usedGroupingGene <- useGrouping
-			}
-			## now I want to create some gene clusters_gene too based on hclust only
-#			if ( is.null(dataObj$annotation$'hclust Order')){
-#				hcG <- hclust(as.dist( 1- cor(dataObj$data(), method='pearson') ),method = cmethod )
-#				dataObj$annotation$'hclust Order' <- hcG$order
-#				dataObj$annotation$'hclust 5 groups' <- factor(cutree(hcG,k=5) )
-#				dataObj$annotation$'hclust 10 groups' <- factor(cutree(hcG,k=10) )
-#				for ( i in c('hclust Order', 'hclust 5 groups', 'hclust 10 groups' )){
-#					dataObj <- colors_4(dataObj, i )
-#				}
-#			}
-			dataObj$usedObj[['clusters_gene']] <- clusters_gene
-			dataObj$usedObj[['hc_gene']] <- hc
+			transpose(dataObj)
+			clusters(dataObj, clusterby= clusterby, useGrouping=useGrouping, groups.n = groups.n,
+					ctype=ctype, onwhat=onwhat, cmethod=cmethod, name=name)
+			transpose(dataObj)
 			invisible(dataObj)
 } )

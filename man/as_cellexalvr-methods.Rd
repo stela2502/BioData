@@ -10,7 +10,8 @@
 \usage{
 as_cellexalvr(x, ...)
 
-\S4method{as_cellexalvr}{BioData}(x, cellInfo, groups = NULL, linear = NULL)
+\S4method{as_cellexalvr}{BioData}(x, cellInfo, groups = NULL,
+  linear = NULL)
 }
 \arguments{
 \item{x}{the BioData object}

@@ -88,12 +88,3 @@ setMethod('defineHeatmapColors', signature = c('BioData') ,
 		}
 )
 
-#' @name minValueExpr
-#' @aliases minValueExpr,BioData-method
-#' @rdname minValueExpr-methods
-#' @docType methods
-#' @description just get me the min value for the object
-#' @param x data object
-#' @title description of function gg.heatmap.list
-#' @return a list with the modified merged table and the colors vector
-#' @export

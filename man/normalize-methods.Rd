@@ -4,9 +4,6 @@
 \name{normalize}
 \alias{normalize}
 \alias{normalize,BioData-method}
-\alias{normalize}
-\alias{normalize,BioData-method}
-\alias{normalize}
 \alias{normalize,SingleCells-method}
 \title{description of function normalize}
 \usage{
@@ -14,8 +11,8 @@
   to_gene_length = FALSE, geneLengthCol = "transcriptLength",
   force = FALSE, name = NULL)
 
-\S4method{normalize}{SingleCells}(object, ..., reads = 600, force = FALSE,
-  name = NULL)
+\S4method{normalize}{SingleCells}(object, ..., reads = 600,
+  force = FALSE, name = NULL)
 }
 \arguments{
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}

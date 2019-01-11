@@ -5,7 +5,9 @@
 \alias{add_to_stat}
 \alias{add_to_stat,BioData-method}
 \title{Add a stsitics table to the $stats slot}
-\format{An object of class \code{NULL} of length 0.}
+\usage{
+add_to_stat(x, stat, name)
+}
 \arguments{
 \item{x}{The BioDat object}
 
@@ -16,4 +18,3 @@
 \description{
 Adds a stst table to the object
 }
-\keyword{datasets}

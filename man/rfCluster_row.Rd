@@ -29,6 +29,8 @@
 \item{ntree}{the numer of trees per forest (default = 500)}
 
 \item{settings}{slurm settings list(A, t and p) which allow to run the rf clustering on a slurm backend}
+
+\item{ids}{the ids for a subset of genes to be analyzed (default NULL)}
 }
 \value{
 a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)

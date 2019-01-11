@@ -3,11 +3,6 @@
 \docType{methods}
 \name{as_BioData}
 \alias{as_BioData}
-\alias{as_BioData}
-\alias{as_BioData}
-\alias{as_BioData}
-\alias{as_BioData}
-\alias{as_BioData}
 \title{description of function as_BioData}
 \usage{
 \S4method{as_BioData}{list}(dat)

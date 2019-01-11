@@ -8,8 +8,8 @@
 \usage{
 complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
   colColors = NULL, rowColors = NULL, pdf = FALSE, subpath = "",
-  main = "", heapmapCols = function(x) {     c("darkgrey", bluered(x)) },
-  brks = 10, X11type = "cairo", green = F)
+  main = "", heapmapCols = function(x) {     c("darkgrey", bluered(x))
+  }, brks = 10, X11type = "cairo", green = F)
 }
 \arguments{
 \item{x}{the BioData object}

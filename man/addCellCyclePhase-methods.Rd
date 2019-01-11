@@ -6,7 +6,8 @@
 \alias{addCellCyclePhase,BioData-method}
 \title{description of function addCellCyclePhase}
 \usage{
-addCellCyclePhase(x, s.genes = NULL, g2m.genes = NULL, gnameCol = NULL)
+addCellCyclePhase(x, s.genes = NULL, g2m.genes = NULL,
+  gnameCol = NULL)
 }
 \arguments{
 \item{x}{the BioData object}

@@ -6,8 +6,8 @@
 \alias{SQLite_SampleSummary,BioData-method}
 \title{description of function SQLite_SampleSummary}
 \usage{
-SQLite_SampleSummary(fname, cells = list(table = "samples", rev = "sample_id",
-  name = "sname"))
+SQLite_SampleSummary(fname, cells = list(table = "samples", rev =
+  "sample_id", name = "sname"))
 }
 \arguments{
 \item{fname}{the file to the sqlite db}

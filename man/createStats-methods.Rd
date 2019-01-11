@@ -22,5 +22,5 @@ the NGSexpressionSet with a set of ststs tables
 \description{
 calculate staistics on all possible groupings using the DEseq nbinomTest test Both
 
-together create the group 'A vs. B'
+together create the group "A vs. B"
 }

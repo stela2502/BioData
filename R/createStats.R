@@ -3,7 +3,7 @@
 #' @rdname createStats-methods
 #' @docType methods
 #' @description  calculate staistics on all possible groupings using the DEseq nbinomTest test Both
-#' @description  together create the group 'A vs. B'
+#' @description  together create the group "A vs. B"
 #' @param x the NGSexpressionSet
 #' @param condition the grouping column in the samples data.frame
 #' @param files write the statistics tables (FALSE)
@@ -63,15 +63,6 @@ setMethod('createStats', signature = c ('BioData'),
 		x
 })
 
-add_to_stat <- function( x, stat, name ) {
-	if ( ! is.na( match( name, names(x$stats)))){
-		x$stats[[ match( name, names(x$stats)) ]] <- stat
-	}else {
-		x$stats[[ length( x$stats ) +1 ]] <- stat
-		names(x$stats)[length(x$stats) ] <- name
-	}
-	x
-}
 
 
 setMethod('createStats', signature = c ( 'MicroArray') ,

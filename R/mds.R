@@ -29,19 +29,8 @@ setMethod('mds', signature = c ('BioData'),
 			mds_store = NULL
 			mds.proj = NULL
 			if ( mds.type=="PCA" ) {
-				useRaw=F
+				useRaw=TRUE
 			}
-			
-			PCA_name = 'pr'
-			n = ncol(dataObj$data()) -2
-			
-			if ( genes ){ 
-				PCA_name = 'prGenes'
-				n = nrow(dataObj$data()) -2
-			}
-			
-			if ( n > 100) 
-				n = 100
 			
 			if ( !genes )
 				cmpTo = colnames(dataObj$dat)
@@ -50,59 +39,6 @@ setMethod('mds', signature = c ('BioData'),
 			
 			## fist fix the initial matrix
 			if ( length( grep('Expression', onwhat )) ==  1){
-				PCA_name = 'pr'
-				n = ncol(dataObj$data()) -2
-				
-				if ( genes ){ 
-					PCA_name = 'prGenes'
-					n = nrow(dataObj$data()) -2
-				}
-				
-				if ( n > 100) 
-					n = 100
-				rerun = 0
-				message( paste("N set to",n))
-				
-				if ( is.na(match( PCA_name , names(dataObj$usedObj))) ){
-					rerun = 1
-				}else{
-					if (isS4(dataObj$usedObj[[PCA_name]])) {
-						## check that this object comes from the right dataset
-						if ( all.equal( rownames(dataObj$usedObj[[PCA_name]]@scores), cmpTo ) == F ) {
-							rerun = 1
-						}
-					}else {
-							if ( all.equal( rownames(dataObj$usedObj[[PCA_name]]$x), cmpTo ) == F ) {
-								rerun = 1
-							}
-					}
-				}
-				
-				if ( rerun == 1) {
-					tmp = dataObj$data()
-					bad = which(tmp@x == -1)
-					if ( length(bad) > 0 ) {
-						tmp[bad] = 0
-					}
-					if ( genes ) {
-						tmp = t(tmp)
-					}
-					if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 1e6 ) {
-						message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
-						dataObj$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( t(tmp), center=T, n=n+1 )
-						#dataObj$usedObj$pr$x <- apply(dataObj$usedObj$pr$x ,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr$x[,2] ) ) } )
-						#dataObj$usedObj$pr$x <- dataObj$usedObj$pr$x[,-2]
-						rownames(dataObj$usedObj[[PCA_name]]$x) = cmpTo
-						
-					}else {
-						message ( "pcaMethods::bpca to also use the holes (0 values)" )
-						dataObj$usedObj[[PCA_name]] <- pcaMethods::bpca( t(as.matrix(tmp)), nPcs=n+1 )
-						#dataObj$usedObj$pr@scores <- apply( dataObj$usedObj$pr@scores,2, function(x) { resid( lm(x ~ dataObj$usedObj$pr@scores[,2] ) ) } )
-						#dataObj$usedObj$pr@scores <- dataObj$usedObj$pr@scores[,-2]
-						rownames(dataObj$usedObj[[PCA_name]]@scores) = cmpTo
-					}
-					rm(tmp)
-				}
 			} else {
 				stop( paste("Sorry, the option onwhat",onwhat,"is not supported") )
 			}
@@ -121,7 +57,9 @@ setMethod('mds', signature = c ('BioData'),
 				if ( genes )
 					mds_store <- 'MDSgenes_PCA100'
 				
-				if ( nrow(dataObj$dat) * ncol(dataObj$dat)  > 1e6  ){
+				PCA_name = DimReduction(dataObj, n=100, genes = genes, method='auto', force = FALSE)
+				
+				if ( ! isS4(dataObj$usedObj[[PCA_name]])  ){
 					tab <- dataObj$usedObj[[PCA_name]]$x
 				}else {
 					tab <- dataObj$usedObj[[PCA_name]]@scores
@@ -145,31 +83,39 @@ setMethod('mds', signature = c ('BioData'),
 				#system ( 'rm loadings.png' )
 				
 				if(mds.type == "PCA"){
-					mds.proj <- tab[,1:dim]
-				}
-				#	mds.trans <- prcomp(t(tab))$x[,1:3]
-				
-				else if ( mds.type=='DM') {
-					if (!library("destiny", quietly = TRUE,logical.return=TRUE )) {
-						stop("package 'destiny' needed for this function to work. Please install it.",
-								call. = FALSE)
+					tmp = dataObj$clone()
+					n = DimReduction(tmp, n=3, genes = genes, method='auto', force = FALSE)
+					if ( ! isS4(dataObj$usedObj[[n]])  ){
+						mds.proj <- tmp$usedObj[[n]]$x
+					}else {
+						mds.proj <- tmp$usedObj[[n]]@scores
 					}
-					if ( ! exists('sigma', mode='numeric') ){
-						if ( exists('find_sigmas', where='package:destiny', mode='function') ){
-							sigmas <- destiny::find_sigmas(tab, verbose=F)
-							sigma <- destiny::optimal_sigma(sigmas)
-						}else {
-							sigmas <- destiny::find.sigmas(tab, verbose=F)
-							sigma <- destiny::optimal.sigma(sigmas)
-						}
-						
-					}
-					if ( !exists('distance', mode='character')){
-						distance = 'cosine'
-					}
-					dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma, n_eigs = dim)
-					mds.proj <- destiny::as.data.frame(dm)[,1:dim]
-					
+					rm( tmp) 
+					gc()
+#				}
+#				#	mds.trans <- prcomp(t(tab))$x[,1:3]
+#				
+#				else if ( mds.type=='DM') {
+#					if (!library("destiny", quietly = TRUE,logical.return=TRUE )) {
+#						stop("package 'destiny' needed for this function to work. Please install it.",
+#								call. = FALSE)
+#					}
+#					if ( ! exists('sigma', mode='numeric') ){
+#						if ( exists('find_sigmas', where='package:destiny', mode='function') ){
+#							sigmas <- destiny::find_sigmas(tab, verbose=F)
+#							sigma <- destiny::optimal_sigma(sigmas)
+#						}else {
+#							sigmas <- destiny::find.sigmas(tab, verbose=F)
+#							sigma <- destiny::optimal.sigma(sigmas)
+#						}
+#						
+#					}
+#					if ( !exists('distance', mode='character')){
+#						distance = 'cosine'
+#					}
+#					dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma, n_eigs = dim)
+#					mds.proj <- destiny::as.data.frame(dm)[,1:dim]
+#					
 				}else if ( mds.type == "TSNE"){
 					browser()
 					## there is an extremely efficient python implementation of that available.
@@ -274,7 +220,7 @@ setMethod('mds', signature = c ('BioData'),
 				
 				dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 			}
-			
+			gc()
 			invisible(dataObj)
 		} 
 )

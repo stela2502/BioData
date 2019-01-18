@@ -55,6 +55,8 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 		}
 		if ( genes ) {
 			x = transpose(x$clone())
+			return (Make3D4obj(x,group=group, mds.type=mds.type,  cex=cex, colFunc=colFunc, cut= cut, names=names,
+							opath=opath, main=main, genes=F, plotType=plotType, size=size, green=green, useRaw=useRaw));
 		}
 		MDS_NAME = 'MDS_PCA100'
 		if ( useRaw ){
@@ -111,6 +113,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 				My.legend3d ("topright", legend = paste( brks ), pch=16, col= COLS, cex=1,inset =c(0.02),
 						main = title
 				)
+				mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
                 rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 
         }
@@ -120,6 +123,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 								col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02),
 								main = title
 						)
+						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
                         rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
@@ -127,6 +131,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 								pch = 16, col = x$usedObj$colorRange[[group]], cex=1, inset=c(0.02),
 								main = title
 						)
+						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
 						rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 						
                 }

@@ -25,7 +25,6 @@ Depends:
     Matrix,
     Matrix.utils,
     pcaMethods,
-    destiny,
     org.Mm.eg.db,
     org.Hs.eg.db,
 LinkingTo: Rcpp (>= 0.11.0), RcppEigen, RcppProgress

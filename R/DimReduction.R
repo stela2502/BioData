@@ -1,4 +1,24 @@
-DimReduction <- function( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ){
+#' @name DimReduction
+#' @aliases DimReduction,BioData-method
+#' @rdname DimReduction-methods
+#' @docType methods
+#' @description Create the initial dimension reduction dataset (PCA n =100)
+#' @param x the BioData object
+#' @param genes create the dim red for the genes dimension (rows) default=FALSE
+#' @param n  how many eigenvectors to collapse to default=100
+#' @param method which method ('auto', 'irlba', 'bpca')
+#' @param force re-produced the dataset even if it already exists default=FALSE
+#' @title initial dimensional reduction step based on PCA
+#' @returns the name of the result object in the usedObj list.
+#' @export 
+if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
+	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) { 
+		standardGeneric('DimReduction')
+	}
+) }
+
+setMethod('DimReduction', signature = c ('BioData'),
+	definition = function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) {
 	
 	PCA_name = 'pr'
 	cmpTo = colnames(x$dat)
@@ -59,4 +79,4 @@ DimReduction <- function( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'
 		gc()
 	}
 	PCA_name
-}
+} )

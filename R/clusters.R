@@ -90,7 +90,7 @@ setMethod('clusters', signature = c ('BioData'),
 				clusters <- kmeans( t(tab) ,centers=groups.n)$cluster
 			}else if ( ctype =='mclust' ) {
 				hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
-				clusters <- hclass(hc, 12)
+				clusters <- hclass(hc, groups.n)
 			}
 			else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			

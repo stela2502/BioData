@@ -85,7 +85,7 @@ setMethod('mds', signature = c ('BioData'),
 				if(mds.type == "PCA"){
 					tmp = dataObj$clone()
 					n = DimReduction(tmp, n=3, genes = genes, method='auto', force = FALSE)
-					if ( ! isS4(dataObj$usedObj[[n]])  ){
+					if ( ! isS4(tmp$usedObj[[n]])  ){
 						mds.proj <- tmp$usedObj[[n]]$x
 					}else {
 						mds.proj <- tmp$usedObj[[n]]@scores
@@ -95,7 +95,7 @@ setMethod('mds', signature = c ('BioData'),
 #				}
 #				#	mds.trans <- prcomp(t(tab))$x[,1:3]
 #				
-#				else if ( mds.type=='DM') {
+#				else if ( mds.type=='DM') { # removed due to a ssl library problem on aurora ls2.
 #					if (!library("destiny", quietly = TRUE,logical.return=TRUE )) {
 #						stop("package 'destiny' needed for this function to work. Please install it.",
 #								call. = FALSE)

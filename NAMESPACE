@@ -3,6 +3,7 @@
 export(BioData)
 export(CodonHeatmap)
 export(CreateBin)
+export(DimReduction)
 export(IdentifyMarkerGenes)
 export(Make3D4obj)
 export(MicroArray)

@@ -2,13 +2,14 @@
 #' @aliases clusters,BioData-method
 #' @rdname clusters-methods
 #' @docType methods
-#' @description Culters the data either based on the raw data values or any MDS data type and adds the grouping into the samples table.
+#' @description This function clusters the data based on hclust, mclust or the kmeans algorithm.
+#' This function can be used to cluster any data slot the BioData class offers (see combination of onwhat and clusterby).
 #' @param dataObj the BioData object
-#' @param clusterby cluster on raw data or MDS clustered data default="raw"
-#' @param useGrouping do nothing and simply use tis grouping default=NULL
+#' @param clusterby is used to specify the MDS type if onwhat is set to MDS (PCA, TSNE_R ...) or the raw, zscored or raw slot for expression data (default 'raw')
+#' @param useGrouping do nothing and simply use this grouping default=NULL
 #' @param groups.n how many groups should be detected default= 3
-#' @param ctype cluster type - either 'hierarchical clust' or 'kmeans' default = 'hierarchical clust'
-#' @param onwhat this option has been kept for the Fluidigm data as there FACS data can also be used default = 'Expression'
+#' @param ctype cluster type - either 'hierarchical clust', 'mclust' or 'kmeans' default = 'hierarchical clust'
+#' @param onwhat This option selects the source data ('Expression', or 'MDS')
 #' @param cmethod the method to used with the hclust clustering (default = 'ward.D2')
 #' @param name the name for the new grouping (default = 'auto_clusters.1:n')
 #' @title description of function clusters

@@ -351,12 +351,27 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	err = NULL
 	for( f in c('barcodes.tsv','matrix.mtx') ) {
 		if ( ! file.exists(file.path(dat,f)) ) {
-			err = c( err, paste("file", file.path(dat,f), "does not exists" ) )
+			if ( file.exists(file.path(dat,paste(f,sep='.', 'gz')))) {
+				system( paste('gunzip ', file.path(dat,paste(f,sep='.', 'gz'))) )
+			}else {
+				err = c( err, paste("file", file.path(dat,f), "does not exists" ) )
+			}
 		}
 	}
-	if ( ! file.exists(file.path(dat,'genes.tsv')) &&  ! file.exists(file.path(dat,'features.tsv'))  ){
-		err = c( err, paste("file genes.tsv or features.tsv does not exists in path" ,dat) )
+	OK = 0
+	for( f in c('genes.tsv','features.tsv') ) {
+		if ( file.exists(file.path(dat,f)) ) {
+			OK = 1
+		}
+		if ( file.exists(file.path(dat,paste(f,sep='.', 'gz')))) {
+			system( paste('gunzip ', file.path(dat,paste(f,sep='.', 'gz'))) )
+			OK = 1
+		}	
 	}
+	if ( OK == 0 ) {
+		err = c( err, paste("file", file.path(dat,'features.tsv'), "does not exists" ) )
+	}
+	
 	if ( ! is.null(err)) {
 		stop( paste(sep="\n", err))
 	}

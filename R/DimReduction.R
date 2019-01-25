@@ -58,19 +58,19 @@ setMethod('DimReduction', signature = c ('BioData'),
 			tmp = t(tmp)
 		}
 		if ( method == 'auto' ){
-			if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 1e6 )
+			if ( nrow(x$dat) * ncol(x$dat) > 1e6 )
 				method = 'irlba'
 			else 
 				method= 'bpca'
 		}
 		if ( method == 'irlba' ) {
 			message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
-			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n+1 )
+			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n )
 			rownames(x$usedObj[[PCA_name]]$x) = cmpTo
 			
-		}else if ( message == 'bpca') {
+		}else if ( method == 'bpca') {
 			message ( "pcaMethods::bpca to also use the holes (0 values)" )
-			x$usedObj[[PCA_name]] <- pcaMethods::bpca( as.matrix(tmp), nPcs=n+1 )
+			x$usedObj[[PCA_name]] <- pcaMethods::bpca( as.matrix(tmp), nPcs=n )
 			rownames(x$usedObj[[PCA_name]]@scores) = cmpTo
 		}else {
 			stop( paste("method", method, "is not defined here" ) )

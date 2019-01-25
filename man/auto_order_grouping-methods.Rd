@@ -14,12 +14,11 @@ auto_order_grouping(x, group, settings = list(A = "lsens2017-3-2", t =
 
 \item{group}{the sample grouping that should become reordered (min 15 groups)}
 
-\item{settings}{a list of slurm settings default}
+\item{settings}{a list of slurm settings default list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)}
 
 \item{k}{how many groups to put into one super group (default 5)}
 
-\item{colapseBy}{which method to collapse the data by (default 'median') see function collaps
-list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)}
+\item{colapseBy}{which method to collapse the data by (default 'median') see function collaps}
 }
 \description{
 This function uses the rfCluster_col function to order median collapsed data values.

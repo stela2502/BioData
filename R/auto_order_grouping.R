@@ -6,10 +6,9 @@
 #' This RF order is then re-ordered twice using hclust 'ward.D2' and the final ordering is forced onto the original grouping.
 #' @param x The BioData object
 #' @param group the sample grouping that should become reordered (min 15 groups)
-#' @param settings a list of slurm settings default 
+#' @param settings a list of slurm settings default list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)
 #' @param k how many groups to put into one super group (default 5)
-#' @param colapseBy which method to collapse the data by (default 'median') see function collaps
-#' list( 'A' = 'lsens2017-3-2' , 't'= '01:00:00', 'p' = 'dell', 'n' = 1, 'N' = 1)
+#' @param colapseBy which method to collapse the data by (default 'median') see function collaps 
 #' @title Auto re-order a (RF) grouping
 #' @export 
 setGeneric('auto_order_grouping', ## Name

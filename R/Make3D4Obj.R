@@ -114,6 +114,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 						main = title
 				)
 				mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+				if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
+					MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+				}
                 rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 
         }
@@ -124,6 +127,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 								main = title
 						)
 						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+						if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
+							MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+						}
                         rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
@@ -132,6 +138,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 								main = title
 						)
 						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
+						if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
+							MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+						}
 						rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 						
                 }

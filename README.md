@@ -8,5 +8,5 @@ This package is meant to be a base package for any kind of biological data.
 To intsall it I recommend using deftools:
 
 library(devtools)
-install_github("stela2502/BioData")
+install_git('https://github.com/stela2502/BioData.git', ref='testing')
 

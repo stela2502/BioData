@@ -59,6 +59,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 										#x$stats[[name]] <- x$stats[[name]][statIDs,]
 									} )
 						}
+						x$usedObj$prGenes = NULL
 						x$name = name
 					}else {
 						print (paste( "None of the probesets matched the probesets in",x$name, "-> keep everything!"))
@@ -96,6 +97,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 						if ( length(x$stats) > 0 ) {
 							x$stats = list()
 						}
+						x$usedObj$prGenes = NULL
 						x$name = name
 						
 					}else {

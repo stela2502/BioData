@@ -29,6 +29,7 @@ setMethod('reorder.samples', signature = c ('BioData'),
 				x$raw <- x$raw[ , idx]
 			}
 			lapply( names(x$usedObj$MDS),reorder.mds, idx, x, 'MDS')
+			lapply( names(x$usedObj$MDS_PCA100),reorder.mds, idx, x, 'MDS_PCA100')
 			x$samples <- x$samples[idx ,]
 			invisible(x)
 		}
@@ -76,6 +77,7 @@ setMethod('reorder.genes', signature = c ('BioData'),
 				lapply( names(x$stats), function(n) { x$stats[[n]] <-x$stats[[n]][idx,] })
 			}
 			lapply( names(x$usedObj$MDSgene),reorder.mds, idx, x, 'MDSgene')
+			lapply( names(x$usedObj$MDSgenes_PCA100),reorder.mds, idx, x, 'MDSgenes_PCA100')
 			x$annotation <- t
 			invisible(x)
 		}

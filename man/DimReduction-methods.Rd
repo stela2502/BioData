@@ -16,6 +16,9 @@
 
 \item{force}{re-produced the dataset even if it already exists default=FALSE}
 }
+\value{
+the name of the result object in the usedObj list.
+}
 \description{
 Create the initial dimension reduction dataset (PCA n =100)
 }

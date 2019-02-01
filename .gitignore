@@ -173,3 +173,6 @@ scratchbord/outpath/*
 /runRFclust_testObject_RFclust_row_1_1_omp_660470.out
 /runRFclust_testObject_RFclust_row_1_1_omp_660471.err
 /runRFclust_testObject_RFclust_row_1_1_omp_660471.out
+/runTSNE.py
+/TSNE_data.csv
+/tSNE_dim3_coods.csv

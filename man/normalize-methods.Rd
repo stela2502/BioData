@@ -13,6 +13,8 @@
 
 \S4method{normalize}{SingleCells}(object, ..., reads = 600,
   force = FALSE, name = NULL)
+
+\S4method{normalize}{MicroArray}(object, to = NULL, ..., name = NULL)
 }
 \arguments{
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}
@@ -27,6 +29,8 @@
 
 \item{reads}{the required read depth}
 
+\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
+
 \item{x}{The NGSexpressionSet}
 
 \item{x}{The BioData object (NGS expression data, not single cells)}
@@ -38,6 +42,8 @@
 \item{x}{The SingleCellsNGS object}
 
 \item{name}{the name of the new object}
+
+\item{x}{the BioData object}
 }
 \value{
 the normalized data set (original data stored in NGS$raw
@@ -54,4 +60,7 @@ for each obejct specific function.
 normalize the expression data (sample wise)
 
 normalize the expression data by subsampling as described in PMID 24531970
+
+constructor that has to be implemented for a generic BioData
+This generic version was meant for array data and I have not had the need nor time to implement this part.
 }

@@ -1,4 +1,3 @@
-#library(BioData)
 context( "SLURM RFclust" )
 if ( ! system('sbatch --help 2>/dev/null ')==0 ) {
 	skip( "no SLURM based system" )

@@ -1,4 +1,3 @@
-#library(BioData)
 context( "local RFclust" )
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 

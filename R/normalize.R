@@ -121,8 +121,8 @@ setMethod('normalize', signature = c ('SingleCells'),
 				object$dat[] <- 0
 				#pb <- progress_estimated(100)
 				#steps = ceiling(ncol(object$raw)/100)
-				
-				object$dat <- Matrix(apply( object$raw,2, normF, n ))
+				object$dat <- FastSparseRowScale( object$raw, TRUE, FALSE, reads, TRUE)
+				#object$dat <- Matrix(apply( object$raw,2, normF, n ))
 				rownames(object$dat) <- rownames(object$raw)
 			}
 			else {
@@ -136,25 +136,32 @@ setMethod('normalize', signature = c ('SingleCells'),
 
 
 
-##' @name normalize
-##' @aliases normalize,BioData-method
-##' @rdname normalize-methods
-##' @docType methods
-##' @description  constructor that has to be implemented for a generic BioData
-##' This generic version was meant for array data and I have not had the need nor time to implement this part.
-##' @param x the BioData object
-##' @param to a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table 
-##' @title description of function normalize
-#setMethod('normalize', signature = c ('BioData') ,
-#	definition = function ( object , to=NULL, ..., name=NULL) {
-#		if ( is.null(to) ) {
-#			stop( "Sorry, but to nees to to be a numeric vector" )
-#		}
-#		if ( is.null(object$raw) ){
-#			object$raw = object$dat
-#		}
-#		object$samples$norm_to <- to
-#		object$dat =  data.frame(t(apply(object$raw,1, function(a) { a / to } ) ))
-#		invisible(object)
-#})
+#' @name normalize
+#' @aliases normalize,BioData-method
+#' @rdname normalize-methods
+#' @docType methods
+#' @description  constructor that has to be implemented for a generic BioData
+#' This generic version was meant for array data and I have not had the need nor time to implement this part.
+#' @param x the BioData object
+#' @param to a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table 
+#' @title description of function normalize
+setMethod('normalize', signature = c ('MicroArray') ,
+	definition = function ( object , to=NULL, ..., name=NULL) {
+		object$zscored=NULL
+		df_rank <- apply(object$dat,2,rank,ties.method="min")
+		df_sorted <- data.frame(apply(object$data(), 2, sort))
+		df_mean <- apply(df_sorted, 1, mean)
+		
+		index_to_mean <- function(my_index, my_mean){
+			return(my_mean[my_index])
+		}
+		object$samples$norm_to = 'quantile'
+		
+		df_final <- apply(df_rank, 2, index_to_mean, my_mean=df_mean)
+		rownames(df_final) <- rownames(df)
+		
+		object$dat = Matrix( as.matrix(df_final) )
+		
+		invisible(object)
+})
 

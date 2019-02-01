@@ -1,4 +1,3 @@
-#library(BioData)
 context( "split for GEO" )
 
 set.seed(1)

@@ -66,7 +66,7 @@ setMethod('createStats', signature = c ('BioData'),
 
 
 setMethod('createStats', signature = c ( 'MicroArray') ,
-		definition = function ( x, condition, files=F, A=NULL, B=NULL ) {
+		definition = function ( x, condition, files=F, A=NULL, B=NULL, form=NULL  ) {
 			if (!requireNamespace("limma", quietly = TRUE)) {
 				stop("limma needed for this function to work. Please install it.",
 						call. = FALSE)
@@ -76,7 +76,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			}
 			str = levels(x$samples[,condition])
 			Factor=x$samples[,condition]
-			design <- model.matrix( ~ -1+ Factor )
+			design <- model.matrix( ~1+ Factor )
 			colnames(design) <- str_replace_all( colnames(design), 'Factor', '' )
 			fit <- limma::lm.series(data$data(), design)
 			contr <- list()

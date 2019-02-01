@@ -51,8 +51,10 @@ usability.
 
 In the first example you have seen that you can generate BioData objects from a simple marix objects.
 
-But not only matrix objects can be used you can create BioData objects from a seurat object, cellexalvrR object of simply Rsubread list objects.
-You can also read sqlite databases. The function call is always 
+But not only matrix objects can be used: you can create BioData objects from a seurat object, 
+a cellexalvrR object or from simply Rsubread list objects.
+In addition you can also read sqlite databases as produced by my Chromium_SingleCell_Perl pipeline and the text files from a cellranger run.
+The function call is always 
 
 ``` {r}
 TM_Heart_10x <- as_BioData( system.file("extdata", "droplet_Heart_TabulaMuris.sqlite", package = "BioData"))
@@ -85,7 +87,7 @@ Normally BioData objects contain e.g. one 10X sample run. When you want to compa
 you need to merge these data parts together.
 
 Used the merge function:
-```{r}
+```{r, merged}
 TM_Aorta_facs <- as_BioData( system.file("extdata", "facs_Aorta_TabulaMuris.sqlite", package = "BioData"))
 TM_Aorta_facs$name = 'TM_Aorta_facs'
 TM_Aorta_facs
@@ -107,7 +109,7 @@ A BioData object can store different types of expression data.
 The type of data is linked to the sub class name.
 You can check the class of a BioData object by
 ```{r, eval = FALSE}
-class(BioData)
+class(BioDataObject)
 ```
 
 The functions normalize, z.score and createStats applies different functions to the different classes.
@@ -132,7 +134,8 @@ Depending on the class of the BioData object different normalization steps are u
 Example for our merged dataset here:
 
 ```{r}
-mds(merged)
+merged = TestData
+
 normalize(merged)
 z.score(merged)
 
@@ -147,7 +150,6 @@ runStats_inThread( merged, 'Phase' )
 
 runStats_inThread( merged, 'sname' )
 runStats_inThread( merged, 'Phase' )
-
 
 ```
 

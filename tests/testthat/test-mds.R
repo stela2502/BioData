@@ -1,4 +1,3 @@
-#library(BioData)
 context( 'mds')
 set.seed(1)
 dat = matrix(round(rnorm(10100,mean = 10, sd = 15)),ncol=101)

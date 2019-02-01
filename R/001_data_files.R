@@ -66,3 +66,11 @@
 #' @usage mouse.CellSurface
 #' @format vector
 "mouse.CellSurface"
+
+#' @name TestData
+#' @title merged the two smallest Mouse Tabular muris datasets facs_Aorta_TabulaMuris and droplet_Heart_TabulaMuris
+#' @description two TabulaMuris mouse datasets merged
+#' @docType data
+#' @usage TestData
+#' @format BioData
+"TestData"

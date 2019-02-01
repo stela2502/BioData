@@ -1,4 +1,3 @@
-#library(BioData)
 context( "single cells" )
 
 set.seed(1)

@@ -177,3 +177,4 @@ scratchbord/outpath/*
 /runTSNE.py
 /tSNE_dim3_coods.csv
 inst/doc
+/testObject/

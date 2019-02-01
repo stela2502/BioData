@@ -9,7 +9,7 @@
 #' @param method which method ('auto', 'irlba', 'bpca')
 #' @param force re-produced the dataset even if it already exists default=FALSE
 #' @title initial dimensional reduction step based on PCA
-#' @returns the name of the result object in the usedObj list.
+#' @return the name of the result object in the usedObj list.
 #' @export 
 if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
 	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) { 

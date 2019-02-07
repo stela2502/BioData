@@ -1,4 +1,3 @@
-
 #' @name reorder.samples
 #' @aliases reorder.samples,BioData-method
 #' @rdname reorder.samples-methods
@@ -30,7 +29,10 @@ setMethod('reorder.samples', signature = c ('BioData'),
 			}
 			lapply( names(x$usedObj$MDS),reorder.mds, idx, x, 'MDS')
 			lapply( names(x$usedObj$MDS_PCA100),reorder.mds, idx, x, 'MDS_PCA100')
-			if ( !is.null(x$usedObj$pr) ) {
+			if (isS4(x$usedObj$pr) ) {
+				x$usedObj$pr@scores = x$usedObj$pr@scores[idx,]
+			}
+			else if ( !is.null(x$usedObj$pr) ) {
 				x$usedObj$pr = x$usedObj$pr[idx,]
 			}
 			x$samples <- x$samples[idx ,]

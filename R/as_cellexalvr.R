@@ -31,6 +31,11 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 								function(gname) { paste(unlist(stringr::str_split( gname, '\\s+')), collapse='_') }) )
 			} 
 			colnames(x$dat) <- make.names( colnames(x$dat) )
+			bad = which(x$dat@x == -1)
+			if ( length(bad) > 0 ) {
+				x$dat@x[ bad] = 0
+			}
+			
 			lapply(c ('MDS', 'MDS_PCA100'), function (n) {
 					if ( ! is.null(x$usedObj[[n]]) ){
 						lapply( names(x$usedObj[[n]]),
@@ -40,10 +45,14 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 					else { x$usedObj[[n]] = list()}
 				}
 			)
-			names(x$usedObj[['MDS_PCA100']]) = paste( 'PCA100', names(x$usedObj[['MDS_PCA100']]) )
+			if ( !is.null(x$usedObj[['MDS_PCA100']])) {
+				names(x$usedObj[['MDS_PCA100']]) = paste( 'PCA100', names(x$usedObj[['MDS_PCA100']]) )
+			}
 			
-			meta.cell = cellexalvrR::make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
-			rownames(meta.cell) <- colnames(x$dat)
+			
+			
+			#meta.cell = cellexalvrR::make.cell.meta.from.df( as.matrix(x$samples), cellInfo )
+			#rownames(meta.cell) <- colnames(x$dat)
 			
 			userGroups = NULL
 			if ( ! is.null(groups) ) {
@@ -75,6 +84,17 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 			if ( is.null(index) ) {
 				index = matrix()
 			}
+			
+			# exdata,mds.list,specie=c("mouse","human"),cell.metadata=NULL,facs.data=NULL
+			ret <- list( 
+					exdata = as.matrix(x$dat),
+					mds.list = c ( x$usedObj$MDS, x$usedObj$MDS_PCA100),
+					cell.metadata = userGroups,
+					specie= 'mouse',
+					facs.data=NULL
+			)
+			message( 'load this list into the cellexal object using do( MakeCellexaVRObj, ThisList ) ')
+			return ( ret) 
 			
 			ret = new( 'cellexalvr',
 					data = as.matrix(x$dat),

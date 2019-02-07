@@ -10,7 +10,7 @@
 #' @param force re-produced the dataset even if it already exists default=FALSE
 #' @title initial dimensional reduction step based on PCA
 #' @return the name of the result object in the usedObj list.
-#' @export 
+#' @export DimReduction
 if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
 	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) { 
 		standardGeneric('DimReduction')

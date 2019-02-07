@@ -121,8 +121,8 @@ setMethod('normalize', signature = c ('SingleCells'),
 				object$dat[] <- 0
 				#pb <- progress_estimated(100)
 				#steps = ceiling(ncol(object$raw)/100)
-				object$dat <- FastSparseRowScale( object$raw, TRUE, FALSE, reads, TRUE)
-				#object$dat <- Matrix(apply( object$raw,2, normF, n ))
+				#object$dat <- FastSparseRowScale( object$raw, TRUE, FALSE, reads, TRUE)
+				object$dat <- Matrix(apply( object$raw,2, normF, n ))
 				rownames(object$dat) <- rownames(object$raw)
 			}
 			else {

@@ -28,3 +28,9 @@ All groups that fail to be prediceted using the random forest are deemed ungroup
 
 All groups where less than 50 percent of the total samples geting classified as being from that group fail.
 }
+\examples{
+## lets data be a source BioData object and selection be a smaller one with only selected samples 
+## for which a grouping has been produced named 'new_perfect_grouping'
+predictor <- bestGrouping( selection, 'new_perfect_grouping' )
+data$samples$new_perfect_grouping <- predict(predictor, as.matrix(t(data$dat)))
+}

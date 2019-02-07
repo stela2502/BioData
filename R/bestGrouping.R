@@ -12,6 +12,11 @@
 #' @param ... additional variables for the randomForest call
 #' @title description of function randomForest
 #' @return a distRF object to be analyzed by pamNew
+#' @examples
+#' ## lets data be a source BioData object and selection be a smaller one with only selected samples 
+#' ## for which a grouping has been produced named 'new_perfect_grouping'
+#' predictor <- bestGrouping( selection, 'new_perfect_grouping' )
+#' data$samples$new_perfect_grouping <- predict(predictor, as.matrix(t(data$dat)))
 #' @export 
 if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
 		function ( x, group , bestColname='QualifiedGrouping', cutoff=0.5, ntree=2000, ...){

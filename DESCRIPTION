@@ -23,6 +23,7 @@ Depends:
     RDRToolbox,
     DDRTree,
     Matrix,
+    umap,
     Matrix.utils,
     pcaMethods,
     org.Mm.eg.db,

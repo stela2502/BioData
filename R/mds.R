@@ -172,6 +172,17 @@ setMethod('mds', signature = c ('BioData'),
 					
 					rownames(mds.proj) <- rownames(tab)
 					
+				}else if ( mds.type == 'UMAP' ) {
+					if (!library("umap", quietly = TRUE,logical.return=TRUE )) {
+						stop("package 'umap' needed for this function to work. Please install it.",
+								call. = FALSE)
+					}
+					umap_config = umap.defaults
+					umap_config$n_components = dim
+					uMap = umap( as.matrix(tab), umap_config)
+					mds.proj <- uMap$layout
+					
+					
 				}
 				
 				else if ( mds.type == "LLE"){

@@ -2,7 +2,8 @@
 #' @aliases DimReduction,BioData-method
 #' @rdname DimReduction-methods
 #' @docType methods
-#' @description Create the initial dimension reduction dataset (PCA n =100)
+#' @description Create the initial dimension reduction dataset (PCA n =100) based on either 
+#' irlba::prcomp_irlba (large dataset with more than 1e+6 values) or pcaMethods::bpca (small dataset)
 #' @param x the BioData object
 #' @param genes create the dim red for the genes dimension (rows) default=FALSE
 #' @param n  how many eigenvectors to collapse to default=100
@@ -10,7 +11,7 @@
 #' @param force re-produced the dataset even if it already exists default=FALSE
 #' @title initial dimensional reduction step based on PCA
 #' @return the name of the result object in the usedObj list.
-#' @export DimReduction
+#' @export
 if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
 	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) { 
 		standardGeneric('DimReduction')
@@ -22,6 +23,7 @@ setMethod('DimReduction', signature = c ('BioData'),
 	
 	PCA_name = 'pr'
 	cmpTo = colnames(x$dat)
+	
 	if( genes) {
 		PCA_name = 'prGenes'
 		cmpTo = rownames(x$dat)
@@ -31,6 +33,7 @@ setMethod('DimReduction', signature = c ('BioData'),
 		print ( paste("n set to",n) )
 	}
 	rerun = 0
+	
 	if ( is.na(match( PCA_name , names(x$usedObj))) ){
 		rerun = 1
 	}else{

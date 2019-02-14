@@ -6,15 +6,8 @@
 \alias{getGeneInfo,BioData-method}
 \title{description of function getEnsembl}
 \usage{
-libraray(BioData)
-CellCycle_gene_symbols <- getGeneInfo(
-			"GO:0007049", species = 'mMus', from= 'go_id', from_tab='go' 
-)
-CellCycle_ensembl_ids <- getGeneInfo(
-			"GO:0007049", species = "Hs", from = "go_id", from_tab = "go", 
-			what='ensembl_id', what_tab="ensembl")
-Complement_and_coagulation_cascades_gene_symbols <- getGeneInfo(
-			'04610', species = 'Hs', from = 'path_id', what= 'symbol' )
+getGeneInfo(x, species = "mMus", from, from_tab = NULL,
+  what = "symbol", what_tab = NULL, tab.res = FALSE)
 }
 \arguments{
 \item{x}{the query string or a vector of query strings}
@@ -36,4 +29,14 @@ A vector of ids
 }
 \description{
 getGeneInfo is a poverful function, that uses the annotation packages RSQLite tables to select information.
+}
+\examples{
+CellCycle_gene_symbols <- getGeneInfo(
+			"GO:0007049", species = 'mMus', from= 'go_id', from_tab='go' 
+)
+CellCycle_ensembl_ids <- getGeneInfo(
+			"GO:0007049", species = "Hs", from = "go_id", from_tab = "go", 
+			what='ensembl_id', what_tab="ensembl")
+Complement_and_coagulation_cascades_gene_symbols <- getGeneInfo(
+			'04610', species = 'Hs', from = 'path_id', what= 'symbol' )
 }

@@ -5,6 +5,7 @@
 #' @description convert BioData to Seurat object but keeping the BioData normalized information.
 #' @param x The BioData object
 #' @param group Which group should be used as identity in the seurat object (default=NULL)
+#' @param fromRaw create the Seurat object from the raw unnormalized data (default =TRUE)
 #' @title convert BioData to Seurat
 #' @export 
 setGeneric('as_Seurat', ## Name

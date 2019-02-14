@@ -6,6 +6,8 @@
 #' @param x the BioData object
 #' @param genes a list of gene symbols (IMPORTANT)
 #' @param ontology which GO ontology to choose from (default = "BP") 
+#' @param topNodes how many pathways to return (default 10)
+#' @param GOfname file to export the results to (default GOgenes.csv)
 #' @param ... unused
 #' @title description of function ontologyLogPage
 #' @export 
@@ -25,15 +27,9 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 			
 			if ( is.null( x$usedObj$GO2genes)){
 				if(x$usedObj$specie =='mouse'){
-					if(require(org.Mm.eg.db)){
-						db <- org.Mm.eg.db}else{
-						stop("Install org.Mm.eg.db package for retrieving gene lists from GO")
-					}
+					db <- org.Mm.eg.db
 				}else if ( x$usedObj$specie=='human'){
-					if(require(org.Hs.eg.db)){
-						db <- org.Hs.eg.db}else{
-						stop("Install org.Hs.eg.db package for retrieving gene lists from GO")
-					}
+					db <- org.Hs.eg.db
 				}else {
 					error= paste( "The usedObj$specie",  x$usedObj$specie,  "is up to now not supported in the GO reports function" )
 				}
@@ -43,7 +39,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 			all = is.na(match(rownames(x$data()), genes ))
 			names(all) = rownames(x$data())
 			all = factor(all)
-			tryCatch({  library("topGO", quietly = TRUE) } ,  
+			tryCatch({  requireNamespace("topGO", quietly = TRUE) } ,  
 					error = function(e) {
 						stop(paste("topGO needed for this function to work. Please install it.\n", e),
 								call. = FALSE)

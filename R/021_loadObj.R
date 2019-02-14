@@ -7,14 +7,22 @@
 #' @param file the infile
 #' @title description of function loadObj
 #' @export 
-if ( ! isGeneric('loadObj') ){ setGeneric('loadObj', ## Name
+
+if ( ! isGeneric('loadObj') ){ 
+	setGeneric('loadObj', ## Name
 		function ( file=NULL ){	
 			standardGeneric('loadObj')
 		}
 )
+
 }else {
 	print ("Onload warn generic function 'loadObj' already defined - no overloading here!")
 }
+
+#isGeneric <- function( x ) {
+#	## just do nothing and return
+#	FALSE
+#}
 
 setMethod('loadObj', signature = c ('character'),
 		definition = function ( file=NULL ){

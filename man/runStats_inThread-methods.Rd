@@ -23,6 +23,8 @@ runStats_inThread(x, condition, files = F, A = NULL, B = NULL,
 \item{covariates}{should covariates be used - name them here}
 
 \item{form}{a specific formualr to use? State it here}
+
+\item{settings}{SLURM setting like list( A = 'lsens2018.3.3', T='00:20:00', n=1, N=1 ) (default NULL)}
 }
 \description{
 create a script that calculates the stats in a new thread; run the script and collect the data after the script has finished

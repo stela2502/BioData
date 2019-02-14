@@ -20,6 +20,7 @@
 the name of the result object in the usedObj list.
 }
 \description{
-Create the initial dimension reduction dataset (PCA n =100) based on either 
+Create the initial dimension reduction dataset (PCA n =100) based on either
+
 irlba::prcomp_irlba (large dataset with more than 1e+6 values) or pcaMethods::bpca (small dataset)
 }

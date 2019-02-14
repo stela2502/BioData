@@ -12,7 +12,7 @@
 #' @param what_tab analogue to the from_tab the table name containing the colmn if more than one table contains the info
 #' @param tab_res return all results as table (to check the results; default = FALSE) 
 #' @return A vector of ids
-#' @usage libraray(BioData)
+#' @examples
 #' CellCycle_gene_symbols <- getGeneInfo(
 #' 			"GO:0007049", species = 'mMus', from= 'go_id', from_tab='go' 
 #' )
@@ -33,15 +33,17 @@ setMethod('getGeneInfo', signature = c ('character'),
 	if(!(species %in%c('mMus','Hs'))){stop("'species' needs to be either 'mMus' or 'Hs'")}
 	
 	if(species=='mMus'){
-		if(require(org.Mm.eg.db)){
-			db <- org.Mm.eg.db}else{
-			stop("Install org.Mm.eg.db package for retrieving gene lists from GO")
-		}
+		#if(require(org.Mm.eg.db)){
+			db <- org.Mm.eg.db
+		#}else{
+		#	stop("Install org.Mm.eg.db package for retrieving gene lists from GO")
+		#}
 	}else if ( species=='Hs'){
-		if(require(org.Hs.eg.db)){
-			db <- org.Hs.eg.db}else{
-			stop("Install org.Hs.eg.db package for retrieving gene lists from GO")
-		}
+		#if(require(org.Hs.eg.db)){
+			db <- org.Hs.eg.db
+		#}else{
+		#	stop("Install org.Hs.eg.db package for retrieving gene lists from GO")
+		#}
 	}else {
 		if ( attributes(class(species))$package == "AnnotationDbi" ) {
 			db = species

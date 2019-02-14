@@ -1,4 +1,10 @@
-
+#' @name normalize
+#' @docType methods
+#' @param object an object from class BioData
+#' @param ... BioData sub classes specific options
+#' @param name the name of the returned BioData object
+#' @title normalize 
+#' @export normalize
 if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 	function ( object, ... , name=NULL) { 
 		standardGeneric('normalize')
@@ -8,22 +14,20 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
 }
 
-#' @name normalize
-#' @aliases normalize,BioData-method
-#' @rdname normalize-methods
+#' @describeIn normalize a BioData::R6 object using DEseq2
 #' @docType methods
-#' @description  normalize the expression data (sample wise)
+#' @description  normalize the expression data (sample wise) using DEseq2
 #' @param x The BioData object (NGS expression data, not single cells)
 #' @param readCounts The number of reads from each bam file or another value you want to normalize the data to
 #' @param to_gene_length FALSE whether or not to normalize the data to gene length
 #' @param geneLengthCol the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)
 #' @param name the new name of the object (deafule old name + normalized)
-#' @param forec replace old norm data (FALSE)
+#' @param force replace old norm data (FALSE)
 #' @return the normalized data set (original data stored in NGS$raw
-#' @title description of function normalize
-#' @export 
+#' @title normalize a BioData::R6 object
+#' @export normalize
 setMethod('normalize', signature = c ('BioData'),
-		definition = function (  object, ..., readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
+		definition = function (  object, readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
 			if ( ! object$snorm ){
 				
 				if ( is.null(object$raw) ){
@@ -58,21 +62,19 @@ setMethod('normalize', signature = c ('BioData'),
 		})
 
 
-#' @name normalize
-#' @aliases normalize,SingleCells-method
-#' @rdname normalize-methods
+#' @describeIn normalize a SingleCells::BioData::R6 object using subsampling
 #' @docType methods
 #' @description  
 #' normalize the expression data by subsampling as described in PMID 24531970
-#' @param x The SingleCellsNGS object
+#' @param x The SingleCells::BioData::R6 object
 #' @param reads the required read depth
 #' @param name the name of the new object
 #' @param  force re-normalize this object (default FALSE)
 #' @return the normalized data set (original data stored in slot 'raw'
-#' @title description of function normalize
-#' @export 
+#' @title normalize a SingleCells::BioData::R6 object
+#' @export normalize
 setMethod('normalize', signature = c ('SingleCells'),
-		definition = function (  object, ..., reads=600, force=FALSE , name=NULL) {
+		definition = function (  object, reads=600, force=FALSE , name=NULL) {
 			if ( is.null( object$usedObj$snorm) ) {
 				object$usedObj$snorm = 0
 			}
@@ -125,17 +127,16 @@ setMethod('normalize', signature = c ('SingleCells'),
 
 
 
-#' @name normalize
-#' @aliases normalize,MicroArray-method
-#' @rdname normalize-methods
+#' @describeIn normalize normalize a MicoArray::BioData::R6 object using quantile normalization
 #' @docType methods
 #' @description  constructor that has to be implemented for a generic BioData
 #' This generic version was meant for array data and I have not had the need nor time to implement this part.
-#' @param x the BioData object
+#' @param x the MicoArray::BioData::R6 object
 #' @param to a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table 
-#' @title description of function normalize
+#' @title normalize a MicoArray::BioData::R6 object
+#' @export normalize
 setMethod('normalize', signature = c ('MicroArray') ,
-	definition = function ( object , to=NULL, ..., name=NULL) {
+	definition = function ( object , to=NULL, name=NULL) {
 		object$zscored=NULL
 		df_rank <- apply(object$dat,2,rank,ties.method="min")
 		df_sorted <- data.frame(apply(object$data(), 2, sort))

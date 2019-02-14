@@ -23,5 +23,5 @@
 \item{name}{the name for the new grouping (default = 'auto_clusters_gene.1:n')}
 }
 \description{
-Culters the data either based on the raw data values or any MDS data type and adds the grouping into the annotation table.
+Clusters the data either based on the raw data values or any MDS data type and adds the grouping into the annotation table.
 }

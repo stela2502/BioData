@@ -12,7 +12,7 @@
 #' @title description of function IdentifyMarkerGenes
 #' @export 
 setGeneric('IdentifyMarkerGenes', ## Name
-	function ( x, gname, ... ) { 
+	function ( x, gname, settings=list(), names=NULL ) { 
 		standardGeneric('IdentifyMarkerGenes')
 	}
 )

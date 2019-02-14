@@ -35,7 +35,8 @@ colnames(dat) <- paste('Sample', 1:10)
 rownames(dat) <- paste( 'gene', 1:100)
 samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
-x <- tRNAMINT$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+x <- tRNAMINT$new( cbind(annotation,dat), 
+  Samples=samples, name="testObject",namecol='sname', outpath = "" )
 }
 \keyword{MINT}
 \keyword{tRNA}

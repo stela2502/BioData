@@ -1,13 +1,16 @@
 Package: BioData
 Title: The package allows to annotate a numeric data.table with col and row data
-Version: 1.2.3.001
+Version: 1.2.3.002
 Authors@R: person("Stefan", "Lang", email = "Stefan.Lang@med.lu.se", role = c("aut", "cre"))
 Description: The package is a base R6 class to store numeric data on biological
     experiments that most of the time have complex annotation for both columns and
     rows of this data.
+License: GPL-3
+Encoding: UTF-8
 Depends:
-    R (>= 3.3.2),
+    R (>= 3.4.0),
     R6,
+    methods,
     R.utils,
     dplyr,
     stringr,
@@ -16,7 +19,6 @@ Depends:
     weights,
     reshape2,
     rgl,
-    gplots,
     RFclust.SGE,
     RSQLite,
     ggplot2,
@@ -29,23 +31,31 @@ Depends:
     pcaMethods,
     org.Mm.eg.db,
     org.Hs.eg.db,
-LinkingTo: Rcpp (>= 0.11.0), RcppEigen, RcppProgress
-biocViews: RDRToolbox,
+LinkingTo: 
+    Rcpp (>= 0.11.0), 
+    RcppEigen, 
+    RcppProgress
+biocViews: 
+    RDRToolbox,
     pcaMethods,
     destiny,
+    MAST,
+    DESeq2,
     org.Mm.eg.db,
     org.Hs.eg.db
-Remotes: stela2502/RFclust.SGE
-License: GPL-3
-Encoding: UTF-8
+Remotes: 
+   stela2502/RFclust.SGE,
+   sonejilab/cellexalvrR
 LazyData: true
 Suggests:
+	cellexlvrR,
     testthat,
-    DESeq2,
-    MAST,
-    Seurat,
     knitr,
     rmarkdown
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-Imports: Rcpp
+Imports: 
+    Rcpp,
+    DESeq2,
+    MAST,
+    Seurat

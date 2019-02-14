@@ -1,7 +1,8 @@
 #' @name as_BioData
-#' @rdname as_BioData-methods
 #' @docType methods
-#' @description create a NGSexpressionSet from an other object
+#' @description create a BioData from an other object
+#' @param ... source object specififc options
+#' @title create a BioData from an other object
 #' @export 
 if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
 	function ( dat, ... ) { 
@@ -12,12 +13,11 @@ if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
 	print ("Onload warn generic function 'as_BioData' already defined - no overloading here!")
 }
 
-#' @name as_BioData
-#' @rdname as_BioData-methods
+#' @describeIn as_BioData create a BioData::R6 object from a Rsubread result list
 #' @docType methods
 #' @param dat a list coming for Rsubread scanning of NGS data
-#' @title description of function as_BioData
-#' @export 
+#' @title create a BioData object from a Rsubread result list
+#' @export as_BioData
 setMethod('as_BioData', signature = c ('list'),
 	definition = function ( dat ) {
 	ret = NULL
@@ -42,12 +42,11 @@ setMethod('as_BioData', signature = c ('list'),
 	ret
 } )
 
-#' @name as_BioData
-#' @rdname as_BioData-methods
+#' @describeIn as_BioData convert a matrix to a BioData::R6 object
 #' @docType methods
 #' @param dat a matrix object with cells in columns and genes in rows
-#' @title description of function as_BioData
-#' @export 
+#' @title convert a matrix into BioData
+#' @export as_BioData
 setMethod('as_BioData', signature = c ('matrix'),
 		definition = function ( dat ) {
 				dat <- Matrix(dat)
@@ -65,6 +64,11 @@ setMethod('as_BioData', signature = c ('matrix'),
 		}
 )
 
+#' @describeIn as_BioData convert a data.frame to a BioData::R6 object
+#' @docType methods
+#' @param dat a cellexlvrR object
+#' @title convert a data.frame to BioData
+#' @export as_BioData
 setMethod('as_BioData', signature = c ('data.frame'),
 		definition = function ( dat ) {
 			snames <- colnames(dat)
@@ -81,13 +85,12 @@ setMethod('as_BioData', signature = c ('data.frame'),
 		}
 )
 
-#' @name as_BioData
-#' @rdname as_BioData-methods
+#' @describeIn as_BioData convert a cellexalvrR object to a SingleCells::BioData::R6 object
 #' @docType methods
 #' @param dat a cellexlvrR object
-#' @title description of function as_BioData
-#' @export 
-setMethod('as_BioData', signature = c ('cellexalvr'),
+#' @title convert a cellexalvrR object to SingleCells::BioData::R6
+#' @export as_BioData
+setMethod('as_BioData', signature = c ('cellexalvrR'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
@@ -134,17 +137,17 @@ setMethod('as_BioData', signature = c ('cellexalvr'),
 			ret <- BioData$new( Matrix(dat@data), Samples=samples,
 					annotation= dat@meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 			ret$usedObj <- dat@usedObj
+			class(ret) = c( 'SingleCells', 'BioData', 'R6')
 			ret
 		}
 		
 )
 
-#' @name as_BioData
-#' @rdname as_BioData-methods
+#' @describeIn as_BioData convert a seurat object into a SingleCells::BioData::R6 object
 #' @docType methods
 #' @param dat a seurat object
-#' @title description of function as_BioData
-#' @export 
+#' @title convert a seurat object into BioData
+#' @export as_BioData
 setMethod('as_BioData', signature = c ('seurat'),
 				definition = function ( dat ) {
 					#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
@@ -217,6 +220,7 @@ setMethod('as_BioData', signature = c ('seurat'),
 #						}
 #					}
 					ret$zscored= NULL
+					class(ret) = c( 'SingleCells', 'BioData', 'R6')
 					ret
 				}  
 )
@@ -229,7 +233,7 @@ fetch_first <- function ( sth ) {
 		rm(sth)
 	}
 	else {
-		warn ("query was not finished")
+		warning ("query was not finished")
 		RSQLite::dbClearResult(sth)
 		rm(sth)
 	}
@@ -254,7 +258,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	t <- RSQLite::dbFetch(sth)
-	ret <- sparseMatrix( i=t[,1], j=t[,2], x=t[,3], dims=c(max(t[,1]),max(t[,2])))
+	ret <- Matrix::sparseMatrix( i=t[,1], j=t[,2], x=t[,3], dims=c(max(t[,1]),max(t[,2])))
 	## gives the same result as the old function! EXTREMELY much faster!
 	if(is.null(useS)){
 		useS = 1:ncol(ret)
@@ -327,13 +331,13 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 }
 
 
-
-#' @name as_BioData
-#' @rdname as_BioData-methods
+#' @describeIn as_BioData character path or sqlite3 database name
 #' @docType methods
 #' @param dat a sqlite database as created by the cellexalvrR::export2cellexalvr() function
-#' @title description of function as_BioData
-#' @export 
+#' @param minUMI the minimum UMI count in order to read a cell (default=100)
+#' @param minGexpr the minimum UMI count for a gene to be included (default NULL - translates into 1)
+#' @title convert a cellRanger output directory or a Chromium_SingleCell_Perl output database into a BioData object
+#' @export as_BioData
 setMethod('as_BioData', signature = c ('character'),
 		definition = function ( dat, minUMI=100, minGexpr=NULL ) {
 			if ( dir.exists(dat) ){

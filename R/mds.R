@@ -159,7 +159,7 @@ setMethod('mds', signature = c ('BioData'),
 						rownames(mds.proj) <- rownames(tab)
 					}
 				}else if ( mds.type == "TSNE_R"){
-					if (!library("Rtsne", quietly = TRUE,logical.return=TRUE )) {
+					if (!requireNamespace("Rtsne", quietly = TRUE,logical.return=TRUE )) {
 						stop("package 'Rtsne' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}
@@ -173,7 +173,7 @@ setMethod('mds', signature = c ('BioData'),
 					rownames(mds.proj) <- rownames(tab)
 					
 				}else if ( mds.type == 'UMAP' ) {
-					if (!library("umap", quietly = TRUE,logical.return=TRUE )) {
+					if (!requireNamespace("umap", quietly = TRUE,logical.return=TRUE )) {
 						stop("package 'umap' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}

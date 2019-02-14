@@ -26,66 +26,67 @@ setMethod('tRNA_stats', signature = c ('tRNAMINT'),
 	definition = function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) {
 		ret <- NULL
 	
-	b <- x$clone()
-	if ( length(unique(x$samples[,scol])) != 2){
-		stop( "Sorry you can only get this statistics on exactly two sample groups")
-	}
-	if ( !is.null(norm.type) ) {
-		reduceTo(b,what='col', colnames(x$dat)[ grep( norm.type, b$samples$NormalizationMode ) ] )
-	}else {
-		norm.type= "All"
-	}
-	if ( ! is.null(codon) ) {
-		reduceTo(b,what='row', rownames(b$dat)[ which( b$annotation[,codon] == 1 ) ] )
-	}else {
-		codon = "all codons"
-	}
-	return.val <- list()
-	for ( name in unique(b$annotation[,acol])) {
-		a <- b$clone()
-		reduceTo( a, what='row', to= rownames(a$dat)[which(a$annotation[,acol] == name)])
-		if ( class(a$dat) !=  "matrix" & class(a$dat) !=  "data.frame" ) {
-			next ## useless as we have less than 2 values for this
-		}
-		collapse(a,what='col',group=scol, fun = fun )
-		a$name = paste(codon, name)
-		return.val[[paste(codon, name)]] <- a
-		## now I have two columns of mean values for one state in the table
-		## therefore I can add exactly one stat entry
-		if ( class(a$dat) == 'numeric' || nrow(a$dat) < 2){
-			ret <- rbind( ret, c(name, rep( NA, 8) ) )
-		}else {
-			if ( nrow(a$dat) > 2 ) {
-				#t <- cor.test( as.vector(a$data[,1]),as.vector(a$data[,2])) # this is a naive test! useless!
-				#t <- wtd.t.test( x= a$data[,1], y=a$data[,2], weight= apply(a$data, 1,sum) ,samedata=TRUE )
-				t <- t.test(x= a$data()[,1], y=a$data()[,2], paired=T)
-				t$foldChange <- mean(apply(a$data(),1,function(x) { x[1] / x[2]} ) )
-				#ret <- rbind( ret, c( name, nrow(a$data), as.numeric(t(unlist(t))[1:4]) ) )
-				#ret <- rbind( ret, c( name, t$coefficients,t$additional ) )
-				ret <- rbind( ret, c( name, nrow(a$data()), t$statistic,t$parameter, t$p.value, t$alternative, t$method, t$estimate, t$foldChange) )
-				
-			}else {
-				ret <- rbind( ret, c( name, nrow(a$data()), rep(NA,7) ) )
-			}
-		}
-	}
-	if ( class(ret) != "matrix") {
-		print (paste("Not enough data for the fragment types ", paste( unique(b$annotation[,acol]) , collapse=", "), "and codon", codon ))
-	}else {
-		try({
-					#colnames(ret) <- c( acol, 'frament [n]', 'statistic.t', 'df' ,'p.value', 'estimate.cor' )
-					#colnames(ret) <- c( acol, 't.value', 'df' ,'p.value', 'Difference', 
-					#	paste('Mean.',a$samples[1,scol],sep=""), 
-					#	paste('Mean.',a$samples[2,scol],sep=""), 'Std. Err'
-					#			)
-					colnames(ret) <- c(acol, 'frament [n]', "t.statistic","t.parameter", "p.value", "t.alternative", "t.method", "t.estimate", 'manual.foldChange' )
-					if ( is.null(x$usedObj$tRNA_stats) ) {
-						x$usedObj$tRNA_stats <- list ()
-					}
-					x$usedObj$tRNA_stats[[paste( codon, norm.type)]] <- ret
-				}
-		)
-	}
+		stop ( 'broken!')
+#	b <- x$clone()
+#	if ( length(unique(x$samples[,scol])) != 2){
+#		stop( "Sorry you can only get this statistics on exactly two sample groups")
+#	}
+#	if ( !is.null(norm.type) ) {
+#		reduceTo(b,what='col', colnames(x$dat)[ grep( norm.type, b$samples$NormalizationMode ) ] )
+#	}else {
+#		norm.type= "All"
+#	}
+#	if ( ! is.null(codon) ) {
+#		reduceTo(b,what='row', rownames(b$dat)[ which( b$annotation[,codon] == 1 ) ] )
+#	}else {
+#		codon = "all codons"
+#	}
+#	return.val <- list()
+#	for ( name in unique(b$annotation[,acol])) {
+#		a <- b$clone()
+#		reduceTo( a, what='row', to= rownames(a$dat)[which(a$annotation[,acol] == name)])
+#		if ( class(a$dat) !=  "matrix" & class(a$dat) !=  "data.frame" ) {
+#			next ## useless as we have less than 2 values for this
+#		}
+#		collapse(a,what='col',group=scol, fun = fun )
+#		a$name = paste(codon, name)
+#		return.val[[paste(codon, name)]] <- a
+#		## now I have two columns of mean values for one state in the table
+#		## therefore I can add exactly one stat entry
+#		if ( class(a$dat) == 'numeric' || nrow(a$dat) < 2){
+#			ret <- rbind( ret, c(name, rep( NA, 8) ) )
+#		}else {
+#			if ( nrow(a$dat) > 2 ) {
+#				#t <- cor.test( as.vector(a$data[,1]),as.vector(a$data[,2])) # this is a naive test! useless!
+#				#t <- wtd.t.test( x= a$data[,1], y=a$data[,2], weight= apply(a$data, 1,sum) ,samedata=TRUE )
+#				t <- t.test(x= a$data()[,1], y=a$data()[,2], paired=T)
+#				t$foldChange <- mean(apply(a$data(),1,function(x) { x[1] / x[2]} ) )
+#				#ret <- rbind( ret, c( name, nrow(a$data), as.numeric(t(unlist(t))[1:4]) ) )
+#				#ret <- rbind( ret, c( name, t$coefficients,t$additional ) )
+#				ret <- rbind( ret, c( name, nrow(a$data()), t$statistic,t$parameter, t$p.value, t$alternative, t$method, t$estimate, t$foldChange) )
+#				
+#			}else {
+#				ret <- rbind( ret, c( name, nrow(a$data()), rep(NA,7) ) )
+#			}
+#		}
+#	}
+#	if ( class(ret) != "matrix") {
+#		print (paste("Not enough data for the fragment types ", paste( unique(b$annotation[,acol]) , collapse=", "), "and codon", codon ))
+#	}else {
+#		try({
+#					#colnames(ret) <- c( acol, 'frament [n]', 'statistic.t', 'df' ,'p.value', 'estimate.cor' )
+#					#colnames(ret) <- c( acol, 't.value', 'df' ,'p.value', 'Difference', 
+#					#	paste('Mean.',a$samples[1,scol],sep=""), 
+#					#	paste('Mean.',a$samples[2,scol],sep=""), 'Std. Err'
+#					#			)
+#					colnames(ret) <- c(acol, 'frament [n]', "t.statistic","t.parameter", "p.value", "t.alternative", "t.method", "t.estimate", 'manual.foldChange' )
+#					if ( is.null(x$usedObj$tRNA_stats) ) {
+#						x$usedObj$tRNA_stats <- list ()
+#					}
+#					x$usedObj$tRNA_stats[[paste( codon, norm.type)]] <- ret
+#				}
+#		)
+#	}
 	invisible(return.val)
 	#invisible(x)
 } )

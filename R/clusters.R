@@ -12,17 +12,20 @@
 #' @param onwhat This option selects the source data ('Expression', or 'MDS')
 #' @param cmethod the method to used with the hclust clustering (default = 'ward.D2')
 #' @param name the name for the new grouping (default = 'auto_clusters.1:n')
-#' @title description of function clusters
-#' @export 
-if ( ! isGeneric('clusters') ){ setGeneric('clusters', ## Name
+#' @title create a grouping based on either the raw data or a MDS projection
+#' @export
+
+# if ( ! isGeneric('clusters') ){ 
+setGeneric('clusters', ## Name
 	function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3, 
 			ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {
 		standardGeneric('clusters')
 	}
 )
-}else {
-	print ("Onload warn generic function 'clusters' already defined - no overloading here!")
-}
+
+#}else {
+#	print ("Onload warn generic function 'clusters' already defined - no overloading here!")
+#}
 
 setMethod('clusters', signature = c ('BioData'),
 	definition = function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3,

@@ -1,9 +1,8 @@
 #' @name DimReduction
 #' @aliases DimReduction,BioData-method
-#' @rdname DimReduction-methods
 #' @docType methods
 #' @description Create the initial dimension reduction dataset (PCA n =100) based on either 
-#' irlba::prcomp_irlba (large dataset with more than 1e+6 values) or pcaMethods::bpca (small dataset)
+#' @description irlba::prcomp_irlba (large dataset with more than 1e+6 values) or pcaMethods::bpca (small dataset)
 #' @param x the BioData object
 #' @param genes create the dim red for the genes dimension (rows) default=FALSE
 #' @param n  how many eigenvectors to collapse to default=100

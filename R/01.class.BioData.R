@@ -19,7 +19,8 @@ require('R6')
 #' rownames(dat) <- paste( 'gene', 1:100)
 #' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 #' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
-#' x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' x <- BioData$new( cbind(annotation,dat), 
+#' 	Samples=samples, name="testObject",namecol='sname', outpath = "" )
 #' @field data the numerical data as data.frame
 #' @field samples the sample annotation as data.frame
 #' @field annotation the row annotation as data.frame
@@ -202,7 +203,8 @@ BioData <- #withFormalClass(
 #' rownames(dat) <- paste( 'gene', 1:100)
 #' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 #' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
-#' x <- tRNAMINT$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' x <- tRNAMINT$new( cbind(annotation,dat), 
+#'   Samples=samples, name="testObject",namecol='sname', outpath = "" )
 #' @field data the numerical data as data.frame
 #' @field samples the sample annotation as data.frame
 #' @field annotation the row annotation as data.frame
@@ -225,12 +227,16 @@ tRNAMINT <-
 #' @format \code{\link{R6Class}} object.
 #' @examples
 #' set.seed(1)
-#' dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
+#' dat = matrix(rnorm(1000),ncol=10)
+#' dat = round(dat)
+#' dat = dat - min(dat)
+#' dat = data.frame( dat ) 
 #' colnames(dat) <- paste('Sample', 1:10)
 #' rownames(dat) <- paste( 'gene', 1:100)
 #' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 #' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
-#' x <- SingleCells$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' x <- SingleCells$new( cbind(annotation,dat), 
+#'   Samples=samples, name="testObject",namecol='sname', outpath = "" )
 #' @field data the numerical data as data.frame
 #' @field samples the sample annotation as data.frame
 #' @field annotation the row annotation as data.frame
@@ -268,7 +274,8 @@ SingleCells <-
 #' rownames(dat) <- paste( 'gene', 1:100)
 #' samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 #' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
-#' x <- MicroArray$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
+#' x <- MicroArray$new( cbind(annotation,dat), 
+#'   Samples=samples, name="testObject",namecol='sname', outpath = "" )
 #' @field data the numerical data as data.frame
 #' @field samples the sample annotation as data.frame
 #' @field annotation the row annotation as data.frame
@@ -305,5 +312,16 @@ MicroArray <-
 			})
 #	r6x::formalizeClasses()
 }
+
+
+#' @name show
+#' @title the BioData show function
+#' @param object the BioData object
+#' @docType methods
+#' @export show
+setMethod('show', signature = c ('BioData'),
+		definition = function (  object ) {
+			object$print()
+		})
 
 #try(t <- BioData$new(),silent=T)

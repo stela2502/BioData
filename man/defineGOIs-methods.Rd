@@ -6,7 +6,7 @@
 \alias{defineGOIs,cellexalvr-method}
 \title{description of function defineGOIs}
 \usage{
-defineGOIs(x, name, genes, lables = NULL, ...)
+defineGOIs(x, name, genes, lables = NULL, gene_col = NULL)
 }
 \arguments{
 \item{x}{A BioData object}

@@ -1,6 +1,6 @@
-#' @name groups.boxplot
-#' @aliases groups.boxplot,BioData-method
-#' @rdname groups.boxplot-methods
+#' @name groups_boxplot
+#' @aliases groups_boxplot,BioData-method
+#' @rdname groups_boxplot-methods
 #' @docType methods
 #' @description  This function can be used to get an overview of the different gene level groups in
 #' @description  an BioData object. It uses the linux montage command to merge all different boxplots
@@ -11,18 +11,18 @@
 #' @param svg create the single boxplots as svg or (default png) files
 #' @param fname the filename extension files are created by paste(x$outpath,fname,<GroupID>,"_boxplot")
 #' @param Collapse if set will lead to a collapse of the sample groups into one value per gene. Supports all \code{\link{collaps}} by options.
-#' @title description of function groups.boxplot
+#' @title description of function groups_boxplot
 #' @export 
-if ( ! isGeneric('groups.boxplot') ){ setGeneric('groups.boxplot', ## Name
+if ( ! isGeneric('groups_boxplot') ){ setGeneric('groups_boxplot', ## Name
 	function ( x, groupCol='GroupName', clusters, svg=F, fname='group_', width=800, height=800,mar=NULL, Collapse=NULL, ...) { 
-		standardGeneric('groups.boxplot')
+		standardGeneric('groups_boxplot')
 	}
 )
 }else {
-	print ("Onload warn generic function 'groups.boxplot' already defined - no overloading here!")
+	print ("Onload warn generic function 'groups_boxplot' already defined - no overloading here!")
 }
 
-setMethod('groups.boxplot', signature = c ( 'BioData') ,
+setMethod('groups_boxplot', signature = c ( 'BioData') ,
 	definition = function ( x, groupCol, groupRow, svg=F, fname='group_', width=800, height=800,mar=NULL, Collapse=NULL, ...) {
 		clusters <- as.numeric( x$annotation[,groupRow])
 		maxG <- max( clusters )

@@ -7,7 +7,7 @@ rownames(dat) <- paste( 'gene', 1:100)
 samples <- data.frame(SampleID = 1:10, sname = colnames(dat) )
 annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 
-x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = file.path(pwd(),"Split4Geo") )
+x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = file.path(getwd(),"Split4Geo") )
 
 Split4Geo( x )
 

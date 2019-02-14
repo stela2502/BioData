@@ -11,7 +11,7 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
 x$samples$group <- rep(c('A','B'), 5)
 
-normalize(x, to=apply( x$dat,2, sum))
+normalize(x, readCounts =apply( x$dat,2, sum) )
 z.score(x)
 
 a <- collaps( x, groupCol='group', by='median')

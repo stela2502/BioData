@@ -15,7 +15,8 @@
 #' @details select the cells that match the requirement ( minCellOverlap and minGroupOverlap) and asigne the group id of the biggest group
 #' @details to this cell.
 #' @details The same algorythm will be applied for all cells that end up in small groups before the final ungrouped cells are assigned.
-#' @examples combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
+#' @examples combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], 
+#' minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 #' @export 
 setGeneric('combineGroupings', ## Name
 	function ( x, colGroups, new_name="Merged Group 1", minCellOverlap=5 , minGroupOverlap=length(colGroups)-2, minCellsInReturnGroup=NULL ) { 

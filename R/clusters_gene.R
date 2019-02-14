@@ -2,7 +2,7 @@
 #' @aliases clusters_gene,BioData-method
 #' @rdname clusters_gene-methods
 #' @docType methods
-#' @description Culters the data either based on the raw data values or any MDS data type and adds the grouping into the annotation table.
+#' @description Clusters the data either based on the raw data values or any MDS data type and adds the grouping into the annotation table.
 #' @param dataObj the BioData object
 #' @param clusterby cluster on raw data or MDS clustered data default="raw"
 #' @param useGrouping do nothing and simply use tis grouping default=NULL

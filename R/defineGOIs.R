@@ -12,13 +12,13 @@
 #' @title description of function defineGOIs
 #' @export defineGOIs
 setGeneric('defineGOIs', ## Name
-	function ( x,name, genes, lables=NULL, ...) { 
+	function ( x,name, genes, lables=NULL, gene_col=NULL) { 
 		standardGeneric('defineGOIs')
 	}
 )
 
 setMethod('defineGOIs', signature = c ('BioData'),
-	definition = function ( x, name, genes, lables=NULL, gene_col=NULL, ... ) {
+	definition = function ( x, name, genes, lables=NULL, gene_col=NULL ) {
 		if ( is.null(lables) ) {
 			lables = rep(name, length(genes))
 		}

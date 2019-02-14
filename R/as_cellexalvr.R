@@ -1,19 +1,4 @@
 #' @name as_cellexalvr
-#' @aliases as_cellexalvr,cellexalvr-method
-#' @rdname as_cellexalvr-methods
-#' @docType methods
-#' @description Convert a R6::BioData object into a R6::cellexalvr object
-#' @param x the BioData object
-#' @title description of function as_cellexalvr
-#' @export 
-setGeneric('as_cellexalvr', ## Name
-		function ( x, ... ) { 
-			standardGeneric('as_cellexalvr')
-		}
-)
-#' @name as_cellexalvr.BioData
-#' @aliases as_cellexalvr.BioData,cellexalvr-method
-#' @rdname as_cellexalvr-methods
 #' @docType methods
 #' @description Convert a R6::BioData object into a R6::cellexalvr object
 #' @param x the BioData object
@@ -22,6 +7,12 @@ setGeneric('as_cellexalvr', ## Name
 #' @param linear linear sample information that is to be stored in the facs matrix
 #' @title description of function as_cellexalvr
 #' @export 
+setGeneric('as_cellexalvr', ## Name
+		function ( x, cellInfo, groups=NULL, linear=NULL  ) { 
+			standardGeneric('as_cellexalvr')
+		}
+)
+
 setMethod('as_cellexalvr', signature = c ('BioData'),
 		definition = function ( x, cellInfo, groups=NULL, linear=NULL  ) {
 			x <- x$clone()

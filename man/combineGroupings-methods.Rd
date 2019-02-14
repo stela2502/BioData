@@ -37,5 +37,6 @@ to this cell.
 The same algorythm will be applied for all cells that end up in small groups before the final ungrouped cells are assigned.
 }
 \examples{
-combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
+combineGroupings(BioDataObj, colnames(BioDataObject$samples)[1:10], 
+minCellOverlap = 5, minGroupOverlap = 8, minCellsInReturnGroup = 20)
 }

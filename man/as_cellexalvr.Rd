@@ -3,15 +3,9 @@
 \docType{methods}
 \name{as_cellexalvr}
 \alias{as_cellexalvr}
-\alias{as_cellexalvr,cellexalvr-method}
-\alias{as_cellexalvr.BioData}
-\alias{as_cellexalvr.BioData,cellexalvr-method}
 \title{description of function as_cellexalvr}
 \usage{
-as_cellexalvr(x, ...)
-
-\S4method{as_cellexalvr}{BioData}(x, cellInfo, groups = NULL,
-  linear = NULL)
+as_cellexalvr(x, cellInfo, groups = NULL, linear = NULL)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -21,11 +15,7 @@ as_cellexalvr(x, ...)
 \item{groups}{the R calculated groupings to go into the userGroups matrix}
 
 \item{linear}{linear sample information that is to be stored in the facs matrix}
-
-\item{x}{the BioData object}
 }
 \description{
-Convert a R6::BioData object into a R6::cellexalvr object
-
 Convert a R6::BioData object into a R6::cellexalvr object
 }

@@ -10,6 +10,7 @@
 #' @param B if not all conditions should be used condition B
 #' @param covariates should covariates be used - name them here
 #' @param form a specific formualr to use? State it here
+#' @param settings SLURM setting like list( A = 'lsens2018.3.3', T='00:20:00', n=1, N=1 ) (default NULL) 
 #' @title description of function runStats_inThread
 #' @export 
 setGeneric('runStats_inThread', ## Name

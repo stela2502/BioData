@@ -13,9 +13,13 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 x <- BioData$new( as.data.frame(dat), annotation=annotation,  Samples=samples, name="testObject",namecol='sname', outpath = "" )
 
 
+context( 'mds TSNE_R')
+
 mds( x, mds.type='TSNE_R')
 
 expect_equal( class( x ), c('BioData', 'R6') )
+
+context( 'reduceTo')
 
 reduceTo(x,what='row', to=paste( 'gene', c(1,50:100)), name="rows dropped" )
 
@@ -38,10 +42,15 @@ expect_equal(colnames(a$data()), paste('Sample', 1:100, sep='.'))
 expect_equal(  a$name, "rows dropped" )
 
 x$samples$group <- paste( 'Group', rep(c(1,2,3,4)) )
+
+
+context( 'colors_4')
+
 colors_4( x, 'group' )
 exp = rainbow(4)
 expect_equal( x$usedObj$colorRange$group, exp )
 })
+
 
 #x2 <- tRNAMINT$new( dat, annotation=annotation, Samples=samples, name="testObject2",namecol='sname', outpath = "" )
 #expect_equal( class( x2 ), c('tRNAMINT', 'BioData', 'R6') )

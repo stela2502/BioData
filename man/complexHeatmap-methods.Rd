@@ -8,8 +8,8 @@
 \usage{
 complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
   colColors = NULL, rowColors = NULL, pdf = FALSE, subpath = "",
-  main = "", heapmapCols = function(x) {     c("darkgrey", bluered(x))
-  }, brks = 10, X11type = "cairo", green = F)
+  main = "", heapmapCols = function(x) {     c("darkgrey",
+  gplots::bluered(x)) }, brks = 10, X11type = "cairo", green = F)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -28,9 +28,13 @@ complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
 
 \item{subpath}{the subpath for the plots (default = '')}
 
+\item{main}{the picture title (default '')}
+
 \item{heapmapCols}{the color function to calculate the heatmap colours ( default function (x) { c("darkgrey",bluered(x)) } )}
 
 \item{brks}{how many breaks should the expression value color key have (default=10)}
+
+\item{X11type}{sometimes needed for compatibility (default = 'cairo')}
 
 \item{green}{if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)}
 }

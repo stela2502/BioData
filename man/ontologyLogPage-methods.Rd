@@ -16,6 +16,10 @@ ontologyLogPage(x, genes, ontology = "BP", topNodes = 10,
 
 \item{ontology}{which GO ontology to choose from (default = "BP")}
 
+\item{topNodes}{how many pathways to return (default 10)}
+
+\item{GOfname}{file to export the results to (default GOgenes.csv)}
+
 \item{...}{unused}
 }
 \description{

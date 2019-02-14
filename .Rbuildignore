@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+vignettes_not_OK
+scratchbord
+testObject
+src_definct

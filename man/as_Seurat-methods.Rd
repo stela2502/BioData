@@ -12,6 +12,8 @@ as_Seurat(x, group = NULL, fromRaw = T)
 \item{x}{The BioData object}
 
 \item{group}{Which group should be used as identity in the seurat object (default=NULL)}
+
+\item{fromRaw}{create the Seurat object from the raw unnormalized data (default =TRUE)}
 }
 \description{
 convert BioData to Seurat object but keeping the BioData normalized information.

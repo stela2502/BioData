@@ -12,14 +12,16 @@
 #' @param rowColors a named list of row color vectors
 #' @param pdf export as pdf (default = FALSE)
 #' @param subpath the subpath for the plots (default = '')
+#' @param main the picture title (default '')
 #' @param heapmapCols the color function to calculate the heatmap colours ( default function (x) { c("darkgrey",bluered(x)) } )
 #' @param brks how many breaks should the expression value color key have (default=10)
+#' @param X11type sometimes needed for compatibility (default = 'cairo')
 #' @param green if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)
 #' @title description of function complexHeatmap
 #' @export 
 setGeneric('complexHeatmap', ## Name
 		function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE, subpath='', 
-				main = '',  heapmapCols= function(x){ c("darkgrey",bluered(x))}, brks=10, X11type= 'cairo', green = F ) { 
+				main = '',  heapmapCols= function(x){ c("darkgrey", gplots::bluered(x))}, brks=10, X11type= 'cairo', green = F ) { 
 			standardGeneric('complexHeatmap')
 		}
 )
@@ -98,14 +100,14 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				brks[1:2] = brks[1:2] - 1e-4
 				if ( is.null(heapmapCols)){
 					if ( green ) {
-						heapmapCols = function(x){ c("#006D2C","black",bluered(x-1))}
+						heapmapCols = function(x){ c("#006D2C","black", gplots::bluered(x-1))}
 					}else {
-						heapmapCols = function(x){ c("black","black",bluered(x-1))}
+						heapmapCols = function(x){ c("black","black", gplots::bluered(x-1))}
 					}
 				}
 			}else {
 				brks <- unique(as.vector(c(m, quantile(data[which(data!= m)],seq(0,1,by=1/brks)),max(data))))
-				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black",bluered(x))}}
+				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black", gplots::bluered(x))}}
 			}
 			if ( ! is.null(ofile)){
 				## here I need more magic

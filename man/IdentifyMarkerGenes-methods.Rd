@@ -6,7 +6,7 @@
 \alias{IdentifyMarkerGenes,BioData-method}
 \title{description of function IdentifyMarkerGenes}
 \usage{
-IdentifyMarkerGenes(x, gname, ...)
+IdentifyMarkerGenes(x, gname, settings = list(), names = NULL)
 }
 \arguments{
 \item{x}{the BioData object}

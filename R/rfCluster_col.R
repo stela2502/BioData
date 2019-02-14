@@ -25,7 +25,9 @@
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
 if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
-			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust',settings=list(), ids=NULL){
+			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, 
+					subset=200,nforest=500, ntree=500, name='RFclust',
+					settings=list(), ids=NULL){
 				standardGeneric('rfCluster_col')
 			}
 	)
@@ -33,7 +35,9 @@ if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
 	print ("Onload warn generic function 'rfCluster_col' already defined - no overloading here!")
 }
 setMethod('rfCluster_col', signature = c ('BioData'),
-		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust', settings=list(), ids=NULL) {
+		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, 
+				subset=200 ,nforest=500, ntree=1000, name='RFclust',
+				settings=list(), ids=NULL) {
 			if ( rep > 1) {
 				lapply(1:rep, function(i) { 
 							rfCluster_col(

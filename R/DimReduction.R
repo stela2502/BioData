@@ -33,7 +33,7 @@ setMethod('DimReduction', signature = c ('BioData'),
 		print ( paste("n set to",n) )
 	}
 	rerun = 0
-	
+	# so this is new then...
 	if ( is.na(match( PCA_name , names(x$usedObj))) ){
 		rerun = 1
 	}else{

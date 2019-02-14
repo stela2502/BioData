@@ -1,15 +1,4 @@
-#' @name normalize
-#' @aliases normalize,BioData-method
-#' @rdname normalize-methods
-#' @docType methods
-#' @description  normalize the expression data (sample wise)
-#' This generic method is implemented in a object specific way - more options available
-#' for each obejct specific function.
-#' @param x The NGSexpressionSet
-#' @param name the new name of the object (deafule old name + normalized)
-#' @return the normalized data set (original data stored in NGS$raw
-#' @title description of function normalize
-#' @export 
+
 if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 	function ( object, ... , name=NULL) { 
 		standardGeneric('normalize')
@@ -137,7 +126,7 @@ setMethod('normalize', signature = c ('SingleCells'),
 
 
 #' @name normalize
-#' @aliases normalize,BioData-method
+#' @aliases normalize,MicroArray-method
 #' @rdname normalize-methods
 #' @docType methods
 #' @description  constructor that has to be implemented for a generic BioData

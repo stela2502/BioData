@@ -5,6 +5,7 @@
 \alias{normalize}
 \alias{normalize,BioData-method}
 \alias{normalize,SingleCells-method}
+\alias{normalize,MicroArray-method}
 \title{description of function normalize}
 \usage{
 \S4method{normalize}{BioData}(object, ..., readCounts = NULL,
@@ -31,11 +32,7 @@
 
 \item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
 
-\item{x}{The NGSexpressionSet}
-
 \item{x}{The BioData object (NGS expression data, not single cells)}
-
-\item{name}{the new name of the object (deafule old name + normalized)}
 
 \item{forec}{replace old norm data (FALSE)}
 
@@ -48,15 +45,9 @@
 \value{
 the normalized data set (original data stored in NGS$raw
 
-the normalized data set (original data stored in NGS$raw
-
 the normalized data set (original data stored in slot 'raw'
 }
 \description{
-normalize the expression data (sample wise)
-This generic method is implemented in a object specific way - more options available
-for each obejct specific function.
-
 normalize the expression data (sample wise)
 
 normalize the expression data by subsampling as described in PMID 24531970

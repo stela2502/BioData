@@ -148,7 +148,7 @@ setMethod('createStats', signature = c ( 'SingleCells') ,
 			}
 			
 			sca <- MAST::FromMatrix(class='SingleCellAssay', 
-					exprsArray=d, 
+					exprsArray=t(d), 
 					cData=cData, 
 					fData=data.frame(primerid=rownames(d)))
 			#groups <- sca@elementMetadata$GroupName <- a$samples[,condition]

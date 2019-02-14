@@ -164,10 +164,10 @@ setMethod('mds', signature = c ('BioData'),
 								call. = FALSE)
 					}
 					if ( useRaw ){
-						mds.proj <- Rtsne( tab, dims=dim , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
+						mds.proj <- Rtsne::Rtsne( tab, dims=dim , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
 					}else {
 						## The data is already PCAed
-						mds.proj <- Rtsne( tab, dims=dim , check_duplicates =F,  verbose=T, pca=F )$Y
+						mds.proj <- Rtsne::Rtsne( tab, dims=dim , check_duplicates =F,  verbose=T, pca=F )$Y
 					}
 					
 					rownames(mds.proj) <- rownames(tab)

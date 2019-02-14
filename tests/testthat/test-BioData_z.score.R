@@ -1,4 +1,4 @@
-context( 'z.score')
+
 
 #library(BioData)
 #test_that("z.score",{
@@ -12,6 +12,9 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
 expect_equal( class( x ), c('BioData', 'R6'), "correct class name" )
 
+normalize(x)
+
+context( 'z.score')
 z.score(x)
 
 expect_true( length( which( round(apply(x$zscored,1,mean),digits=10) != 0 )) == 0 ,"all means == 0" )

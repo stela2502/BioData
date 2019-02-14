@@ -57,7 +57,7 @@ setMethod('DimReduction', signature = c ('BioData'),
 			tmp[bad] = 0
 		}
 		if ( ! genes ) {
-			tmp = t(tmp)
+			tmp = Matrix::t(tmp)
 		}
 		if ( method == 'auto' ){
 			if ( nrow(x$dat) * ncol(x$dat) > 1e6 )

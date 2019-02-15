@@ -1,7 +1,8 @@
 context( "SLURM RFclust" )
-if ( ! system('sbatch --help 2>/dev/null ')==0 ) {
+
+if ( Sys.which('sbatch') == "" ) 
 	skip( "no SLURM based system" )
-}
+
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
 colnames(dat) <- paste('Sample', 1:10)

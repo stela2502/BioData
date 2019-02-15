@@ -1,14 +1,14 @@
 Package: BioData
 Title: The package allows to annotate a numeric data.table with col and row data
-Version: 1.2.3.002
+Version: 1.2.3.004
 Authors@R: person("Stefan", "Lang", email = "Stefan.Lang@med.lu.se", role = c("aut", "cre"))
-Description: The package is a base R6 class to store numeric data on biological
+Description: The package is a R6 class to store numeric data on biological
     experiments that most of the time have complex annotation for both columns and
-    rows of this data.
+    rows of this data. Special classes for Microarray, NGS bulk sequencing and single cell sequencing are available.
 License: GPL-3
 Encoding: UTF-8
 Depends:
-    R (>= 3.4.0),
+    R (>= 3.5.0),
     R6,
     methods,
     R.utils,
@@ -40,6 +40,7 @@ biocViews:
     pcaMethods,
     destiny,
     MAST,
+    limma,
     DESeq2,
     org.Mm.eg.db,
     org.Hs.eg.db
@@ -48,6 +49,7 @@ Remotes:
    sonejilab/cellexalvrR
 LazyData: true
 Suggests:
+	Rtsne,
 	cellexlvrR,
     testthat,
     knitr,
@@ -58,5 +60,6 @@ Imports:
     Rcpp,
     Rtsne,
     DESeq2,
+    limma,
     MAST,
     Seurat

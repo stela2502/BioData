@@ -159,7 +159,7 @@ setMethod('mds', signature = c ('BioData'),
 						rownames(mds.proj) <- rownames(tab)
 					}
 				}else if ( mds.type == "TSNE_R"){
-					if (!requireNamespace("Rtsne", quietly = TRUE,logical.return=TRUE )) {
+					if (!requireNamespace("Rtsne", quietly = TRUE ) == T ) {
 						stop("package 'Rtsne' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}

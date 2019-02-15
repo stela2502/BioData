@@ -53,7 +53,7 @@ context( "single cells mds" )
 
 mds(x)
 
-expect_true( ! is.null(x$usedObj$pr), "initial pca speed up not existing" )
+expect_true( is.null(x$usedObj$pr), "initial pca speed up existing" )
 
-expect_true( ! is.null(x$usedObj$MDS_PCA100[['Expression PCA']]), "PCA data not existing" )
+expect_true( is.null(x$usedObj$MDS[['Expression PCA']]), "PCA data existing" )
 

@@ -1,4 +1,4 @@
-context("collaps")
+context("normalize_zscore")
 #library(BioData)
 
 set.seed(1)
@@ -11,9 +11,14 @@ annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = "" )
 x$samples$group <- rep(c('A','B'), 5)
 
-normalize(x, readCounts =apply( x$dat,2, sum) )
+to = apply( x$dat,2, sum)
+#stop(paste( to ))
+
+try ( {normalize(x, readCounts = to )} )
+
 z.score(x)
 
+context("collaps")
 a <- collaps( x, groupCol='group', by='median')
 
 expect_equal( dim(a$data()), c(100,2),info= "right drop" )

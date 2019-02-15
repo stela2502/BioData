@@ -1,20 +1,7 @@
-#' @name normalize
-#' @docType methods
-#' @param object an object from class BioData
-#' @param ... BioData sub classes specific options
-#' @param name the name of the returned BioData object
-#' @title normalize 
-#' @export normalize
-if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
-	function ( object, ... , name=NULL) { 
-		standardGeneric('normalize')
-	}
-)
-}else {
-	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
-}
 
-#' @describeIn normalize a BioData::R6 object using DEseq2
+
+#' @name normalize
+#' @aliases normalize,BioData-method
 #' @docType methods
 #' @description  normalize the expression data (sample wise) using DEseq2
 #' @param x The BioData object (NGS expression data, not single cells)
@@ -26,6 +13,16 @@ if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
 #' @return the normalized data set (original data stored in NGS$raw
 #' @title normalize a BioData::R6 object
 #' @export normalize
+
+if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
+	function ( object, ... , name=NULL) { 
+		standardGeneric('normalize')
+	}
+)
+}else {
+	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
+}
+
 setMethod('normalize', signature = c ('BioData'),
 		definition = function (  object, readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
 			if ( ! object$snorm ){
@@ -42,7 +39,7 @@ setMethod('normalize', signature = c ('BioData'),
 				object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
 				colnames(object$dat) = colnames(object$raw)
 				rownames(object$dat) = rownames(object$raw)
-				if (to_gene_length){
+				if (length(to_gene_length ) > 0 ){
 					for ( i in 1:nrow(object$dat)) {
 						object$dat[i,] <- object$dat[i,]/ (object$annotation[i,geneLengthCol ] / 1000)
 					}
@@ -58,7 +55,7 @@ setMethod('normalize', signature = c ('BioData'),
 					logThis(object) ## regen log
 				}
 			}
-			object
+			invisible(object)
 		})
 
 

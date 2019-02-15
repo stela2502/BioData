@@ -13,12 +13,12 @@ x <- BioData$new( cbind(annotation,dat), Samples=samples, name="testObject",name
 context( "mds PCA" )
 			
 	mds( x )
-	expect_equal (names(x$usedObj$MDS_PCA100), c('Expression PCA'))
-	expect_equal (dim(x$usedObj$MDS_PCA100$'Expression PCA'), c(101,  3)) # 10 samples
+	expect_equal (names(x$usedObj$MDS), c('Raw Expression PCA'))
+	expect_equal (dim(x$usedObj$MDS$'Raw Expression PCA'), c(101,  3)) # 10 samples
 	
 	mds( x , genes=T )
-	expect_equal (names(x$usedObj$MDSgene), c('Expression PCA'))
-	expect_equal (dim(x$usedObj$MDSgene$'Expression PCA'), c(100,  3)) # 10 samples
+	expect_equal (names(x$usedObj$MDSgene), c('Raw Expression PCA'))
+	expect_equal (dim(x$usedObj$MDSgene$'Raw Expression PCA'), c(100,  3)) # 10 samples
 	
 skip ("skip DM LLE and DDRTree - too simple data?!")
 

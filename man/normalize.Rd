@@ -6,39 +6,29 @@
 \alias{normalize,BioData-method}
 \alias{normalize,SingleCells-method}
 \alias{normalize,MicroArray-method}
-\title{normalize}
+\title{normalize a BioData::R6 object}
 \usage{
-\S4method{normalize}{BioData}(object, readCounts = NULL,
-  to_gene_length = FALSE, geneLengthCol = "transcriptLength",
-  force = FALSE, name = NULL)
-
 \S4method{normalize}{SingleCells}(object, reads = 600, force = FALSE,
   name = NULL)
 
 \S4method{normalize}{MicroArray}(object, to = NULL, name = NULL)
 }
 \arguments{
-\item{object}{an object from class BioData}
+\item{reads}{the required read depth}
+
+\item{force}{replace old norm data (FALSE)}
+
+\item{name}{the new name of the object (deafule old name + normalized)}
+
+\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
+
+\item{x}{The BioData object (NGS expression data, not single cells)}
 
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}
 
 \item{to_gene_length}{FALSE whether or not to normalize the data to gene length}
 
 \item{geneLengthCol}{the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)}
-
-\item{force}{replace old norm data (FALSE)}
-
-\item{name}{the name of the returned BioData object}
-
-\item{reads}{the required read depth}
-
-\item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
-
-\item{...}{BioData sub classes specific options}
-
-\item{x}{The BioData object (NGS expression data, not single cells)}
-
-\item{name}{the new name of the object (deafule old name + normalized)}
 
 \item{x}{The SingleCells::BioData::R6 object}
 
@@ -63,8 +53,6 @@ This generic version was meant for array data and I have not had the need nor ti
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{BioData}: a BioData::R6 object using DEseq2
-
 \item \code{SingleCells}: a SingleCells::BioData::R6 object using subsampling
 
 \item \code{MicroArray}: normalize a MicoArray::BioData::R6 object using quantile normalization

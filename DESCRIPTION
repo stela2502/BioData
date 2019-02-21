@@ -32,8 +32,8 @@ Depends:
     org.Mm.eg.db,
     org.Hs.eg.db,
 LinkingTo: 
-    Rcpp (>= 0.11.0), 
-    RcppEigen, 
+    Rcpp,
+    RcppEigen,
     RcppProgress
 biocViews: 
     RDRToolbox,

@@ -1,5 +1,3 @@
-
-
 #' @name normalize
 #' @aliases normalize,BioData-method
 #' @docType methods

@@ -6,38 +6,21 @@
 
 using namespace Rcpp;
 
-// RunUMISampling
-Eigen::SparseMatrix<double> RunUMISampling(Eigen::SparseMatrix<double> data, int sample_val, bool upsample, bool display_progress);
-RcppExport SEXP _BioData_RunUMISampling(SEXP dataSEXP, SEXP sample_valSEXP, SEXP upsampleSEXP, SEXP display_progressSEXP) {
+// ZScore
+Eigen::SparseMatrix<double> ZScore(Eigen::SparseMatrix<double> data, bool display_progress);
+RcppExport SEXP _BioData_ZScore(SEXP dataSEXP, SEXP display_progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::SparseMatrix<double> >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type sample_val(sample_valSEXP);
-    Rcpp::traits::input_parameter< bool >::type upsample(upsampleSEXP);
     Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(RunUMISampling(data, sample_val, upsample, display_progress));
-    return rcpp_result_gen;
-END_RCPP
-}
-// RunUMISamplingPerCell
-Eigen::SparseMatrix<double> RunUMISamplingPerCell(Eigen::SparseMatrix<double> data, NumericVector sample_val, bool upsample, bool display_progress);
-RcppExport SEXP _BioData_RunUMISamplingPerCell(SEXP dataSEXP, SEXP sample_valSEXP, SEXP upsampleSEXP, SEXP display_progressSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Eigen::SparseMatrix<double> >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type sample_val(sample_valSEXP);
-    Rcpp::traits::input_parameter< bool >::type upsample(upsampleSEXP);
-    Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(RunUMISamplingPerCell(data, sample_val, upsample, display_progress));
+    rcpp_result_gen = Rcpp::wrap(ZScore(data, display_progress));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_BioData_RunUMISampling", (DL_FUNC) &_BioData_RunUMISampling, 4},
-    {"_BioData_RunUMISamplingPerCell", (DL_FUNC) &_BioData_RunUMISamplingPerCell, 4},
+    {"_BioData_ZScore", (DL_FUNC) &_BioData_ZScore, 2},
     {NULL, NULL, 0}
 };
 

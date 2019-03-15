@@ -24,7 +24,7 @@ setMethod('logThis', signature = c ('BioData'),
 			x$raw = x$dat
 		}
 		OK = which(x$dat@x > 0)
-		x$dat@x[OK] = log(x$dat@x[OK])
+		x$dat@x[OK] = log(x$dat@x[OK] +1)
 		x$logged = TRUE
 		
 	}

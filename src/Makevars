@@ -1,2 +1,0 @@
-CXX_STD = CXX11
-CXXFLAGS = -Wno-ignored-attributes

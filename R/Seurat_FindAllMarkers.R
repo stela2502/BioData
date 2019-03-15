@@ -17,9 +17,28 @@ setMethod('Seurat_FindAllMarkers', signature = c ('BioData'),
 	definition = function ( x , condition) {
 	
 	
-	object <- as_Seurat( x, group=condition, fromRaw=F ) ## I want to use MY data
+	#object <- as_Seurat( x, group=condition, fromRaw=F ) ## I want to use MY data
 
-	stats = Seurat::FindAllMarkers( object )
+	
+			
+	CppStats <- function( n ) {
+		OK = which(grp.vec == n )
+		BAD= which(grp.vec != n )
+		r = as.data.frame(
+				FastWilcoxTest::StatTest( Matrix::t( x@dat), OK, BAD, logfc.threshold, minPct )
+		)
+		r= r[order( r[,'p.value']),]
+		r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x@dat)[r[,1]] )
+		r
+	}
+	
+	stats = NULL;
+	grp.vec = as.vector(x$samples[,condition])
+	
+	for ( n in  unique( sort(grp.vec)) ) {
+		stats = rbind( all_markers, CppStats(n) )
+	}
+	
 	
 	add_to_stat <- function( x, stat, name ) {
 		if ( ! is.na( match( name, names(x$stats)))){
@@ -31,7 +50,7 @@ setMethod('Seurat_FindAllMarkers', signature = c ('BioData'),
 		x
 	}
 	
-	x <- add_to_stat ( x, stats, paste(sep="_", "Seurat_FindAllMarkers", condition) )
+	x <- add_to_stat ( x, stats, paste(sep="_", "wilcox_FindAllMarkers", condition) )
 	
 	invisible(x)
 } )

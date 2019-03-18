@@ -31,10 +31,6 @@ Depends:
     pcaMethods,
     org.Mm.eg.db,
     org.Hs.eg.db,
-LinkingTo: 
-    Rcpp,
-    RcppEigen,
-    RcppProgress
 biocViews: 
     RDRToolbox,
     pcaMethods,
@@ -58,7 +54,6 @@ Suggests:
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Imports: 
-    Rcpp,
     Rtsne,
     DESeq2,
     limma,

@@ -86,7 +86,7 @@ setMethod('z.score', signature = c ('SingleCells'),
 		definition = function ( m ) {
 			
 			if ( is.null(m$zscored) ) {
-				m$zscored <- ZScore(m$dat)
+				m$zscored <- FastWilcoxTest::ZScore(m$dat)
 				#ret[which(is.na(ret)==T)] <- 0
 				colnames(m$zscored) <- colnames(m$dat)
 				rownames(m$zscored) <- rownames(m$dat)

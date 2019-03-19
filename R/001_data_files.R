@@ -1,6 +1,3 @@
-#' @useDynLib BioData
-#' @importFrom Rcpp sourceCpp
-NULL
 
 
 #' @name CellCycleGenes

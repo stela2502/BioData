@@ -5,33 +5,45 @@
 #' @description  Use Seurat's FindAllMarkers function
 #' @param x the BioData object
 #' @param condition The grouping you wat to analyze
-#' @param logfc.threshold  Seurat FindAllmarkers option used for speed up (default = 1) 
+#' @param logfc.threshold test only genes with a liog fold change of default=1.0 or more 
+#' @param minPct test only genes with expression in more than default=0.1 fraction of cells in at least one group
 #' @title description of function Seurat_FindAllMarkers
 #' @export 
 setGeneric('Seurat_FindAllMarkers', ## Name
-	function ( x , condition, logfc.threshold = 1 ) { 
+	function ( x , condition, logfc.threshold=1.0, minPct=0.1) { 
 		standardGeneric('Seurat_FindAllMarkers')
 	}
 )
 
 setMethod('Seurat_FindAllMarkers', signature = c ('BioData'),
-	definition = function ( x , condition, logfc.threshold = 1 ) {
+	definition = function ( x , condition, logfc.threshold = 1, minPct=0.1 ) {
 	
 	object <- as_Seurat( x, group=condition, fromRaw=F ) ## I want to use MY data
 	
-	stats = Seurat::FindAllMarkers( object, logfc.threshold = logfc.threshold )
-	
-	add_to_stat <- function( x, stat, name ) {
-		if ( ! is.na( match( name, names(x$stats)))){
-			x$stats[[ match( name, names(x$stats)) ]] <- stat
-		}else {
-			x$stats[[ length( x$stats ) +1 ]] <- stat
-			names(x$stats)[length(x$stats) ] <- name
+	stats = Seurat::FindAllMarkers( object, logfc.threshold = logfc.threshold, minPct = minPct )
+
+	CppStats <- function( n ) {
+		print ( paste("Calc wilcox test for",n) )
+		OK = which(grp.vec == n )
+		BAD= which(grp.vec != n )
+		if ( length(OK) > 0 && length(BAD) > 0 ){
+			r = as.data.frame(
+					FastWilcoxTest::StatTest( Matrix::t( x$dat), OK, BAD, logfc.threshold, minPct )
+			)
+			r= r[order( r[,'p.value']),]
+			r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
 		}
-		x
+		r
 	}
 	
-	x <- add_to_stat ( x, stats, paste(sep="_", "Seurat_FindAllMarkers", condition) )
+	stats = NULL;
+	grp.vec = as.vector(x$samples[,condition])
+	
+	for ( n in  unique( sort(grp.vec)) ) {
+		stats = rbind( stats, CppStats(n) )
+	}
+	
+	x$stats[[name]] = stats
 	
 	invisible(x)
 } )
@@ -58,29 +70,31 @@ setGeneric('Cpp_FindAllMarkers', ## Name
 setMethod('Cpp_FindAllMarkers', signature = c ('BioData'),
 		definition = function ( x , condition, logfc.threshold = 1, minPct = 0.1 , onlyPos = FALSE) {
 			
-			grp.vec = as.vector( x$samples[,condition])
-			CppStats <- function( n ) {
-				OK = which(grp.vec == n )
-				BAD= which(grp.vec != n )
-				r = as.data.frame(FastWilcoxTest::StatTest( mat, OK, BAD, logfc.threshold, minPct, onlyPos ))
-				r= r[order( r[,'p.value']),]
-				r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
-				r
-			}
-			
-			mat = Matrix::t(x$dat)
-			bad = which( mat@x <= 0 )
-			if ( length(bad) > 0 ){
-				mat@x[bad] = 0;
-			}
-			
-			all_markers = NULL;
-			for ( n in  unique( sort(grp.vec)) ) {
-				all_markers = rbind( all_markers, CppStats(n) )
-			}
-			all_markers = cbind( all_markers, 'p_val_adj' = stats::p.adjust( all_markers[,'p.value'], method='BH' ) )
+			        CppStats <- function( n ) {
+                print ( paste("Calc wilcox test for",n) )
+                OK = which(grp.vec == n )
+                BAD= which(grp.vec != n )
+                if ( length(OK) > 0 && length(BAD) > 0 ){
+                        r = as.data.frame(
+                                        FastWilcoxTest::StatTest( Matrix::t( x$dat), OK, BAD, logfc.threshold, minPct )
+                        )
+                        r= r[order( r[,'p.value']),]
+                        r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
+                }
+                r
+        }
+
+        stats = NULL;
+        grp.vec = as.vector(x$samples[,condition])
+
+        for ( n in  unique( sort(grp.vec)) ) {
+                stats = rbind( stats, CppStats(n) )
+        }
+
+
+			stats = cbind( stats, 'p_val_adj' = stats::p.adjust( stats[,'p.value'], method='BH' ) )
 			name = paste(sep="_", "Cpp_FindAllMarkers", condition) 
-			x$stats[[name]] = all_markers
+			x$stats[[name]] = stats
 			
 			invisible(x)
 		} )

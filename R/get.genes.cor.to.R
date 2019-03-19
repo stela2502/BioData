@@ -20,19 +20,26 @@ if ( ! isGeneric('get.genes.cor.to') ){ setGeneric('get.genes.cor.to', ## Name
 setMethod('get.genes.cor.to', signature = c ('BioData'),
 	definition = function (x, gname, output) {
 	
+		
+		this = x$data()
+		bad = which(this@x == -1 )
+		if ( length(bad > 0 ) )
+			this@x[bad] = 0
+		this = Matrix::drop0(this)
+		
 		if ( length(gname) == ncol(x$data())) {
 			print ("You have given me the correlating variables as gname - hope that was intended!")
 			goi <- as.numeric(gname)
 		}else {
-			goi <- as.vector(t(x$data()[gname,]))
+			goi <- as.vector(t(this[gname,]))
 		}
-	
-	
-		calc.cor <- function(v,comp){
-			cor(v,comp)
-		}
-	
-		cor.values <- apply(x$data(),1,calc.cor,comp=goi)
+		cor.values <-  FastWilcoxTest::CorMatrix( this, goi)
+		names(cor.values) = rownames(dat)
+		
+		#calc.cor <- function(v,comp){
+		#	cor(v,comp)
+		#}
+		#cor.values <- apply(x$data(),1,calc.cor,comp=goi)
 	
 		sort(cor.values)
 	

@@ -30,7 +30,7 @@ Depends:
     Matrix.utils,
     pcaMethods,
     org.Mm.eg.db,
-    org.Hs.eg.db,
+    org.Hs.eg.db
 biocViews: 
     RDRToolbox,
     pcaMethods,
@@ -39,7 +39,9 @@ biocViews:
     limma,
     DESeq2,
     org.Mm.eg.db,
-    org.Hs.eg.db
+    org.Hs.eg.db,
+    topGO,
+    GO.db
 Remotes: 
    stela2502/RFclust.SGE,
    stela2502/FastWilcoxTest,
@@ -59,4 +61,6 @@ Imports:
     limma,
     MAST,
     Seurat,
-    FastWilcoxTest
+    FastWilcoxTest (>= 0.1.0.0200),
+    topGO,
+    GO.db

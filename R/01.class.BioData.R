@@ -128,7 +128,7 @@ BioData <- #withFormalClass(
 							self$samples$samples <- colnames(self$dat)
 							
 							if ( class(self$dat) != 'dgCMatrix' ) {
-								self$dat <- Matrix( as.matrix(self$dat) ) ## should save up to 80% of memory!
+								self$dat <- Matrix( as.matrix(self$dat), sparse=T ) ## should save up to 80% of memory!
 								rm(dat)
 								gc()
 							}

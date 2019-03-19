@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Stefan Lang" />
+
+<meta name="date" content="2019-02-19" />
+
+<title>Example Analysis of Single Cell Expression Data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Example Analysis of Single Cell Expression Data</h1>
+<h4 class="author"><em>Stefan Lang</em></h4>
+<h4 class="date"><em>2019-02-19</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>BioData is a R6 R class to handle different kinds of biological data. At the moment a BioData object is for NGS expression data and will e.g. use DEseq2 for statistical analysis; a SingleCells object is meant to store SingleCell NGS data and is using the MAST statistics by default; and finally Microarray, the oldes implemtaion and using limma for the startistics.</p>
+<p>BioData is an R6 class and therefore objects are modified by functions. Please keep that in mind when you use it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,<span class="dt">ncol=</span><span class="dv">10</span>, <span class="dt">nrow=</span><span class="dv">10</span>)
+<span class="kw">colnames</span>(m) =<span class="st"> </span><span class="kw">paste</span>(<span class="st">'cell'</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)
+<span class="kw">rownames</span>(m) =<span class="st"> </span><span class="kw">paste</span>(<span class="st">'gene'</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)
+test &lt;-<span class="st"> </span><span class="kw">as_BioData</span>( m )
+test
+<span class="co">#&gt; An object of class R6::BioData </span>
+<span class="co">#&gt; named  BioData </span>
+<span class="co">#&gt; with 10 genes and 10  samples. </span>
+<span class="co">#&gt; Annotation datasets (10,1): 'GeneID'   </span>
+<span class="co">#&gt; Sample annotation (10,2): 'sampleName', 'samples'</span>
+<span class="kw">reduceTo</span>(test, <span class="dt">what=</span><span class="st">'row'</span>, <span class="dt">to=</span><span class="kw">rownames</span>(test<span class="op">$</span>dat)[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>])
+test
+<span class="co">#&gt; An object of class R6::BioData </span>
+<span class="co">#&gt; named  reducedTo </span>
+<span class="co">#&gt; with 5 genes and 10  samples. </span>
+<span class="co">#&gt; Annotation datasets (): ''   </span>
+<span class="co">#&gt; Sample annotation (10,2): 'sampleName', 'samples'</span></code></pre></div>
+<p>BioData uses S4 method dispatching and not the R6 object$method() syntax.</p>
+<div id="aim-of-this-document" class="section level2">
+<h2>Aim of this document</h2>
+<p>This document is not only for the user, but also for a more advanced user type that wants to understand the mechanics of the package and increase its usability.</p>
+</div>
+</div>
+<div id="example-analysis" class="section level1">
+<h1>Example Analysis</h1>
+<div id="create-biodata-objects" class="section level2">
+<h2>Create BioData objects</h2>
+<p>In the first example you have seen that you can generate BioData objects from a simple matrix objects.</p>
+<p>But not only matrix objects can be used: you can create BioData objects from a Seurat object, a cellexalvrR object or from simply Rsubread list objects. In addition you can also read sqlite3 databases as produced by my Chromium_SingleCell_Perl pipeline and the text files from a CellRanger run.</p>
+<p>The function call is always</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">TM_Heart_10x &lt;-<span class="st"> </span><span class="kw">as_BioData</span>( <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;droplet_Heart_TabulaMuris.sqlite&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;BioData&quot;</span>))
+<span class="co">#&gt; Load sqlite database</span>
+<span class="co">#&gt; [1] &quot;Obtaining the sample UMI summary&quot;</span>
+<span class="co">#&gt; [1] &quot;I create a 624 columns and 12963 rows wide matrix&quot;</span>
+<span class="co">#&gt; [1] &quot;adding gene and sample names&quot;</span>
+<span class="co">#&gt; [1] &quot;done creating the matrix&quot;</span>
+<span class="co">#&gt; [1] &quot;creating the BioData object&quot;</span>
+TM_Heart_10x<span class="op">$</span>name =<span class="st"> 'TM_Heart_10x'</span>
+TM_Heart_10x
+<span class="co">#&gt; An object of class R6::BioData::SingleCells </span>
+<span class="co">#&gt; named  TM_Heart_10x </span>
+<span class="co">#&gt; with 12962 genes and 624  samples. </span>
+<span class="co">#&gt; Annotation datasets (12962,4): 'gene_id', 'avg( value)', 'count(value)', 'gname'   </span>
+<span class="co">#&gt; Sample annotation (624,2): 'cell_id', 'samples'</span></code></pre></div>
+</div>
+<div id="class-details" class="section level2">
+<h2>Class Details</h2>
+<p>The BioData object is containing many possible interesting datasets that I will document here:</p>
+<p>I have two important data access function which actually use the R6 method style:</p>
+<ol style="list-style-type: decimal">
+<li>BioData$data() returns the most analyzed data in the object</li>
+<li>BioData$rawData() returns the most primitive data in the dataset</li>
+</ol>
+<p>The raw / processed data is stored in $raw, $dat and $zsored as sparse Matrix. There are two important data.tables $samples and $annotation that store the respective data and are always kept in sync to the three data tables.</p>
+<p>In addition there are two lists that grow while the data is processed: 1. $stats every time a statistics is run the results get added to this list. The entries of this list are also in sync with the data tables. 2. $usedObj this list contains all kind of objects and will be discussed when needed.</p>
+</div>
+<div id="merging-two-biodata-objects" class="section level2">
+<h2>Merging Two BioData Objects</h2>
+<p>After the data import into a BioData object it normally contain e.g. one 10X sample run. When you want to compare your data to e.g. a second run of a similar sample or a published similar analysis, you need to merge these two BioData objects.</p>
+<p>Used the merge function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">TM_Aorta_facs &lt;-<span class="st"> </span><span class="kw">as_BioData</span>( <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;facs_Aorta_TabulaMuris.sqlite&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;BioData&quot;</span>))
+TM_Aorta_facs<span class="op">$</span>name =<span class="st"> 'TM_Aorta_facs'</span>
+TM_Aorta_facs
+
+merged &lt;-<span class="st"> </span><span class="kw">merge</span>( TM_Heart_10x, TM_Aorta_facs )
+merged</code></pre></div>
+<p>This will merge the raw data and all entries in the annotation and samples tables. In addition data in the usedObj list is stored. It will drop all normalized and z.scored data as these steps have to be re-calculated for the merged dataset. It will not keep any additional information like stats or the usedObj list of the source objects.</p>
+</div>
+<div id="change-biodata-classes" class="section level2">
+<h2>Change BioData Classes</h2>
+<p>A BioData object can store different types of expression data. The type of data is linked to the sub class name. You can check the class of a BioData object by</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(BioDataObject)</code></pre></div>
+<p>The functions normalize, z.score and createStats applies different functions to the different classes.</p>
+<pre class="{r,eval=false}{"><code>class(merged)
+# change that to Microarray
+class(merged) = c( 'MicroArray', 'BioData', 'R6')
+# change that to a SingleCell class:
+class(merged) = c( 'SingleCells', 'BioData', 'R6')</code></pre>
+<p>We keep the SingleCells class here as that is what this dataset is.</p>
+</div>
+<div id="normalization-and-z-score" class="section level2">
+<h2>Normalization and Z-Score</h2>
+<p>Depending on the class of the BioData object different normalization steps are used: 1. SingleCells: Use re-sampling to normalize the reads. This normalization is loosing information as I have experienced, that this is the only way to make single cell data really comparable. 2. BioData: Use DEseq2 to normalize the data 3. MicroArray: Use DEseq2 to normalize the data (missing implementation of anything else)</p>
+<p>This merge process is quite slow and therefore the merged result is part of this pcakage.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">merged =<span class="st"> </span>TestData
+
+merged<span class="op">$</span>samples<span class="op">$</span>expMethod =<span class="st">  </span>
+<span class="st">  </span><span class="kw">unlist</span>(<span class="kw">lapply</span>(<span class="kw">str_split</span>( merged<span class="op">$</span>samples<span class="op">$</span>samples, <span class="st">'</span><span class="ch">\\</span><span class="st">.'</span> ) , 
+    <span class="cf">function</span>(x){ <span class="cf">if</span> (<span class="kw">length</span>(x) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) { <span class="st">'dropseq'</span> } <span class="cf">else</span> { <span class="st">'smartseq'</span> } }))
+
+<span class="kw">colors_4</span>(merged, <span class="st">'expMethod'</span>)
+
+merged<span class="op">$</span>outpath =<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">getwd</span>(), <span class="st">'TestData'</span>)
+<span class="cf">if</span> ( <span class="op">!</span><span class="st"> </span><span class="kw">file.exists</span>( merged<span class="op">$</span>outpath) )
+  <span class="kw">dir.create</span>( merged<span class="op">$</span>outpath )
+<span class="kw">saveObj</span>(merged)
+<span class="co">#&gt; [1] &quot;data exported to /home/med-sal/git_Projects/BioData/vignettes/TestData/BioData.RData&quot;</span>
+
+<span class="kw">hist</span>(<span class="kw">log10</span>(TestData<span class="op">$</span>samples<span class="op">$</span>nUMI))</code></pre></div>
+<p><img src="data:image/png;base64,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1AWkbA/sijoRAX2ET0vctH24TqkACHUb5HkFOfMahEZU25S1WjMdoeaRP/6W/BAGdESvV43R6++K3VtHNhEBoReDP8/SN+mJdnstPHPmTVUG6hp/NIc0FL+dHx78C27Haodf2tqmR5OrJCHDtHHIZ9BujX6INtOUTTQzBxQ6LXNb9cHGu5jFrqgTEdD9JL+0zStbeRNMBNBaL3xREu9iwQ7fxdC9yaHe9eZg/mfb+tRdOSoB//CGR4ossXvrFo9sERBunKh0Y27hq2czvypttiG0LShoO3nU8K43+k9itbGepkPGd1UThAS6oX+kKlTreEDMRlMsrkHjqmuT82g7yHxX1AkFhApSo9XBPYWmIwF0S/uhBFCrZyS1dfRh9Q4uFeqULJdUGu+UT6P4Mb4+TaTweGifE5N2ezrYkjZTx4f2nV3ksVU2bYdWdu4kOzW7hG3DBGSLE6McfxYz07UBwdrGSlPfpsXb9nlSh8UEZIemOPw0X7nEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATHEATH0f5dc6GP7peyBAAAAAElFTkSuQmCC" /><!-- --></p>
+<p>You can clearly see the two different experimental methods: dropseq with a max at 3.5 and the smartseq2 with a peak at 4.1. This difference has to be removed using a sample normalzation.</p>
+<p>BioData’s SingleCells normalize method uses the R sample function and looses information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">normalize</span>(merged, <span class="dt">reads=</span><span class="dv">2500</span> )
+<span class="kw">z.score</span>(merged)
+
+normalized_reads =<span class="st"> </span><span class="kw">apply</span> (merged<span class="op">$</span>dat, <span class="dv">2</span>, <span class="cf">function</span>(x) { OK =<span class="st"> </span><span class="kw">which</span>( x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> ); <span class="cf">if</span> ( <span class="kw">length</span>(OK) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> ) { <span class="kw">sum</span>(x[OK])} <span class="cf">else</span> {<span class="dv">0</span>} }  )
+<span class="kw">all</span>( normalized_reads <span class="op">==</span><span class="st"> </span><span class="dv">2500</span>)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+</div>
+<div id="cell-cycle-phase" class="section level2">
+<h2>Cell Cycle Phase</h2>
+<p>Apart from the library depth the cell cycle phase is the next most confounding factor:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">addCellCyclePhase</span>(merged, <span class="dt">gnameCol=</span><span class="st">'gname'</span> )
+<span class="co">#&gt; Create Seurat object from raw data</span>
+<span class="co">#&gt; Seurat object ready</span>
+<span class="co">#&gt; addressing the cell cycle phase using Seurat::CellCycleScoring</span>
+
+<span class="kw">table</span>(merged<span class="op">$</span>samples<span class="op">$</span>Phase)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  G1 G2M   S </span>
+<span class="co">#&gt; 414 165 298</span>
+
+<span class="kw">colors_4</span>(merged, <span class="st">'Phase'</span>)</code></pre></div>
+</div>
+<div id="variable-genes" class="section level2">
+<h2>Variable Genes</h2>
+<p>To speed up the analysis we can now select the most variable genes in the dataset. There is no elaborate function in BioData to find variable genes as a more targeted analysis based on known genes is most of the times a better starting point and gives more clear results.</p>
+<p>For the sakes of this vignette variable genes are obtained using the simple var function with a speciality in R6::BioData::SingleCells: information lost during the normalization is denoted by a -1 in the normalized data. This information should of cause not affect the variable genes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+V =<span class="st"> </span><span class="kw">apply</span>( merged<span class="op">$</span>dat, <span class="dv">1</span>, <span class="cf">function</span>(x) { 
+    OK =<span class="st"> </span><span class="kw">which</span>(x <span class="op">!=</span><span class="st"> </span><span class="dv">-1</span> ) 
+    <span class="cf">if</span> ( <span class="kw">length</span>(OK) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) { <span class="kw">var</span>(x[OK])} 
+    <span class="cf">else</span> {<span class="fl">1e-5</span>} } 
+)
+
+<span class="kw">hist</span>(<span class="kw">log10</span>(V))</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+V =<span class="st"> </span>V[<span class="kw">rev</span>(<span class="kw">order</span>(V))]
+OK =<span class="st"> </span><span class="kw">names</span>(V[<span class="dv">1</span><span class="op">:</span><span class="dv">700</span>])
+<span class="kw">length</span>(OK)
+<span class="co">#&gt; [1] 700</span>
+
+<span class="co"># Get rid of genes known/likely to cause problems</span>
+<span class="kw">lapply</span>( <span class="kw">c</span>( <span class="st">'Mt-'</span>, <span class="st">'Rp'</span>, <span class="st">'GM'</span>, <span class="st">'Rik'</span> ) , <span class="cf">function</span>(n) { 
+  bad =<span class="st"> </span><span class="kw">grep</span>(n, OK )
+  <span class="cf">if</span> ( <span class="kw">length</span>(bad ) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> ) {
+    OK =<span class="st"> </span>OK[<span class="op">-</span>bad]
+  }
+  <span class="ot">NULL</span>;
+} )
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; NULL</span>
+
+<span class="kw">length</span>(OK)
+<span class="co">#&gt; [1] 700</span>
+
+<span class="kw">CreateBin</span>( merged )
+
+<span class="kw">colors_4</span>(merged, <span class="st">'expMethod'</span>)
+
+VarData =<span class="kw">reduceTo</span>(merged, <span class="dt">copy=</span>T, <span class="dt">what=</span><span class="st">'row'</span>, <span class="dt">to=</span>OK, <span class="dt">name=</span><span class="st">&quot;VariableDataset&quot;</span> )
+<span class="kw">saveObj</span>(VarData)
+<span class="co">#&gt; [1] &quot;data exported to /home/med-sal/git_Projects/BioData/vignettes/TestData/VariableDataset.RData&quot;</span>
+VarData
+<span class="co">#&gt; An object of class R6::BioData::SingleCells </span>
+<span class="co">#&gt; named  VariableDataset </span>
+<span class="co">#&gt; with 700 genes and 877  samples. </span>
+<span class="co">#&gt; raw  - and z.scored data is also stored</span>
+<span class="co">#&gt; Annotation datasets (700,11): 'gname', 'gene_id TM_Heart_10x', 'gene_id TM_Aorta_facs', 'avg( value) TM_Heart_10x', 'avg( value) TM_Aorta_facs', 'count(value) TM_Heart_10x', 'count(value) TM_Aorta_facs', 'nUMI TM_Heart_10x', 'nUMI TM_Aorta_facs', 'nCell TM_Heart_10x', 'nCell TM_Aorta_facs'   </span>
+<span class="co">#&gt; Sample annotation (877,10): 'cell_id', 'samples', 'sname', 'nUMI', 'nGene', 'expMethod', 'S.Score', 'G2M.Score', 'Phase', 'nUMI_bins'</span></code></pre></div>
+</div>
+<div id="sample-grouping-using-tsne" class="section level2">
+<h2>Sample Grouping using TSNE</h2>
+<p>Based on this variable data we now can try to find the different cell types in the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">mds</span>( VarData, <span class="dt">mds.type=</span><span class="st">'TSNE_R'</span>, <span class="dt">useRaw=</span>T )
+<span class="co">#&gt; Performing PCA</span>
+<span class="co">#&gt; Read the 877 x 50 data matrix successfully!</span>
+<span class="co">#&gt; OpenMP is working. 1 threads.</span>
+<span class="co">#&gt; Using no_dims = 3, perplexity = 30.000000, and theta = 0.500000</span>
+<span class="co">#&gt; Computing input similarities...</span>
+<span class="co">#&gt; Building tree...</span>
+<span class="co">#&gt; Done in 0.53 seconds (sparsity = 0.132235)!</span>
+<span class="co">#&gt; Learning embedding...</span>
+<span class="co">#&gt; Iteration 50: error is 64.201598 (50 iterations in 1.05 seconds)</span>
+<span class="co">#&gt; Iteration 100: error is 56.653198 (50 iterations in 0.32 seconds)</span>
+<span class="co">#&gt; Iteration 150: error is 56.061112 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 200: error is 55.895661 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 250: error is 55.843217 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 300: error is 1.004327 (50 iterations in 0.32 seconds)</span>
+<span class="co">#&gt; Iteration 350: error is 0.890486 (50 iterations in 0.32 seconds)</span>
+<span class="co">#&gt; Iteration 400: error is 0.855045 (50 iterations in 0.32 seconds)</span>
+<span class="co">#&gt; Iteration 450: error is 0.838658 (50 iterations in 0.32 seconds)</span>
+<span class="co">#&gt; Iteration 500: error is 0.829688 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 550: error is 0.822844 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 600: error is 0.818879 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 650: error is 0.815223 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 700: error is 0.812294 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 750: error is 0.810325 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 800: error is 0.807468 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 850: error is 0.805088 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 900: error is 0.803652 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 950: error is 0.801352 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 1000: error is 0.799637 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Fitting performed in 6.92 seconds.</span>
+<span class="kw">clusters</span>( VarData, 
+  <span class="dt">clusterby=</span> <span class="st">'TSNE_R'</span>, <span class="dt">groups.n=</span> <span class="dv">10</span>, 
+  <span class="dt">ctype=</span><span class="st">'kmeans'</span>, <span class="dt">onwhat=</span><span class="st">'MDS'</span>,  
+  <span class="dt">name=</span><span class="st">&quot;First_TSNE_grouping&quot;</span> )
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;used a new grouing&quot;</span></code></pre></div>
+</div>
+<div id="plotting-heatmaps" class="section level2">
+<h2>Plotting Heatmaps</h2>
+<p>Now it is time to take a closer look at the results - does the data make sense?</p>
+<p>Normally I would use the Make3D4obj() function which would create a 3D graph for a first glance, but here I will instead use the 2D complexHeatmap() function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">lapply</span>( 
+  <span class="kw">rev</span>(<span class="kw">c</span>(<span class="st">'First_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>) ), 
+  <span class="cf">function</span>(n) { <span class="kw">reorder.samples</span>( VarData, n ); <span class="ot">NULL</span>; } 
+  )
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">complexHeatmap</span>( VarData, <span class="dt">colGroups=</span><span class="kw">c</span>(<span class="st">'First_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>))
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span></code></pre></div>
+<p>This heatmap is a first overview of the data and not the final result. There is still a slight UMI effect visible, but only minor Phase influence.</p>
+<p>The experimental method seams to still affect the gene expression levels quite a lot.</p>
+</div>
+<div id="statistics" class="section level2">
+<h2>Statistics</h2>
+<p>So lets assume that these groups might still be of interest, but apply proper statistics to find differetials.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+m =<span class="st"> </span><span class="kw">match</span>( <span class="kw">colnames</span>(merged<span class="op">$</span>dat), <span class="kw">colnames</span>(VarData<span class="op">$</span>dat))
+<span class="kw">all.equal</span>(  <span class="kw">colnames</span>(merged<span class="op">$</span>dat), <span class="kw">colnames</span>(VarData<span class="op">$</span>dat)[m])
+<span class="co">#&gt; [1] TRUE</span>
+
+merged<span class="op">$</span>samples<span class="op">$</span>First_TSNE_grouping =<span class="st"> </span>VarData<span class="op">$</span>samples<span class="op">$</span>First_TSNE_grouping[m]
+
+<span class="kw">Seurat_FindAllMarkers</span>( merged, <span class="st">'First_TSNE_grouping'</span>, <span class="dt">logfc.threshold =</span> <span class="dv">5</span>  )
+<span class="co">#&gt; Create Seurat object from raw data</span>
+<span class="co">#&gt; replacing Seurat norm data with BioData norm data</span>
+<span class="co">#&gt; Seurat object ready</span>
+
+<span class="kw">names</span>(merged<span class="op">$</span>stats<span class="op">$</span>Seurat_FindAllMarkers_First_TSNE_grouping)
+<span class="co">#&gt; [1] &quot;p_val&quot;     &quot;avg_logFC&quot; &quot;pct.1&quot;     &quot;pct.2&quot;     &quot;p_val_adj&quot; &quot;cluster&quot;  </span>
+<span class="co">#&gt; [7] &quot;gene&quot;</span>
+
+ret_genes =<span class="st"> </span><span class="dv">30</span>
+top_genes &lt;-<span class="st"> </span><span class="cf">function</span>( x ) {
+  <span class="cf">if</span> ( <span class="kw">length</span>(x) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
+    <span class="ot">NA</span>
+  }
+  <span class="cf">else</span> <span class="cf">if</span> ( <span class="kw">length</span>(x) <span class="op">&lt;</span><span class="st"> </span>ret_genes ) {
+    x
+  }<span class="cf">else</span> {
+    x[<span class="dv">1</span><span class="op">:</span>ret_genes]
+  }
+}
+
+genes_list &lt;-<span class="st"> </span><span class="kw">split</span>( 
+  <span class="kw">as.vector</span>(merged<span class="op">$</span>stats<span class="op">$</span>Seurat_FindAllMarkers_First_TSNE_grouping[,<span class="st">'gene'</span>]), 
+  merged<span class="op">$</span>stats<span class="op">$</span>Seurat_FindAllMarkers_First_TSNE_grouping[,<span class="st">'cluster'</span>] 
+  )
+deg.genes =<span class="st"> </span><span class="kw">unique</span>(<span class="kw">unlist</span>( <span class="kw">lapply</span>( genes_list,top_genes ) ))
+<span class="kw">colors_4</span>(merged, <span class="st">'First_TSNE_grouping'</span>)
+
+StatGOI1 &lt;-<span class="st"> </span><span class="kw">reduceTo</span>( merged, <span class="dt">copy=</span> T, <span class="dt">what=</span><span class="st">'row'</span>, <span class="dt">to=</span>deg.genes, <span class="dt">name=</span><span class="st">&quot;SeuratStats1&quot;</span> )
+
+<span class="kw">lapply</span>( 
+  <span class="kw">rev</span>(<span class="kw">c</span>(<span class="st">'First_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>) ), 
+  <span class="cf">function</span>(n) { <span class="kw">reorder.samples</span>( StatGOI1, n ); <span class="ot">NULL</span>; } 
+  )
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; NULL</span>
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">complexHeatmap</span>( StatGOI1, 
+  <span class="dt">colGroups=</span><span class="kw">c</span>(<span class="st">'First_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>))
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">saveObj</span>(StatGOI1)
+<span class="co">#&gt; [1] &quot;data exported to /home/med-sal/git_Projects/BioData/vignettes/TestData/SeuratStats1.RData&quot;</span></code></pre></div>
+<p>There are more statistical methods implemented in BioData. Please refer to the function documentation for details.</p>
+</div>
+<div id="heatmap-showing-lost-information" class="section level2">
+<h2>Heatmap showing Lost Information</h2>
+<p>How did the normalization affect this information? Have we lost gene expression and therefore we see dropout at high UMI counts? Or might there be a biological difference.</p>
+<p>You can show the ‘dropped’ gene expression values in green:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">complexHeatmap</span>( 
+  StatGOI1, 
+  <span class="dt">colGroups=</span><span class="kw">c</span>(<span class="st">'First_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>), 
+  <span class="dt">green=</span>T)</code></pre></div>
+</div>
+<div id="refine-the-goi-list" class="section level2">
+<h2>Refine the GOI List</h2>
+<p>In my eyes this still looks kind of OK. But it is hard to say now as the data looks rather ungrouped. Lets re-do the grouping based on these genes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">mds</span>( StatGOI1, <span class="dt">mds.type=</span><span class="st">'TSNE_R'</span>, <span class="dt">useRaw=</span>T )
+<span class="co">#&gt; Performing PCA</span>
+<span class="co">#&gt; Read the 877 x 50 data matrix successfully!</span>
+<span class="co">#&gt; OpenMP is working. 1 threads.</span>
+<span class="co">#&gt; Using no_dims = 3, perplexity = 30.000000, and theta = 0.500000</span>
+<span class="co">#&gt; Computing input similarities...</span>
+<span class="co">#&gt; Building tree...</span>
+<span class="co">#&gt; Done in 0.52 seconds (sparsity = 0.131785)!</span>
+<span class="co">#&gt; Learning embedding...</span>
+<span class="co">#&gt; Iteration 50: error is 62.872431 (50 iterations in 1.26 seconds)</span>
+<span class="co">#&gt; Iteration 100: error is 57.824724 (50 iterations in 0.43 seconds)</span>
+<span class="co">#&gt; Iteration 150: error is 57.420338 (50 iterations in 0.43 seconds)</span>
+<span class="co">#&gt; Iteration 200: error is 57.289226 (50 iterations in 0.44 seconds)</span>
+<span class="co">#&gt; Iteration 250: error is 57.231829 (50 iterations in 0.46 seconds)</span>
+<span class="co">#&gt; Iteration 300: error is 1.075817 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 350: error is 0.950613 (50 iterations in 0.28 seconds)</span>
+<span class="co">#&gt; Iteration 400: error is 0.907602 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 450: error is 0.886345 (50 iterations in 0.30 seconds)</span>
+<span class="co">#&gt; Iteration 500: error is 0.875479 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 550: error is 0.867860 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 600: error is 0.862437 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 650: error is 0.858076 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 700: error is 0.855063 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 750: error is 0.852056 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 800: error is 0.850132 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 850: error is 0.848083 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 900: error is 0.846907 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 950: error is 0.844742 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Iteration 1000: error is 0.842771 (50 iterations in 0.29 seconds)</span>
+<span class="co">#&gt; Fitting performed in 7.37 seconds.</span>
+<span class="kw">clusters</span>( 
+ StatGOI1, <span class="dt">clusterby=</span> <span class="st">'TSNE_R'</span>, 
+ <span class="dt">groups.n=</span> <span class="dv">10</span>, <span class="dt">ctype=</span><span class="st">'kmeans'</span>, 
+ <span class="dt">onwhat=</span><span class="st">'MDS'</span>,  <span class="dt">name=</span><span class="st">&quot;Second_TSNE_grouping&quot;</span> )
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;used a new grouing&quot;</span>
+
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">complexHeatmap</span>( 
+  StatGOI1, 
+  <span class="dt">colGroups=</span><span class="kw">c</span>(<span class="st">'Second_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>), 
+  <span class="dt">green=</span>T)</code></pre></div>
+</div>
+<div id="gene-grouping" class="section level2">
+<h2>Gene Grouping</h2>
+<p>Now the genes would be of interest - can we group them, too?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">transpose</span> ( StatGOI1 )
+
+<span class="kw">mds</span>( StatGOI1, <span class="dt">mds.type=</span><span class="st">'TSNE_R'</span>, <span class="dt">useRaw=</span>T )
+<span class="co">#&gt; Performing PCA</span>
+<span class="co">#&gt; Read the 230 x 50 data matrix successfully!</span>
+<span class="co">#&gt; OpenMP is working. 1 threads.</span>
+<span class="co">#&gt; Using no_dims = 3, perplexity = 30.000000, and theta = 0.500000</span>
+<span class="co">#&gt; Computing input similarities...</span>
+<span class="co">#&gt; Building tree...</span>
+<span class="co">#&gt; Done in 0.13 seconds (sparsity = 0.554556)!</span>
+<span class="co">#&gt; Learning embedding...</span>
+<span class="co">#&gt; Iteration 50: error is 51.491762 (50 iterations in 0.31 seconds)</span>
+<span class="co">#&gt; Iteration 100: error is 50.883080 (50 iterations in 0.12 seconds)</span>
+<span class="co">#&gt; Iteration 150: error is 51.025148 (50 iterations in 0.15 seconds)</span>
+<span class="co">#&gt; Iteration 200: error is 52.064676 (50 iterations in 0.18 seconds)</span>
+<span class="co">#&gt; Iteration 250: error is 52.848929 (50 iterations in 0.17 seconds)</span>
+<span class="co">#&gt; Iteration 300: error is 0.340051 (50 iterations in 0.08 seconds)</span>
+<span class="co">#&gt; Iteration 350: error is 0.310674 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 400: error is 0.311370 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 450: error is 0.309837 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 500: error is 0.306899 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 550: error is 0.306503 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 600: error is 0.309232 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 650: error is 0.311825 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 700: error is 0.312306 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 750: error is 0.311746 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 800: error is 0.313594 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 850: error is 0.315168 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 900: error is 0.314516 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 950: error is 0.314507 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Iteration 1000: error is 0.314672 (50 iterations in 0.06 seconds)</span>
+<span class="co">#&gt; Fitting performed in 1.86 seconds.</span>
+<span class="kw">clusters</span>( 
+  StatGOI1, 
+  <span class="dt">clusterby=</span> <span class="st">'TSNE_R'</span>, 
+  <span class="dt">groups.n=</span> <span class="dv">10</span>, 
+  <span class="dt">ctype=</span><span class="st">'kmeans'</span>, 
+  <span class="dt">onwhat=</span><span class="st">'MDS'</span>,  
+  <span class="dt">name=</span><span class="st">&quot;Second_TSNE_Gene_grouping&quot;</span> )
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;name changed to Raw Expression TSNE_R&quot;</span>
+<span class="co">#&gt; [1] &quot;used a new grouing&quot;</span>
+
+<span class="kw">transpose</span> ( StatGOI1 )
+
+<span class="kw">dev.off</span>()
+<span class="co">#&gt; null device </span>
+<span class="co">#&gt;           1</span>
+<span class="kw">complexHeatmap</span>( 
+   StatGOI1,
+   <span class="dt">colGroups=</span><span class="kw">c</span>(<span class="st">'Second_TSNE_grouping'</span>, <span class="st">'expMethod'</span>, <span class="st">'Phase'</span>, <span class="st">'nUMI_bins'</span>),
+   <span class="dt">rowGroups=</span> <span class="kw">c</span>(<span class="st">'Second_TSNE_Gene_grouping'</span>), 
+   <span class="dt">green=</span>T)</code></pre></div>
+</div>
+<div id="in-detail-gene-reporting" class="section level2">
+<h2>In Detail Gene Reporting</h2>
+<p>Now you should get information about the genes. So first get the genes in order:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(<span class="kw">levels</span>( StatGOI1<span class="op">$</span>annotation<span class="op">$</span>Second_TSNE_Gene_grouping ),
+  <span class="cf">function</span>(n) {
+    <span class="kw">sort</span>( <span class="kw">rownames</span>(StatGOI1<span class="op">$</span>dat)[
+      <span class="kw">which</span>( StatGOI1<span class="op">$</span>annotation<span class="op">$</span>Second_TSNE_Gene_grouping <span class="op">==</span><span class="st"> </span>n) ] 
+     )  
+  }
+)
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt;  [1] &quot;4930523C07Rik&quot; &quot;Cd24a&quot;         &quot;Cd59a&quot;         &quot;Ednrb&quot;        </span>
+<span class="co">#&gt;  [5] &quot;Herpud1&quot;       &quot;Hsd3b1&quot;        &quot;Irgm2&quot;         &quot;Lars2&quot;        </span>
+<span class="co">#&gt;  [9] &quot;Ncoa3&quot;         &quot;Pkp4&quot;          &quot;Ppp1r16b&quot;      &quot;Prkch&quot;        </span>
+<span class="co">#&gt; [13] &quot;Ptgs1&quot;         &quot;Rab7&quot;          &quot;Tmem26&quot;       </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt;  [1] &quot;Abca8a&quot;     &quot;Cd34&quot;       &quot;Clec3b&quot;     &quot;Col15a1&quot;    &quot;Col1a1&quot;    </span>
+<span class="co">#&gt;  [6] &quot;Crispld2&quot;   &quot;Cygb&quot;       &quot;Dpt&quot;        &quot;Fbln2&quot;      &quot;Fxyd1&quot;     </span>
+<span class="co">#&gt; [11] &quot;Gas1&quot;       &quot;Gm15421&quot;    &quot;Gpx3&quot;       &quot;Htra3&quot;      &quot;Igf1&quot;      </span>
+<span class="co">#&gt; [16] &quot;Lrp1&quot;       &quot;Lum&quot;        &quot;Mfap5&quot;      &quot;Mgst1&quot;      &quot;Mmp2&quot;      </span>
+<span class="co">#&gt; [21] &quot;Ogn&quot;        &quot;Plac9&quot;      &quot;Rarres2&quot;    &quot;Rnase4&quot;     &quot;Rpl31-ps12&quot;</span>
+<span class="co">#&gt; [26] &quot;Rps15a-ps4&quot; &quot;Serpinf1&quot;   &quot;Sod3&quot;       &quot;Tcf21&quot;      &quot;Xist&quot;      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt;  [1] &quot;1190002H23Rik&quot; &quot;Cd300lg&quot;       &quot;Eltd1&quot;         &quot;Fam101b&quot;      </span>
+<span class="co">#&gt;  [5] &quot;Flt1&quot;          &quot;Gimap6&quot;        &quot;Gpihbp1&quot;       &quot;Jup&quot;          </span>
+<span class="co">#&gt;  [9] &quot;Kdr&quot;           &quot;Podxl&quot;         &quot;Ptprb&quot;         &quot;Tmem88&quot;       </span>
+<span class="co">#&gt; [13] &quot;Tspan13&quot;      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt;  [1] &quot;Atp1b2&quot;      &quot;Cnn1&quot;        &quot;D14Ertd449e&quot; &quot;Filip1l&quot;     &quot;Gm6222&quot;     </span>
+<span class="co">#&gt;  [6] &quot;Higd1b&quot;      &quot;Ndufa4l2&quot;    &quot;Olfr78&quot;      &quot;ORF63&quot;       &quot;Rgs4&quot;       </span>
+<span class="co">#&gt; [11] &quot;Slco1a4&quot;     &quot;Vtn&quot;        </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt;  [1] &quot;Angpt1&quot;        &quot;Ank1&quot;          &quot;Ankrd1&quot;        &quot;C130080G10Rik&quot;</span>
+<span class="co">#&gt;  [5] &quot;Ckm&quot;           &quot;Ckmt2&quot;         &quot;Cmya5&quot;         &quot;Corin&quot;        </span>
+<span class="co">#&gt;  [9] &quot;Csrp3&quot;         &quot;Ctgf&quot;          &quot;D830015G02Rik&quot; &quot;Dkk3&quot;         </span>
+<span class="co">#&gt; [13] &quot;Doc2g&quot;         &quot;Hrc&quot;           &quot;Kcnj5&quot;         &quot;Kcnk3&quot;        </span>
+<span class="co">#&gt; [17] &quot;Ldb3&quot;          &quot;Lmod2&quot;         &quot;Mybphl&quot;        &quot;Myl4&quot;         </span>
+<span class="co">#&gt; [21] &quot;Myl7&quot;          &quot;Mylk3&quot;         &quot;Myom1&quot;         &quot;Myom2&quot;        </span>
+<span class="co">#&gt; [25] &quot;Nppa&quot;          &quot;Nppb&quot;          &quot;Pgam2&quot;         &quot;Popdc2&quot;       </span>
+<span class="co">#&gt; [29] &quot;Rbm24&quot;         &quot;Sgcg&quot;          &quot;Smpx&quot;          &quot;Srl&quot;          </span>
+<span class="co">#&gt; [33] &quot;Tcap&quot;          &quot;Txlnb&quot;         &quot;Xirp2&quot;        </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt;  [1] &quot;Arhgap30&quot; &quot;Bcl2a1b&quot;  &quot;Bcl2a1d&quot;  &quot;Beta-s&quot;   &quot;C5ar1&quot;    &quot;Cbr2&quot;    </span>
+<span class="co">#&gt;  [7] &quot;Ccl24&quot;    &quot;Cd48&quot;     &quot;Cfp&quot;      &quot;Clec4a2&quot;  &quot;Clec4a3&quot;  &quot;Ctss&quot;    </span>
+<span class="co">#&gt; [13] &quot;Cybb&quot;     &quot;Dok2&quot;     &quot;Emr1&quot;     &quot;Evi2a&quot;    &quot;Fam105a&quot;  &quot;Fam46a&quot;  </span>
+<span class="co">#&gt; [19] &quot;Fcer1g&quot;   &quot;Folr2&quot;    &quot;Gm2a&quot;     &quot;H2-DMa&quot;   &quot;Laptm5&quot;   &quot;Lilrb3&quot;  </span>
+<span class="co">#&gt; [25] &quot;Litaf&quot;    &quot;Lsp1&quot;     &quot;Lyn&quot;      &quot;Lyz1&quot;     &quot;Mgl2&quot;     &quot;Ms4a6b&quot;  </span>
+<span class="co">#&gt; [31] &quot;Myo1g&quot;    &quot;Nckap1l&quot;  &quot;Pid1&quot;     &quot;Plbd1&quot;    &quot;Ptpn6&quot;    &quot;Rgs1&quot;    </span>
+<span class="co">#&gt; [37] &quot;Runx1&quot;    &quot;Sfpi1&quot;    &quot;Slfn2&quot;    &quot;Smagp&quot;    &quot;Snx20&quot;    &quot;Trf&quot;     </span>
+<span class="co">#&gt; [43] &quot;Ucp2&quot;     &quot;Zeb2&quot;    </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt;  [1] &quot;0610007N19Rik&quot; &quot;6330406I15Rik&quot; &quot;Abi3bp&quot;        &quot;Atp1a2&quot;       </span>
+<span class="co">#&gt;  [5] &quot;C1s&quot;           &quot;C3&quot;            &quot;Celf2&quot;         &quot;Ckb&quot;          </span>
+<span class="co">#&gt;  [9] &quot;Col6a2&quot;        &quot;Ddr2&quot;          &quot;Entpd2&quot;        &quot;Fbln5&quot;        </span>
+<span class="co">#&gt; [13] &quot;Fgl2&quot;          &quot;Gem&quot;           &quot;Gpm6b&quot;         &quot;Gpx8&quot;         </span>
+<span class="co">#&gt; [17] &quot;Gstm5&quot;         &quot;Igfbp6&quot;        &quot;Islr&quot;          &quot;Itgb5&quot;        </span>
+<span class="co">#&gt; [21] &quot;Lama2&quot;         &quot;Matn2&quot;         &quot;Meg3&quot;          &quot;Mmp23&quot;        </span>
+<span class="co">#&gt; [25] &quot;Ms4a4d&quot;        &quot;Osr1&quot;          &quot;Phlda3&quot;        &quot;Ptgis&quot;        </span>
+<span class="co">#&gt; [29] &quot;Rbms3&quot;         &quot;Sfrp1&quot;         &quot;Tnxb&quot;          &quot;Tpst1&quot;        </span>
+<span class="co">#&gt; [33] &quot;Vcan&quot;         </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt;  [1] &quot;Afap1l1&quot;  &quot;Arhgef15&quot; &quot;Bcam&quot;     &quot;Btnl9&quot;    &quot;Ceacam1&quot;  &quot;Clec1a&quot;  </span>
+<span class="co">#&gt;  [7] &quot;Cyp4b1&quot;   &quot;Dhrs3&quot;    &quot;Dll4&quot;     &quot;Efnb2&quot;    &quot;Gata2&quot;    &quot;Gimap1&quot;  </span>
+<span class="co">#&gt; [13] &quot;Gpr56&quot;    &quot;Ifi203&quot;   &quot;Lgals9&quot;   &quot;Limch1&quot;   &quot;Mndal&quot;    &quot;Rasip1&quot;  </span>
+<span class="co">#&gt; [19] &quot;Slc6a6&quot;   &quot;Thbd&quot;     &quot;Thrsp&quot;   </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt;  [1] &quot;Ablim1&quot;  &quot;Aqp1&quot;    &quot;Cd36&quot;    &quot;Cldn5&quot;   &quot;Cxcl12&quot;  &quot;F11r&quot;    &quot;Fli1&quot;   </span>
+<span class="co">#&gt;  [8] &quot;Kitl&quot;    &quot;Lpl&quot;     &quot;Sparcl1&quot; &quot;Srgn&quot;    &quot;Tcf15&quot;  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt;  [1] &quot;Cd93&quot;    &quot;Cdh5&quot;    &quot;Ctla2a&quot;  &quot;Ecscr&quot;   &quot;Emcn&quot;    &quot;Esam&quot;    &quot;Gpr116&quot; </span>
+<span class="co">#&gt;  [8] &quot;Icam2&quot;   &quot;Mmrn2&quot;   &quot;Pecam1&quot;  &quot;S1pr1&quot;   &quot;Sox18&quot;   &quot;Tek&quot;     &quot;Tie1&quot;   </span>
+<span class="co">#&gt; [15] &quot;Tinagl1&quot;</span></code></pre></div>
+<p>Or even format this list for more easy usage:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">lapply</span>(<span class="kw">levels</span>( StatGOI1<span class="op">$</span>annotation<span class="op">$</span>Second_TSNE_Gene_grouping ), 
+  <span class="cf">function</span>(n) { 
+      genes =<span class="st"> </span><span class="kw">sort</span>( <span class="kw">rownames</span>(StatGOI1<span class="op">$</span>dat)[ 
+    <span class="kw">which</span>( StatGOI1<span class="op">$</span>annotation<span class="op">$</span>Second_TSNE_Gene_grouping <span class="op">==</span><span class="st"> </span>n) ] 
+                    )
+      <span class="kw">paste</span>( <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="st">'http://david.abcc.ncifcrf.gov/api.jsp?type='</span>,<span class="st">'OFFICIAL_GENE_SYMBOL'</span>,<span class="st">&quot;&amp;ids=&quot;</span>, <span class="kw">paste</span>(<span class="dt">collapse=</span><span class="st">&quot;,&quot;</span>, genes), <span class="st">&quot;&amp;tool=summary&quot;</span> )
+        } 
+)
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=4930523C07Rik,Cd24a,Cd59a,Ednrb,Herpud1,Hsd3b1,Irgm2,Lars2,Ncoa3,Pkp4,Ppp1r16b,Prkch,Ptgs1,Rab7,Tmem26&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Abca8a,Cd34,Clec3b,Col15a1,Col1a1,Crispld2,Cygb,Dpt,Fbln2,Fxyd1,Gas1,Gm15421,Gpx3,Htra3,Igf1,Lrp1,Lum,Mfap5,Mgst1,Mmp2,Ogn,Plac9,Rarres2,Rnase4,Rpl31-ps12,Rps15a-ps4,Serpinf1,Sod3,Tcf21,Xist&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=1190002H23Rik,Cd300lg,Eltd1,Fam101b,Flt1,Gimap6,Gpihbp1,Jup,Kdr,Podxl,Ptprb,Tmem88,Tspan13&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Atp1b2,Cnn1,D14Ertd449e,Filip1l,Gm6222,Higd1b,Ndufa4l2,Olfr78,ORF63,Rgs4,Slco1a4,Vtn&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Angpt1,Ank1,Ankrd1,C130080G10Rik,Ckm,Ckmt2,Cmya5,Corin,Csrp3,Ctgf,D830015G02Rik,Dkk3,Doc2g,Hrc,Kcnj5,Kcnk3,Ldb3,Lmod2,Mybphl,Myl4,Myl7,Mylk3,Myom1,Myom2,Nppa,Nppb,Pgam2,Popdc2,Rbm24,Sgcg,Smpx,Srl,Tcap,Txlnb,Xirp2&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Arhgap30,Bcl2a1b,Bcl2a1d,Beta-s,C5ar1,Cbr2,Ccl24,Cd48,Cfp,Clec4a2,Clec4a3,Ctss,Cybb,Dok2,Emr1,Evi2a,Fam105a,Fam46a,Fcer1g,Folr2,Gm2a,H2-DMa,Laptm5,Lilrb3,Litaf,Lsp1,Lyn,Lyz1,Mgl2,Ms4a6b,Myo1g,Nckap1l,Pid1,Plbd1,Ptpn6,Rgs1,Runx1,Sfpi1,Slfn2,Smagp,Snx20,Trf,Ucp2,Zeb2&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=0610007N19Rik,6330406I15Rik,Abi3bp,Atp1a2,C1s,C3,Celf2,Ckb,Col6a2,Ddr2,Entpd2,Fbln5,Fgl2,Gem,Gpm6b,Gpx8,Gstm5,Igfbp6,Islr,Itgb5,Lama2,Matn2,Meg3,Mmp23,Ms4a4d,Osr1,Phlda3,Ptgis,Rbms3,Sfrp1,Tnxb,Tpst1,Vcan&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Afap1l1,Arhgef15,Bcam,Btnl9,Ceacam1,Clec1a,Cyp4b1,Dhrs3,Dll4,Efnb2,Gata2,Gimap1,Gpr56,Ifi203,Lgals9,Limch1,Mndal,Rasip1,Slc6a6,Thbd,Thrsp&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Ablim1,Aqp1,Cd36,Cldn5,Cxcl12,F11r,Fli1,Kitl,Lpl,Sparcl1,Srgn,Tcf15&amp;tool=summary&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt; [1] &quot;http://david.abcc.ncifcrf.gov/api.jsp?type=OFFICIAL_GENE_SYMBOL&amp;ids=Cd93,Cdh5,Ctla2a,Ecscr,Emcn,Esam,Gpr116,Icam2,Mmrn2,Pecam1,S1pr1,Sox18,Tek,Tie1,Tinagl1&amp;tool=summary&quot;</span></code></pre></div>
+<p>This list is a first result and should be analyzed in detail.</p>
+</div>
+<div id="the-used-packages" class="section level2">
+<h2>The Used Packages:</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()
+<span class="co">#&gt; R version 3.5.2 (2018-12-20)</span>
+<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">#&gt; Running under: Ubuntu 18.04.2 LTS</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS: /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3</span>
+<span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt;  [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">#&gt;  [3] LC_TIME=sv_SE.UTF-8        LC_COLLATE=en_AU.UTF-8    </span>
+<span class="co">#&gt;  [5] LC_MONETARY=sv_SE.UTF-8    LC_MESSAGES=en_AU.UTF-8   </span>
+<span class="co">#&gt;  [7] LC_PAPER=sv_SE.UTF-8       LC_NAME=C                 </span>
+<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">#&gt; [11] LC_MEASUREMENT=sv_SE.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats4    parallel  stats     graphics  grDevices utils     datasets </span>
+<span class="co">#&gt; [8] methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt;  [1] BioData_1.2.3.004      org.Hs.eg.db_3.6.0     org.Mm.eg.db_3.6.0    </span>
+<span class="co">#&gt;  [4] AnnotationDbi_1.42.1   IRanges_2.14.12        S4Vectors_0.18.3      </span>
+<span class="co">#&gt;  [7] pcaMethods_1.72.0      Biobase_2.40.0         BiocGenerics_0.26.0   </span>
+<span class="co">#&gt; [10] Matrix.utils_0.9.7     umap_0.2.0.0           DDRTree_0.1.5         </span>
+<span class="co">#&gt; [13] irlba_2.3.3            Matrix_1.2-15          RDRToolbox_1.30.0     </span>
+<span class="co">#&gt; [16] mclust_5.4.2           RSQLite_2.1.1          RFclust.SGE_0.0.0.9000</span>
+<span class="co">#&gt; [19] randomForest_4.6-14    cluster_2.0.7-1        MASS_7.3-51.1         </span>
+<span class="co">#&gt; [22] rgl_0.99.16            reshape2_1.4.3         weights_1.0           </span>
+<span class="co">#&gt; [25] mice_3.3.0             gdata_2.18.0           Hmisc_4.2-0           </span>
+<span class="co">#&gt; [28] ggplot2_3.1.0          Formula_1.2-3          survival_2.43-3       </span>
+<span class="co">#&gt; [31] lattice_0.20-38        gplots_3.0.1.1         RSvgDevice_0.6.4.4    </span>
+<span class="co">#&gt; [34] stringr_1.4.0          dplyr_0.8.0            R.utils_2.8.0         </span>
+<span class="co">#&gt; [37] R.oo_1.22.0            R.methodsS3_1.7.1      R6_2.4.0              </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] snow_0.4-3              backports_1.1.3        </span>
+<span class="co">#&gt;   [3] igraph_1.2.4            plyr_1.8.4             </span>
+<span class="co">#&gt;   [5] lazyeval_0.2.1          splines_3.5.2          </span>
+<span class="co">#&gt;   [7] crosstalk_1.0.0         digest_0.6.18          </span>
+<span class="co">#&gt;   [9] foreach_1.4.4           htmltools_0.3.6        </span>
+<span class="co">#&gt;  [11] lars_1.2                magrittr_1.5           </span>
+<span class="co">#&gt;  [13] checkmate_1.9.1         memoise_1.1.0          </span>
+<span class="co">#&gt;  [15] mixtools_1.1.0          ROCR_1.0-7             </span>
+<span class="co">#&gt;  [17] colorspace_1.4-0        blob_1.1.1             </span>
+<span class="co">#&gt;  [19] pan_1.6                 xfun_0.4               </span>
+<span class="co">#&gt;  [21] crayon_1.3.4            jsonlite_1.6           </span>
+<span class="co">#&gt;  [23] lme4_1.1-20             zoo_1.8-4              </span>
+<span class="co">#&gt;  [25] ape_5.2                 iterators_1.0.10       </span>
+<span class="co">#&gt;  [27] glue_1.3.0              gtable_0.2.0           </span>
+<span class="co">#&gt;  [29] webshot_0.5.1           kernlab_0.9-27         </span>
+<span class="co">#&gt;  [31] prabclus_2.2-7          DEoptimR_1.0-8         </span>
+<span class="co">#&gt;  [33] jomo_2.6-7              scales_1.0.0           </span>
+<span class="co">#&gt;  [35] mvtnorm_1.0-8           DBI_1.0.0              </span>
+<span class="co">#&gt;  [37] bibtex_0.4.2            miniUI_0.1.1.1         </span>
+<span class="co">#&gt;  [39] Rcpp_1.0.0              dtw_1.20-1             </span>
+<span class="co">#&gt;  [41] metap_1.1               xtable_1.8-3           </span>
+<span class="co">#&gt;  [43] htmlTable_1.13.1        reticulate_1.10        </span>
+<span class="co">#&gt;  [45] proxy_0.4-22            foreign_0.8-71         </span>
+<span class="co">#&gt;  [47] bit_1.1-14              SDMTools_1.1-221       </span>
+<span class="co">#&gt;  [49] tsne_0.1-3              httr_1.4.0             </span>
+<span class="co">#&gt;  [51] htmlwidgets_1.3         RColorBrewer_1.1-2     </span>
+<span class="co">#&gt;  [53] fpc_2.1-11.1            acepack_1.4.1          </span>
+<span class="co">#&gt;  [55] modeltools_0.2-22       Seurat_2.3.4           </span>
+<span class="co">#&gt;  [57] ica_1.0-2               pkgconfig_2.0.2        </span>
+<span class="co">#&gt;  [59] flexmix_2.3-14          nnet_7.3-12            </span>
+<span class="co">#&gt;  [61] tidyselect_0.2.5        rlang_0.3.1            </span>
+<span class="co">#&gt;  [63] manipulateWidget_0.10.0 later_0.8.0            </span>
+<span class="co">#&gt;  [65] munsell_0.5.0           tools_3.5.2            </span>
+<span class="co">#&gt;  [67] generics_0.0.2          ggridges_0.5.1         </span>
+<span class="co">#&gt;  [69] broom_0.5.1             evaluate_0.13          </span>
+<span class="co">#&gt;  [71] yaml_2.2.0              npsurv_0.4-0           </span>
+<span class="co">#&gt;  [73] knitr_1.21              bit64_0.9-7            </span>
+<span class="co">#&gt;  [75] fitdistrplus_1.0-14     robustbase_0.93-3      </span>
+<span class="co">#&gt;  [77] caTools_1.17.1.1        RANN_2.6.1             </span>
+<span class="co">#&gt;  [79] purrr_0.3.0             mitml_0.3-7            </span>
+<span class="co">#&gt;  [81] pbapply_1.4-0           nlme_3.1-137           </span>
+<span class="co">#&gt;  [83] mime_0.6                grr_0.9.5              </span>
+<span class="co">#&gt;  [85] hdf5r_1.0.1             compiler_3.5.2         </span>
+<span class="co">#&gt;  [87] rstudioapi_0.9.0        png_0.1-7              </span>
+<span class="co">#&gt;  [89] lsei_1.2-0              tibble_2.0.1           </span>
+<span class="co">#&gt;  [91] stringi_1.3.1           trimcluster_0.1-2.1    </span>
+<span class="co">#&gt;  [93] nloptr_1.2.1            pillar_1.3.1           </span>
+<span class="co">#&gt;  [95] lmtest_0.9-36           Rdpack_0.10-1          </span>
+<span class="co">#&gt;  [97] cowplot_0.9.4           data.table_1.12.0      </span>
+<span class="co">#&gt;  [99] bitops_1.0-6            gbRd_0.4-11            </span>
+<span class="co">#&gt; [101] httpuv_1.4.5.1          latticeExtra_0.6-28    </span>
+<span class="co">#&gt; [103] promises_1.0.1          KernSmooth_2.23-15     </span>
+<span class="co">#&gt; [105] gridExtra_2.3           codetools_0.2-16       </span>
+<span class="co">#&gt; [107] gtools_3.8.1            assertthat_0.2.0       </span>
+<span class="co">#&gt; [109] withr_2.1.2             diptest_0.75-7         </span>
+<span class="co">#&gt; [111] doSNOW_1.0.16           grid_3.5.2             </span>
+<span class="co">#&gt; [113] rpart_4.1-13            tidyr_0.8.2            </span>
+<span class="co">#&gt; [115] class_7.3-15            minqa_1.2.4            </span>
+<span class="co">#&gt; [117] rmarkdown_1.11          segmented_0.5-3.0      </span>
+<span class="co">#&gt; [119] Rtsne_0.15              shiny_1.2.0            </span>
+<span class="co">#&gt; [121] base64enc_0.1-3</span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -6,14 +6,16 @@
 \alias{Seurat_FindAllMarkers,BioData-method}
 \title{description of function Seurat_FindAllMarkers}
 \usage{
-Seurat_FindAllMarkers(x, condition, logfc.threshold = 1)
+Seurat_FindAllMarkers(x, condition, logfc.threshold = 1, minPct = 0.1)
 }
 \arguments{
 \item{x}{the BioData object}
 
 \item{condition}{The grouping you wat to analyze}
 
-\item{logfc.threshold}{Seurat FindAllmarkers option used for speed up (default = 1)}
+\item{logfc.threshold}{test only genes with a liog fold change of default=1.0 or more}
+
+\item{minPct}{test only genes with expression in more than default=0.1 fraction of cells in at least one group}
 }
 \description{
 Use Seurat's FindAllMarkers function

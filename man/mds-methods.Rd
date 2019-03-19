@@ -18,7 +18,8 @@
 
 \item{useRaw}{base the projection on the raw data and not the n=100 PCA data (default FALSE)}
 
-\item{pythonEnv}{if needed the virtual environment for the MulticoreTSNE call set to something like 'source <myPrivateEnvPath>/bin/activate'  (default = NULL)}
+\item{pythonEnv}{if needed the virtual environment for the MulticoreTSNE call set to something like
+'source <myPrivateEnvPath>/bin/activate'  (default = NULL)}
 
 \item{dim}{the number of dimensions to return ( default 3)}
 }

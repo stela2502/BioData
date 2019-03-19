@@ -10,7 +10,8 @@
 #' @param genes do it on genes not on samples (default = F)
 #' @param LLEK the neighbours in the LLE algorithm (default=2)
 #' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
-#' @param pythonEnv if needed the virtual environment for the MulticoreTSNE call set to something like 'source <myPrivateEnvPath>/bin/activate'  (default = NULL)
+#' @param pythonEnv if needed the virtual environment for the MulticoreTSNE call set to something like
+#'  'source <myPrivateEnvPath>/bin/activate'  (default = NULL)
 #' @param dim the number of dimensions to return ( default 3)
 #' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 

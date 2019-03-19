@@ -1,62 +1,42 @@
-DimReduction <- function( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ){
+as_CellexalvrR <- function(x, outpath, specie, meta.cell.groups, meta.genes.groups = NULL, userGroups=NULL, name="BioData_as_cellexalvrR", minGene=1 ) {
+	normUMI <- apply( x$dat, 1, function(d) { sum(exp(d[which(d > 0 )] )) } )
+	forCellexal <- reduceTo( x, what='row', to = rownames(merged$dat)[which(normUMI >= minGene  ) ], name=name )
+	## get rid of -1 values
+	bad = which(forCellexal$dat@x < 0 )
+	if ( length(bad) > 0 )
+		forCellexal$dat@x[bad] = 0
 	
-	PCA_name = 'pr'
-	cmpTo = colnames(x$dat)
-	if( genes) {
-		PCA_name = 'prGenes'
-		cmpTo = rownames(x$dat)
-	}
-	if ( n > length(cmpTo) ) {
-		n = length(cmpTo) -1
-		print ( paste("n set to",n) )
-	}
-	rerun = 0
-	if ( is.na(match( PCA_name , names(x$usedObj))) ){
-		rerun = 1
-	}else{
-		if (isS4(x$usedObj[[PCA_name]])) {
-			## check that this object comes from the right dataset
-			if ( all.equal( rownames(x$usedObj[[PCA_name]]@scores), cmpTo ) == F ) {
-				rerun = 1
-			}
-		}else {
-			if ( all.equal( rownames(x$usedObj[[PCA_name]]$x), cmpTo ) == F ) {
-				rerun = 1
-			}
-		}
-	}
-	if ( force )
-		rerun = 1
+	## save space
+	forCellexal$raw = NULL
+	forCellexal$zscored = NULL
+	forCellexal$dat = drop0(forCellexal$dat)
 	
-	if ( rerun == 1) {
-		tmp = x$data()
-		bad = which(tmp@x < 0)
-		if ( length(bad) > 0 ) {
-			tmp[bad] = 0
-		}
-		if ( ! genes ) {
-			tmp = t(tmp)
-		}
-		if ( method == 'auto' ){
-			if ( nrow(dataObj$dat) * ncol(dataObj$dat) > 1e6 )
-				method = 'irlba'
-			else 
-				method= 'bpca'
-		}
-		if ( method == 'irlba' ) {
-			message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
-			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n+1 )
-			rownames(x$usedObj[[PCA_name]]$x) = cmpTo
-			
-		}else if ( message == 'bpca') {
-			message ( "pcaMethods::bpca to also use the holes (0 values)" )
-			x$usedObj[[PCA_name]] <- pcaMethods::bpca( as.matrix(tmp), nPcs=n+1 )
-			rownames(x$usedObj[[PCA_name]]@scores) = cmpTo
-		}else {
-			stop( paste("method", method, "is not defined here" ) )
-		}
-		rm(tmp)
-		gc()
-	}
-	PCA_name
+	## store the important variables for the convert
+	forCellexal$usedObj$meta.cell.groups = meta.cell.groups
+	forCellexal$usedObj$specie = specie
+	forCellexal$usedObj$meta.genes.groups = meta.genes.groups
+	forCellexal$usedObj$userGroups = userGroups
+	forCellexal$usedObj$outpath = outpath
+	forCellexal$usedObj$specie = specie
+	
+	save( forCellexal, file="forCellexal.RData" )
+	
+	script = paste( sep="\n", "library(cellexalvrR)",
+			"options(warn=-1)",
+			paste( sep="", 'load("forCellexal.RData")' ),
+			paste( sep="", "try({class(forCellexal) = 'list' }, silent=T) ## changes class to environment"  ),
+			paste( sep="", 
+"test = cellexalvrR( forCellexal, 
+	meta.cell.groups =forCellexal$usedObj$meta.cell.groups,
+	meta.genes.groups = forCellexal$usedObj$meta.genes.groups,
+	userGroups = forCellexal$usedObj$userGroups,
+	outpath = forCellexal$usedObj$outpath,
+	specie = forCellexal$usedObj$specie )" ),
+			paste( sep="", "if ( !file.exists(forCellexal$usedObj$outpath)) { dir.create(forCellexal$usedObj$outpath)}" ),
+			paste( sep="", "export2cellexalvr( test, '", forCellexal$usedObj$outpath ,"' )")
+	)
+	print (paste ("create and run script forCellexal_convert.R" ) )
+	system( "Rscript forCellexal_convert.R")
+	print ( paste("please check the outpath", forCellexal$usedObj$outpath ))
+	invisible(x)
 }

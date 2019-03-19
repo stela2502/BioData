@@ -6,12 +6,14 @@
 \alias{Seurat_FindAllMarkers,BioData-method}
 \title{description of function Seurat_FindAllMarkers}
 \usage{
-Seurat_FindAllMarkers(x, condition)
+Seurat_FindAllMarkers(x, condition, logfc.threshold = 1)
 }
 \arguments{
 \item{x}{the BioData object}
 
 \item{condition}{The grouping you wat to analyze}
+
+\item{logfc.threshold}{Seurat FindAllmarkers option used for speed up (default = 1)}
 }
 \description{
 Use Seurat's FindAllMarkers function

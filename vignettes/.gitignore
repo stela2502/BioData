@@ -1,7 +1,5 @@
-/BioData_resample_normalized.RData
-/BioData_resample_normalized_Phase__runStats_inThread.R
-/BioData_resample_normalized_Phase__runStats_inThread.Rout
-/BioData_resample_normalized_Phase__runStats_inThread.pid
-/BioData_resample_normalized_sname__runStats_inThread.R
-/BioData_resample_normalized_sname__runStats_inThread.Rout
-/BioData_resample_normalized_sname__runStats_inThread.pid
+BioData_resample_normalized*
+/StandardAnalysis_cache/
+/StandardAnalysis_files/
+/TestData/
+

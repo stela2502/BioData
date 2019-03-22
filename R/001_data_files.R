@@ -1,4 +1,4 @@
-
+#' @importFrom util read.delim read.table
 
 #' @name CellCycleGenes
 #' @title A simple table containing the Human and mouse orthologe ensembl ids for the cell cycle genes used in PMID28263960 using BioMart and GRCh38.p10
@@ -6,6 +6,7 @@
 #' @docType data
 #' @usage CellCycleGenes
 #' @format data.frame
+#' @keywords data
 'CellCycleGenes'
 
 #' @name CellCycle
@@ -18,6 +19,7 @@
 #' @docType data
 #' @usage CellCycle
 #' @format data.frame
+#' @keywords data
 'CellCycle'
 
 #' A list of mouse transcription factors.
@@ -30,6 +32,7 @@
 #'   ...
 #' }
 #' @source \url{http://bioinfo.life.hust.edu.cn/AnimalTFDB/}
+#' @keywords data
 "mouse.tfs"
 
 #' A list of human transcription factors.
@@ -43,6 +46,7 @@
 #'   ...
 #' }
 #' @source \url{http://bioinfo.life.hust.edu.cn/AnimalTFDB/}
+#' @keywords data
 "human.tfs"
 
 #' @name Epigenetic
@@ -51,6 +55,7 @@
 #' @docType data
 #' @usage Epigenetic
 #' @format data.frame
+#' @keywords data
 'Epigenetic'
 
 #' @name human.CellSurface
@@ -59,6 +64,7 @@
 #' @docType data
 #' @usage human.CellSurface
 #' @format vector
+#' @keywords data
 "human.CellSurface"
 
 #' @name mouse.CellSurface
@@ -67,6 +73,7 @@
 #' @docType data
 #' @usage mouse.CellSurface
 #' @format vector
+#' @keywords data
 "mouse.CellSurface"
 
 #' @name TestData
@@ -75,4 +82,5 @@
 #' @docType data
 #' @usage TestData
 #' @format BioData
+#' @keywords data
 "TestData"

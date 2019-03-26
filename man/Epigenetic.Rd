@@ -11,4 +11,4 @@ Epigenetic
 \description{
 This table can be used to create the epigenetics MDS objects.
 }
-\keyword{datasets}
+\keyword{data}

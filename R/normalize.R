@@ -56,6 +56,72 @@ setMethod('normalize', signature = c ('BioData'),
 			invisible(object)
 		})
 
+#' @name normalize_R_buggy
+#' @aliases normalize_R_buggy,BioData-method
+#' @docType methods
+#' @description  
+#' normalize the expression data by subsampling as described in PMID 24531970
+#' @param x The SingleCells::BioData::R6 object
+#' @param reads the required read depth
+#' @param name the name of the new object
+#' @param  force re-normalize this object (default FALSE)
+#' @return the normalized data set (original data stored in slot 'raw'
+#' @title normalize a SingleCells::BioData::R6 object
+#' @export normalize_R_buggy
+if ( ! isGeneric('normalize_R_buggy') ){ setGeneric('normalize_R_buggy', ## Name
+			function ( object, ... , name=NULL) { 
+				standardGeneric('normalize_R_buggy')
+			}
+	)
+}else {
+	print ("Onload warn generic function 'normalize_R_buggy' already defined - no overloading here!")
+}
+setMethod('normalize_R_buggy', signature = c ('SingleCells'),
+		definition = function (  object, reads=600, force=FALSE , name=NULL) {
+			if ( is.null( object$usedObj$snorm) ) {
+				object$usedObj$snorm = 0
+			}
+			reads <- round(reads)
+			
+			if ( is.null(object$usedObj$snorm) )
+				object$usedObj$snorm = 0
+			if ( is.null(force))
+				force = FALSE
+			
+			if ( force | object$usedObj$snorm == 0 ) {
+				if ( length( object$samples$nUMI ) == 0 ) {
+					object$samples$nUMI <- apply( object$dat, 2, sum)
+				}
+				
+				if(is.null(name)){
+					name = paste( object$name ,'resample_normalized' )
+				}
+				reduceTo( object, copy=FALSE, what="col", 
+					to=colnames(object$dat)[which(object$samples$nUMI >= reads)],
+					name=name )
+				
+				if ( is.null(object$raw) ){
+					object$raw <- object$dat
+				}
+				## resample the data
+				n <- nrow(object$raw)
+				object$dat[] <- 0
+				for ( i in 1:ncol(object$raw) ) {
+					d <- sample(rep ( 1:n, object$raw[,i]) , reads, replace=T)
+					t <- table(d)
+					object$dat[ as.numeric(names(t)),i] <- as.numeric(t)
+				}
+				rownames(object$dat) <- rownames(object$raw)
+				colnames(object$dat) <- colnames(object$raw)
+			}
+			else {
+				print ("Data was already normalized - skipped")
+			}
+			object$usedObj$snorm = 1
+			invisible(object)
+		}
+)
+
 
 #' @describeIn normalize a SingleCells::BioData::R6 object using subsampling
 #' @docType methods
@@ -70,46 +136,32 @@ setMethod('normalize', signature = c ('BioData'),
 #' @export normalize
 setMethod('normalize', signature = c ('SingleCells'),
 		definition = function (  object, reads=600, force=FALSE , name=NULL) {
-			if ( is.null( object$usedObj$snorm) ) {
-				object$usedObj$snorm = 0
-			}
+			
 			reads <- round(reads)
 			
-			normF <- function(x, n) {
-				x <- as.vector(x)
-				ok1 <- which( x > 0 )
-				d <- sample(rep ( 1:n, x) , reads, replace=T)
-				
-				t <- table(d)
-				
-				dropped <- setdiff( ok1, as.numeric(names(t)) )
-				x[as.numeric(names(t))] <- as.numeric(t)
-				
-				x[ dropped ] <- -1
-				x
-			}
-			
+			if ( is.null(object$usedObj$snorm) )
+				object$usedObj$snorm = 0
+			if ( is.null(force))
+				force = FALSE
 			if ( force | object$usedObj$snorm == 0 ) {
 				if ( length( object$samples$nUMI ) == 0 ) {
 					object$samples$nUMI <- apply( object$dat, 2, sum)
 				}
+				
 				if(is.null(name)){
 					name = paste( object$name ,'resample_normalized' )
 				}
-				object <- reduceTo( object, what="col", to=as.character(object$samples[which(object$samples$nUMI >= reads), object$sampleNamesCol ]) 
-						, name=name )
+				reduceTo( object, copy=FALSE, what="col", 
+						to=colnames(object$dat)[which(object$samples$nUMI >= reads)],
+						name=name )
 				
 				if ( is.null(object$raw) ){
 					object$raw <- object$dat
 				}
-				## resample the data
-				n <- nrow(object$raw)
-				object$dat[] <- 0
-				#pb <- progress_estimated(100)
-				#steps = ceiling(ncol(object$raw)/100)
-				#object$dat <- FastSparseRowScale( object$raw, TRUE, FALSE, reads, TRUE)
-				object$dat <- Matrix(apply( object$raw,2, normF, n ))
+				
+				object$dat = FastWilcoxTest::NormalizeCells( object$raw, reads )
 				rownames(object$dat) <- rownames(object$raw)
+				colnames(object$dat) <- colnames(object$raw)
 			}
 			else {
 				print ("Data was already normalized - skipped")
@@ -118,7 +170,6 @@ setMethod('normalize', signature = c ('SingleCells'),
 			invisible(object)
 		}
 )
-
 
 
 

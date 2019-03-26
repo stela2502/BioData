@@ -61,6 +61,6 @@ Imports:
     limma,
     MAST,
     Seurat,
-    FastWilcoxTest (>= 0.1.0.0200),
+    FastWilcoxTest (>= 0.1.4),
     topGO,
     GO.db

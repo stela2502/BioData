@@ -11,4 +11,4 @@ TestData
 \description{
 two TabulaMuris mouse datasets merged
 }
-\keyword{datasets}
+\keyword{data}

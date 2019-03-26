@@ -253,12 +253,18 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 		ncol = length(useG)
 	}
 	print ( paste("I create a", ncol,"columns and",nrow,"rows wide matrix"))
-	
-	q = paste( "select gene_id,", cells$rev,", value from datavalues")
+	q = NULL
+	if (  ! is.null(useS) ) {
+		q = paste( "select gene_id,", cells$rev,", value from datavalues where ",cells$rev, " IN (", paste( useS, collapse = ", ") , ")")
+	}else {
+		q = paste( "select gene_id,", cells$rev,", value from datavalues")
+	}
 	
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	t <- RSQLite::dbFetch(sth)
-	ret <- Matrix::sparseMatrix( i=t[,1], j=t[,2], x=t[,3], dims=c(max(t[,1]),max(t[,2])))
+	ret <- Matrix::sparseMatrix( i=t[,1], j=t[,2], x=t[,3])
+	ret = ret[,-which(Matrix::colSums(ret) == 0) ]
+	
 	## gives the same result as the old function! EXTREMELY much faster!
 	if(is.null(useS)){
 		useS = 1:ncol(ret)
@@ -277,11 +283,14 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))[1:nrow(ret)]
 	RSQLite::dbClearResult(sth)
 	rm(sth)
-	
-	q <- paste("select",cells$name,"from", cells$table, 'order by id' )
-
+	if (  ! is.null(useS) ) {
+		q <- paste("select",cells$name,"from", cells$table, " where id IN (", paste( useS, collapse= ", ") , ") ", 'order by id' )	 
+	}else {
+		q <- paste("select",cells$name,"from", cells$table,'order by id' ) 
+	}
 	sth <- RSQLite::dbSendQuery(dbh, q )
-	colnames(ret) <- as.character(t(RSQLite::dbFetch(sth)))[1:ncol(ret)]
+	t <- as.character(t(RSQLite::dbFetch(sth)))
+	colnames(ret) <- t
 	RSQLite::dbClearResult(sth)
 	RSQLite::dbDisconnect(dbh)
 	print ( "done creating the matrix")
@@ -307,15 +316,15 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 				gene_UMI <- gene_UMI[which(gene_UMI$'count(value)' > minGexpr ),]
 			}
 			useG = length(gene_UMI$gene_id)
-			
-			mat = tryCatch({ SQLite_2_matrix ( dat, useS = useS, useG = NULL ) } ,
+			mat = tryCatch({ SQLite_2_matrix ( dat, useS = useS, useG = NULL , list( 'table' = 'samples', name='sname', rev='sample_id')) } ,
 					 error = function(e) {
 						 SQLite_2_matrix ( dat, useS = useS, useG = NULL, list( 'table' = 'cells', name='cname', rev='cell_id') )
 					 }
 			 )
 			
 			print ( "creating the BioData object" )
-			bad <- which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0)
+			bad = which( Matrix::rowSums( mat ) == 0 )
+			#bad <- which( apply(mat,1, function(x) { length(which( x != 0)) } ) == 0)
 			if ( length(bad) > 0 ) {
 				mat <- mat[ -bad ,]
 			}

@@ -125,8 +125,7 @@ setMethod('normalize_R_buggy', signature = c ('SingleCells'),
 
 #' @describeIn normalize a SingleCells::BioData::R6 object using subsampling
 #' @docType methods
-#' @description  
-#' normalize the expression data by subsampling as described in PMID 24531970
+#' @description normalize the expression data by subsampling as described in PMID 24531970
 #' @param x The SingleCells::BioData::R6 object
 #' @param reads the required read depth
 #' @param name the name of the new object

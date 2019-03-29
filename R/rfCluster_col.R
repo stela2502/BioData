@@ -24,7 +24,7 @@
 #' @param ids the ids for a subset of samples to be analyzed (default NULL)
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
-if ( ! isGeneric('rfCluster_col') ){ setGeneric('rfCluster_col',
+if ( ! isGeneric('rfCluster_col') ){ methods::setGeneric('rfCluster_col',
 			function ( x, rep=1, SGE=F, email='none', k=16, slice=4, 
 					subset=200,nforest=500, ntree=500, name='RFclust',
 					settings=list(), ids=NULL){
@@ -46,12 +46,12 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 									ntree=ntree, name=paste(sep="_",name, i ), settings=settings, ids= ids ) 
 						} )
 			}
-			x$name <- str_replace_all( x$name, '\\s+', '_')
+			x$name <- stringr::str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
 			m <- max(k)
-			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
+			OPATH <- file.path( x$outpath,stringr::str_replace( x$name, '\\s', '_'))
 			opath = file.path( OPATH,name,"RFclust.mp" )
 			
 			if ( ! dir.exists(OPATH)){
@@ -162,7 +162,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 #' @param colFunc a function giving the colours back for the grouping (gets the amount of groups) default = function(x){rainbow(x)}
 #' @title description of function createRFgrouping_col
 #' @export 
-if ( ! isGeneric('createRFgrouping_col') ){ setGeneric('createRFgrouping_col', ## Name
+if ( ! isGeneric('createRFgrouping_col') ){ methods::setGeneric('createRFgrouping_col', ## Name
 			function ( x, RFname, k=10, single_res_col = paste('BioData',RFname), colFunc=NULL) { 
 				standardGeneric('createRFgrouping_col')
 			}
@@ -177,12 +177,12 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			if ( is.na( match( RFname, names(x$usedObj[['rfObj']])))){
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj']]), collapse=" ",sep=', ') ) )
 			}
-			groups <- createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
+			groups <- RFclust.SGE::createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
 			## store the MDS representation of the rfClust dissimilarity object
 			## in case all samples have been used to create the object.
 			if ( is.null (x$usedObj$MDS[[RFname]]) & nrow(x$usedObj$rfObj[[RFname]]@distRF[[RFname]]$cl1) == ncol(x$dat) ) {
 				a <- (x$usedObj$rfObj[[RFname]]@distRF[[RFname]]$cl1)
-				d <- cmdscale(a,3)
+				d <- stats::cmdscale(a,3)
 				m <- match( colnames(x$dat), rownames(d) )
 				x$usedObj$MDS[[single_res_col]] <- d[m,]
 			}
@@ -208,7 +208,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 				print ( "predicting on the calculated grouping" )
 				RFobj <- bestGrouping( x$usedObj[['rfExpressionSets']][[RFname]], group=paste('group n=', m), bestColname = paste('OptimalGrouping',m ,RFname))
 				print( "rf predict")
-				x$samples[, paste( single_res_col) ] <-	predict( RFobj , t(as.matrix(x$data())) )
+				x$samples[, paste( single_res_col) ] <-	stats::predict( RFobj , t(as.matrix(x$data())) )
 				x$samples[, paste( single_res_col) ] <- factor( x$samples[, paste( single_res_col) ], levels= 1:m )
 				x <- colors_4( x, single_res_col )
 			}

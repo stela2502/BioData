@@ -22,7 +22,7 @@ setMethod('auto_order_grouping', signature = c ('BioData'),
 	definition = function ( x, group,  settings=list( 'A' = 'lsens2018-3-3', 't' = '01:00:00', p='dell', 'n'=1, 'N'=1), k=5, 
 			colapseBy = 'median' ) {
 	
-	k = ceil(length( unique(x$samples[,group])) / k )
+	k = ceiling(length( unique(x$samples[,group])) / k )
 	if ( k < 3) {
 		stop( "too view groups to try an automatic grouping here" )
 	}
@@ -60,7 +60,7 @@ setMethod('auto_order_grouping', signature = c ('BioData'),
 #	if ( length( problem ) > 0 ) {
 #		tab = tab[,-problem]
 #	}
-	hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = 'ward.D2' )
+	hc <- stats::hclust(as.dist( 1- stats::cor(tab, method='pearson') ),method = 'ward.D2' )
 	order_l2 <- hc$order ## should be the most likely usable order here
 #	if ( length( problem ) > 0 ) {
 #		for ( i in problem ) { 
@@ -69,7 +69,7 @@ setMethod('auto_order_grouping', signature = c ('BioData'),
 #	}
 	tab <- x_collapsed$data()
 	colnames(tab) <- x_collapsed2$samples[,group]
-	hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = 'ward.D2' )
+	hc <- stats::hclust(as.dist( 1- stats::cor(tab, method='pearson') ),method = 'ward.D2' )
 	order_l1 <- hc$order ## should be the most likely usable order here
 	
 	## now create the most likely OK new order :-D

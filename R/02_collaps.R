@@ -10,7 +10,7 @@
 #' @param copy create a copy of the data (default=F)
 #' @title description of function collaps
 #' @export 
-if ( ! isGeneric('collaps') ){ setGeneric('collaps', ## Name
+if ( ! isGeneric('collaps') ){ methods::setGeneric('collaps', ## Name
 		function (dataObj, by=c('median','mean','sd','sum' ), groupCol='GroupID', copy=FALSE ) { 
 			standardGeneric('collaps')
 		}
@@ -32,9 +32,9 @@ setMethod('collaps', signature = c ('BioData'),
 			switch( by,
 					median = f<- function (x ) { median(x) },
 					mean = f <- function(x) { mean(x) },
-					sd = f <- function(x) { sd(x) },
+					sd = f <- function(x) { stats::sd(x) },
 					sum = f <-function(x) { sum(x)},
-					var = f <- function(x) { var(x) }
+					var = f <- function(x) { stats::var(x) }
 			);
 			}
 			if ( is.null(f) ) {

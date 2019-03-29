@@ -50,12 +50,12 @@ setMethod('convert_to', signature = c ('BioData'),
 		changeNames(x, 'row', 'ensembl_id')
 		rownames(x$annotation) <- rownames(x$dat)
 		rownames(x$samples) <- colnames(x$dat)
-		ret <- SingleCellExperiment(list(counts=as.matrix(x$raw)))
-		rowData(ret) <- as.matrix(x$annotation)
-		colData(ret) <- DataFrame(x$samples)
+		ret <- scran::SingleCellExperiment(list(counts=as.matrix(x$raw)))
+		scran::rowData(ret) <- as.matrix(x$annotation)
+		scran::colData(ret) <- DataFrame(x$samples)
 		if ( ! is.null(x$annotation$gene.name) ) {
-			rowData(ret)$gene.symbol <- rowData(ret)$gene.name
-			rowData(ret)$gene.name <- rowData(ret)$ensembl_id.unique
+			scran::scran::rowData(ret)$gene.symbol <- rowData(ret)$gene.name
+			scran::scran::rowData(ret)$gene.name <- rowData(ret)$ensembl_id.unique
 		}
 	}
 	if ( type == 'Seurat') {

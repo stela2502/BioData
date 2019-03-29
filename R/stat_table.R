@@ -7,7 +7,7 @@
 #' @param padjMethod the method name for the p.adjust call (default = 'BH')
 #' @title description of function stat_table
 #' @export 
-if ( ! isGeneric('stat_table') ){ setGeneric('stat_table', ## Name
+if ( ! isGeneric('stat_table') ){ methods::setGeneric('stat_table', ## Name
 	function ( l, padjMethod='BH' ) { 
 		standardGeneric('stat_table')
 	}

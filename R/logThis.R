@@ -6,7 +6,7 @@
 #' @param x the biodata object
 #' @title description of function log
 #' @export 
-if ( ! isGeneric('logThis') ){ setGeneric('logThis', ## Name
+if ( ! isGeneric('logThis') ){ methods::setGeneric('logThis', ## Name
 	function (x) { 
 		standardGeneric('logThis')
 	}

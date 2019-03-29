@@ -25,7 +25,7 @@
 #' @param ids the ids for a subset of genes to be analyzed (default NULL)
 #' @return a SingleCellsNGS object including the results and storing the RF object in the usedObj list (bestColname)
 #' @export 
-if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
+if ( ! isGeneric('rfCluster_row') ){ methods::setGeneric('rfCluster_row',
 		function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200,nforest=500, ntree=500, name='RFclust', settings=list(), ids=NULL){
 			standardGeneric('rfCluster_row')
 		}
@@ -35,12 +35,12 @@ if ( ! isGeneric('rfCluster_row') ){ setGeneric('rfCluster_row',
 }
 setMethod('rfCluster_row', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, subset=200 ,nforest=500, ntree=1000, name='RFclust_row', settings=list(), ids=NULL) {
-			x$name <- str_replace_all( x$name, '\\s+', '_')
+			x$name <- stringr::str_replace_all( x$name, '\\s+', '_')
 			summaryCol=paste( 'All_groups', name,sep='_')
 			usefulCol=paste ('Usefull_groups',name, sep='_')
 			n= paste(x$name, name,sep='_')
 			m <- max(k)
-			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
+			OPATH <- file.path( x$outpath,stringr::str_replace( x$name, '\\s', '_'))
 			opath = file.path( OPATH,name,"RFclust.mp" )
 			
 			if ( ! dir.exists(OPATH)){
@@ -152,7 +152,7 @@ setMethod('rfCluster_row', signature = c ('BioData'),
 #' @param colFunc a function giving the colours back for the grouping (gets the amount of groups) default = function(x){rainbow(x)}
 #' @title description of function createRFgrouping_row
 #' @export 
-if ( ! isGeneric('createRFgrouping_row') ){ setGeneric('createRFgrouping_row', ## Name
+if ( ! isGeneric('createRFgrouping_row') ){ methods::setGeneric('createRFgrouping_row', ## Name
 		function ( x, RFname='notExisting', k=10, single_res_row = paste('RFgrouping',RFname), colFunc=NULL) { 
 			standardGeneric('createRFgrouping_row')
 		}
@@ -166,7 +166,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 			if ( is.na( match( RFname, names(x$usedObj[['rfObj_row']])))){
 				stop( paste("the RFname",RFname,"is not defined in this object; defined grouings are:",paste(names(x$usedObj[['rfObj_row']]), collapse=" ",sep=', ') ) )
 			}
-			groups <- createGroups( x$usedObj[['rfObj_row']][[RFname]], k=k, name=RFname )
+			groups <- RFclust.SGE::createGroups( x$usedObj[['rfObj_row']][[RFname]], k=k, name=RFname )
 			x$usedObj[['rfExpressionSets_row']][[RFname]]$samples <- 
 					cbind ( x$usedObj[['rfExpressionSets_row']][[RFname]]$samples, groups[,3:(2+length(k))] )
 			le <- ncol(x$usedObj[['rfExpressionSets_row']][[RFname]]$samples)
@@ -196,7 +196,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				print( "rf predict")
 				
 				x$annotation[, paste( single_res_row) ] <-
-						predict(rfObj, as.matrix(fit_4_rf(x)$dat)
+						stats::predict(rfObj, as.matrix(fit_4_rf(x)$dat)
 						)
 				x$annotation[, paste( single_res_row) ] <- factor( x$annotation[, paste( single_res_row) ], levels= 1:m )
 				x <- colors_4( x, single_res_row )

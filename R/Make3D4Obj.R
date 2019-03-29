@@ -19,7 +19,7 @@
 #' @param useRaw base the projection on the raw data and not the n=100 PCA data (default FALSE)
 #' @title description of function Make3D4obj
 #' @export 
-if ( ! isGeneric('Make3D4obj') ){ setGeneric('Make3D4obj', ## Name
+if ( ! isGeneric('Make3D4obj') ){ methods::setGeneric('Make3D4obj', ## Name
 	function ( x, group, mds.type='PCA', cex=0.5, colFunc = function(x) {rainbow(x)}, cut=F, 
 			names=F, opath=NULL, main='', genes=F, plotType=1, size=3.0, green=FALSE, useRaw=FALSE ) { 
 		standardGeneric('Make3D4obj')
@@ -39,11 +39,11 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			if ( ! exists ( 'main')) {
 				main = ''
 			}
-			bgplot3d( {
-				par( mar =c(1,1,1,1),bg='#4C4C4C')
-				plot(0, 0, type = "n", xlim = 0:1, ylim = 0:1, xaxs = "i",
+			rgl::bgplot3d( {
+				graphics::par( mar =c(1,1,1,1),bg='#4C4C4C')
+				graphics::plot(0, 0, type = "n", xlim = 0:1, ylim = 0:1, xaxs = "i",
 						yaxs = "i", axes = FALSE, bty = "n", col='#4C4C4C', main=main, col.main =  "white" )
-				legend(...)
+				graphics::legend(...)
 			} )
 		}
 		check_and_replace <- function( name, list) {
@@ -83,9 +83,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
               	  	brks = unique(as.numeric(sprintf("%2.6e", brks)))
 					d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
 					if ( green) {
-						COLS = c('#006D2C', 'black', bluered(length(brks) -1  ))
+						COLS = c('#006D2C', 'black', gplots::bluered(length(brks) -1  ))
 					}else{
-						COLS = c('black', 'black', bluered(length(brks) -1  ))
+						COLS = c('black', 'black', gplots::bluered(length(brks) -1  ))
 					}
 					
 					col = COLS[d]
@@ -93,7 +93,7 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 					brks= c( (m-.1),m,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
 					brks = unique(as.numeric(sprintf("%2.6e", brks)))
 					d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-					COLS = c('black', bluered(length(brks) -1  ))
+					COLS = c('black', gplots::bluered(length(brks) -1  ))
 					col = COLS[d]
 				}      
                 
@@ -102,8 +102,8 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 			col <- x$usedObj$colorRange[[group]][x$samples[,group]]
 		}
 		#18 105 762 810
-		rgl.open()
-		par3d(windowRect = c(18,105, 762, 810))
+		rgl::rgl.open()
+		rgl::par3d(windowRect = c(18,105, 762, 810))
 		Sys.sleep(1)
 		#bg3d(color='#4C4C4C') 
 		if ( plotType == 1) {
@@ -115,9 +115,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 				)
 				mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
 				if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
-					MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+					MDS_NAME = stringr::str_replace(MDS_NAME, '_PCA100', '' )
 				}
-                rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
+                rgl::rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 
         }
         else {
@@ -128,9 +128,9 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 						)
 						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
 						if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
-							MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+							MDS_NAME = stringr::str_replace(MDS_NAME, '_PCA100', '' )
 						}
-                        rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
+                        rgl::rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
                 }
                 else {
                         My.legend3d ("topright", legend = paste( unique(levels(x$samples[,group]))  ), 
@@ -139,23 +139,23 @@ setMethod('Make3D4obj', signature = c ('BioData'),
 						)
 						mds.type = check_and_replace( mds.type, x$usedObj[[MDS_NAME]] )
 						if ( is.null(x$usedObj[[MDS_NAME]][[mds.type]])){
-							MDS_NAME = str_replace(MDS_NAME, '_PCA100', '' )
+							MDS_NAME = stringr::str_replace(MDS_NAME, '_PCA100', '' )
 						}
-						rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
+						rgl::rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 						
                 }
         }
 		}else if ( plotType == 2) {
-			bg3d("white")
+			rgl::bg3d("white")
 			if ( names) {
-				rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
+				rgl::rgl.texts( x$usedObj[[MDS_NAME]][[mds.type]], col=col, text= as.character(x$samples[,group]), cex=cex )
 			}else {
-				rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
+				rgl::rgl.points( x$usedObj[[MDS_NAME]][[mds.type]], col=col, size=size )
 			}
-			grid3d(c("x", "y", "z"))
-			axis3d(c("x+"),col="black",xlab="Component 1")
-			axis3d(c("y+"),col="black")
-			axis3d(c("z+"),col="black")
+			rgl::grid3d(c("x", "y", "z"))
+			rgl::axis3d(c("x+"),col="black",xlab="Component 1")
+			rgl::axis3d(c("y+"),col="black")
+			rgl::axis3d(c("z+"),col="black")
 			
 		}
 } )

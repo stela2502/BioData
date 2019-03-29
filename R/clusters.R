@@ -83,18 +83,18 @@ setMethod('clusters', signature = c ('BioData'),
 			prob <- which(apply(tab, 2, var) == 0)
 			if ( length(prob) > 0 ){
 				for ( id in prob ){
-					tab[,id] = runif(nrow(tab), -19, -16)
+					tab[,id] = stats::runif(nrow(tab), -19, -16)
 				}
 			}
 			if ( ctype=='hierarchical clust'){
-				hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-				clusters <- cutree(hc,k=groups.n)
+				hc <- stats::hclust(as.dist( 1- stats::cor(tab, method='pearson') ),method = cmethod)
+				clusters <- stats::cutree(hc,k=groups.n)
 			}else if (  ctype=='kmeans' ) {
-				hc <- hclust(as.dist( 1- cor(tab, method='pearson') ),method = cmethod)
-				clusters <- kmeans( t(tab) ,centers=groups.n)$cluster
+				hc <- stats::hclust(as.dist( 1- stats::cor(tab, method='pearson') ),method = cmethod)
+				clusters <- stats::kmeans( t(tab) ,centers=groups.n)$cluster
 			}else if ( ctype =='mclust' ) {
-				hc <- hc( as.dist( 1- cor(tab, method='pearson') ) )
-				clusters <- hclass(hc, groups.n)
+				hc <- hc( stats::as.dist( 1- stats::cor(tab, method='pearson') ) )
+				clusters <- mclust::hclass(hc, groups.n)
 			}
 			else { stop( paste('ctype',ctype, 'unknown!' ) )}
 			

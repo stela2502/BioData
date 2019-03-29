@@ -7,7 +7,7 @@
 #' @return the z scored matrix / BioData object
 #' @title description of function z.score
 #' @export 
-if ( ! isGeneric('z.score') ){ setGeneric('z.score', ## Name
+if ( ! isGeneric('z.score') ){ methods::setGeneric('z.score', ## Name
 		function (m) { 
 			standardGeneric('z.score')
 		}
@@ -55,7 +55,7 @@ setMethod('z.score', signature = c ('tRNAMINT'),
 						apply(ma,1, norm.name)
 				)
 				#ret[which(is.na(ret)==T)] <- -20
-				m$zscored <- Matrix(ret)
+				m$zscored <- Matrix::Matrix(ret)
 				colnames(m$zscored)<- colnames(m$dat)
 			}
 			invisible(m)
@@ -76,7 +76,7 @@ setMethod('z.score',signature = c ('BioData'),
 		definition = function (m) {
 			if ( is.null( m$zscored ) ){
 				#m$raw <- m$data
-				m$zscored <- Matrix(z.score( as.matrix( m$dat )))
+				m$zscored <- Matrix::Matrix(z.score( as.matrix( m$dat )))
 
 			}
 			invisible(m)

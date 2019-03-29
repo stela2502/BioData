@@ -94,7 +94,7 @@ setMethod('getGeneInfo', signature = c ('character'),
 		return (available)
 	}
 	select_id <- paste("select _id, ", from, " from ",tab," where ",from, " IN ('", paste(x, collapse="', '"),"')",  sep="")
-	t <- dbGetQuery(con, select_id )
+	t <- RSQLite::dbGetQuery(con, select_id )
 	if ( length(x) == 1 ) {
 		m <- which( ! is.na( match(t[,2],x)) )
 		notOK <- which(is.na(m))
@@ -113,7 +113,7 @@ setMethod('getGeneInfo', signature = c ('character'),
 		return (available)
 	}
 	select_result <- paste( "select _id,", what,"from", get_table(what, what_tab), "where _id IN (", paste(t[,1], collapse=", "),")")
-	t <- dbGetQuery(con, select_result)
+	t <- RSQLite::dbGetQuery(con, select_result)
 	m <- match(ret[,2],t[,1])
 	ret <- cbind(ret, result = t[m,2] ) 
 	if ( nrow(t) == 0 ) {

@@ -8,7 +8,7 @@
 #' @param prefix  see base::colnames  T default= "row"
 #' @title wrapper for rownames(x$dat)
 #' @export 
-if ( ! isGeneric('rownames') ){ setGeneric('rownames', ## Name
+if ( ! isGeneric('rownames') ){ methods::setGeneric('rownames', ## Name
 	function ( x, do.NULL = TRUE, prefix = "row") { 
 		standardGeneric('rownames')
 	}

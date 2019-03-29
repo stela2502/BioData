@@ -9,7 +9,7 @@
 #' @param name the name of the collapsed object default="collapsed"
 #' @title description of function collapse2codons
 #' @export 
-if ( ! isGeneric('collapse2codons') ){ setGeneric('collapse2codons', ## Name
+if ( ! isGeneric('collapse2codons') ){ methods::setGeneric('collapse2codons', ## Name
 	function ( x, sum.fun=function(x) { sum (x, na.rm=T)} , name="collapsed") { 
 		standardGeneric('collapse2codons')
 	}

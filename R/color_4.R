@@ -9,7 +9,7 @@
 #' @param force forcefully overwrite an existing color entry for this column (default FALSE)
 #' @title description of function createRFgrouping_col
 #' @export 
-if ( ! isGeneric('colors_4') ){ setGeneric('colors_4', ## Name
+if ( ! isGeneric('colors_4') ){ methods::setGeneric('colors_4', ## Name
 		function ( x, name,  colFunc = NULL, force=FALSE  ) { 
 			standardGeneric('colors_4')
 		}

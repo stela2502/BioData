@@ -10,7 +10,7 @@
 #' @title description of function defineHeatmapColors
 #' @return a list with the modified merged table and the colors vector
 #' @export defineHeatmapColors
-if ( ! isGeneric('defineHeatmapColors') ){ setGeneric('defineHeatmapColors', ## Name
+if ( ! isGeneric('defineHeatmapColors') ){ methods::setGeneric('defineHeatmapColors', ## Name
 		function (x, melted, colrs=NULL, lowest='gray',...) { 
 			standardGeneric('defineHeatmapColors')
 		}
@@ -37,16 +37,16 @@ setMethod('defineHeatmapColors', signature = c('tRNAMINT') ,
 				prob.id <- which(is.na(as.numeric(d))==T)
 				treat.separate <- unique(d[prob.id])
 				n <- as.numeric(d[-prob.id])
-				m <- minValueExpr( x)
+				m <- min(x$data()@x[which(x$data()@x > 0 )])
 				brks= c( (m -.1), as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
 				brks = unique(brks)
 				d[-prob.id]  <- brks [cut( n, breaks= brks)]
 				melted$Expression <- factor( d, levels= c(brks, treat.separate ) )
-				colors <- c( colors,rainbow( length(treat.separate) ) )
+				colors <- c( colors,grDevices::rainbow( length(treat.separate) ) )
 			}
 			else {
 				n <- as.numeric(melted$Expression )
-				m <- minValueExpr( x)
+				m <- min(x$data()@x[which(x$data()@x > 0 )])
 				brks= c( (m-.1), as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
 				brks = unique(brks)
 				melted$Expression <- factor( brks [cut( n, breaks= brks)] , levels= c(brks) )
@@ -70,7 +70,7 @@ setMethod('defineHeatmapColors', signature = c('BioData') ,
 				melted$Expression <- factor( d, levels= c(brks, treat.separate ) )
 				colors= c(
 						gplots::bluered(length(brks) -1  ), ## the expression
-						rainbow( length(treat.separate) ) ## the sample descriptions
+						grDevices::rainbow( length(treat.separate) ) ## the sample descriptions
 				)
 			}
 			else {

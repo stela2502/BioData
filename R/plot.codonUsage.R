@@ -15,7 +15,7 @@
 #' @param fname the filename to plot to as png (default use x11 as plotting device)
 #' @title description of function plotCodonUsage
 #' @export 
-if ( ! isGeneric('plotCodonUsage') ){ setGeneric('plotCodonUsage', ## Name
+if ( ! isGeneric('plotCodonUsage') ){ methods::setGeneric('plotCodonUsage', ## Name
 	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) { 
 		standardGeneric('plotCodonUsage')
 	}
@@ -28,22 +28,22 @@ setMethod('plotCodonUsage', signature = c ('BioData'),
 	definition = function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ,main="Pie Chart", color=NULL, fname=NULL ) {
 	data <- sampleCodonUsage(x, sname, codons=codons, min_reads=min_reads, tRF.reliability=tRF.reliability,tRF.type=tRF.type  )
 	if ( is.null(color) ) {
-		color = rainbow(length(data))
+		color = grDevices::rainbow(length(data))
 	}
 	if (!is.null(fname)) {
-		png(file=paste(x$outpath,fname,"_pie.png", sep=''), width=1000, height=1000)
-		pie( data, labels=codons, main=main, col=color)
-		dev.off()
-		png(file=paste(x$outpath,fname,"_bars.png", sep=''), width=1000, height=1000)
-		par(las=2)
-		barplot( data, names.arg=codons, main=main, col=color)
-		dev.off()
+		grDevices::png(file=paste(x$outpath,fname,"_pie.png", sep=''), width=1000, height=1000)
+		graphics::pie( data, labels=codons, main=main, col=color)
+		grDevices::dev.off()
+		grDevices::png(file=paste(x$outpath,fname,"_bars.png", sep=''), width=1000, height=1000)
+		graphics::par(las=2)
+		graphics::barplot( data, names.arg=codons, main=main, col=color)
+		grDevices::dev.off()
 	}
 	else {
-		pie( data, labels=codons, main=main, col=color)
-		x11()
-		par(las=2)
-		barplot( data, names.arg=codons, main=main, col=color)
+		graphics::pie( data, labels=codons, main=main, col=color)
+		grDevices::x11()
+		graphics::par(las=2)
+		graphics::barplot( data, names.arg=codons, main=main, col=color)
 	}
 	invisible(x)
 } )

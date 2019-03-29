@@ -11,7 +11,7 @@
 #' @param tRF.type MINT reports different types of tRNA fragments (3'-half, 5'-half, ...) default=NULL == use all
 #' @title description of function sampleCodonUsage
 #' @export 
-if ( ! isGeneric('sampleCodonUsage') ){ setGeneric('sampleCodonUsage', ## Name
+if ( ! isGeneric('sampleCodonUsage') ){ methods::setGeneric('sampleCodonUsage', ## Name
 	function ( x, sname, codons=NULL, min_reads=1, tRF.reliability=NULL, tRF.type=NULL ) { 
 		standardGeneric('sampleCodonUsage')
 	}

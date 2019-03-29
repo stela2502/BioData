@@ -8,7 +8,7 @@
 #' @param col group name as one column in the samples table
 #' @title description of function quality_of_fit
 #' @export 
-if ( ! isGeneric('quality_of_fit') ){ setGeneric('quality_of_fit', ## Name
+if ( ! isGeneric('quality_of_fit') ){ methods::setGeneric('quality_of_fit', ## Name
 			function ( x, col, what='cells' ) { 
 				standardGeneric('quality_of_fit')
 			}
@@ -58,7 +58,7 @@ setMethod('quality_of_fit', signature = c ('BioData'),
 			}
 			else if ( what=='genes') {
 				clusters <- x$annotation[,col]
-				ret <- list ( 'single' = apply(test,1, difference, as.charcter(clusters), max(clusters) ) )
+				ret <- list ( 'single' = apply(test,1, difference, as.character(clusters), max(clusters) ) )
 				ret$sum = round(sum(ret$single))
 			}
 			else {

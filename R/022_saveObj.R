@@ -7,7 +7,7 @@
 #' @param file the outfile default=paste(str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
 #' @title description of function saveObj
 #' @export 
-if ( ! isGeneric('saveObj') ){ setGeneric('saveObj', ## Name
+if ( ! isGeneric('saveObj') ){ methods::setGeneric('saveObj', ## Name
 		function ( data, file=NULL ){	
 			standardGeneric('saveObj')
 		}
@@ -22,12 +22,12 @@ setMethod('saveObj', signature = c ('BioData'),
 				file=paste(stringr::str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
 			}
 			print ( paste('data exported to', file.path(data$outpath,file) ) )
-			data$dat = drop0(data$dat)
+			data$dat = Matrix::drop0(data$dat)
 			if ( !is.null(data$raw)) {
-				data$raw = drop0(data$raw)
+				data$raw = Matrix::drop0(data$raw)
 			}
 			if ( !is.null(data$zscored)) {
-				data$zscored = drop0(data$zscored)
+				data$zscored = Matrix::drop0(data$zscored)
 			}
 			save(data , file=file.path(data$outpath, file) )
 			

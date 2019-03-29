@@ -13,7 +13,7 @@
 #' @param fun multiple fragments are summed up for this analysis; this is the summing function: default=function(x) { sum(x, na.rm=TRUE) }
 #' @title description of function tRNA_stats
 #' @export 
-if ( ! isGeneric('tRNA_stats') ){ setGeneric('tRNA_stats', ## Name
+if ( ! isGeneric('tRNA_stats') ){ methods::setGeneric('tRNA_stats', ## Name
 	function ( x, acol, scol, norm.type=NULL, codon=NULL, fun=function(x) { x[is.na(x)] = 0; mean(x) } ) { 
 		standardGeneric('tRNA_stats')
 	}

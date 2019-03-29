@@ -8,7 +8,7 @@
 #' @title description of function remove.genes
 #' @export 
 if ( ! isGeneric('reorder.samples') ){ 
-	setGeneric('reorder.samples', ## Name
+	methods::setGeneric('reorder.samples', ## Name
 		function ( x, column, ... ) { 
 			standardGeneric('reorder.samples')
 		}
@@ -53,7 +53,7 @@ reorder.mds <- function ( mds.name, idx, obj, mds.type) {
 #' @param column the samples column to reorder on
 #' @title description of function remove.genes
 #' @export 
-if ( ! isGeneric('reorder.genes') ){ setGeneric('reorder.genes', ## Name
+if ( ! isGeneric('reorder.genes') ){ methods::setGeneric('reorder.genes', ## Name
 		function ( x, column, ... ) { 
 			standardGeneric('reorder.genes')
 		}

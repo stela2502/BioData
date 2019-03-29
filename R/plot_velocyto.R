@@ -53,7 +53,7 @@ setMethod('plot_velocyto', signature = c ('BioData'),
 		print ("calculate cell distances")
 		ret$rvel.cd = NULL
 		ret$velocity_vals = NULL
-		ret$cell.dist <- as.dist(1-velocyto.R::armaCor(t(x$usedObj$pr@scores)))
+		ret$cell.dist <- stats::as.dist(1-velocyto.R::armaCor(t(x$usedObj$pr@scores)))
 	}
 	
 	emb <- x$MDS_PCA100[[mds_name]][,1:2]
@@ -76,7 +76,7 @@ setMethod('plot_velocyto', signature = c ('BioData'),
 	print ("create plot")
 	## here is where we need to create the plot outfile
 	if ( ! is.null(ofile)) {
-		pdf( file=paste(ofile ,'pdf',sep='.'), width=8, height=8)
+		grDevices::pdf( file=paste(ofile ,'pdf',sep='.'), width=8, height=8)
 	}
 	ret$velocity_vals = velocyto.R::show.velocity.on.embedding.cor(
 			emb, ret$rvel.cd, n=300, scale='sqrt', cell.colors=col,
@@ -84,7 +84,7 @@ setMethod('plot_velocyto', signature = c ('BioData'),
 			grid.n=40, arrow.lwd=1, do.par=F, cell.border.alpha = 0.1, return.details=T
 	)
 	if ( ! is.null(ofile)) {
-		dev.off()
+		grDevices::dev.off()
 	}
 	invisible(ret)	
 }  )

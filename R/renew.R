@@ -6,7 +6,7 @@
 #' @param x the object you want to update
 #' @title description of function renew
 #' @export 
-if ( ! isGeneric('renew') ){ setGeneric('renew', ## Name
+if ( ! isGeneric('renew') ){ methods::setGeneric('renew', ## Name
 	function ( x ) { 
 		standardGeneric('renew')
 	}
@@ -28,7 +28,7 @@ setMethod('renew', signature = c ('BioData'),
 					namerow= x$rownamescol, 
 					outpath=x$outpath 
 			)
-		}else if ( x$version != sessionInfo('BioData')$otherPkgs$BioData$Version ){
+		}else if ( x$version != utils::sessionInfo('BioData')$otherPkgs$BioData$Version ){
 			ret <- BioData$new( 
 				dat = x$dat, 
 				annotation= x$annotation,

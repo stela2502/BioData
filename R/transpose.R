@@ -6,7 +6,7 @@
 #' @param x the BioData object
 #' @title description of function t
 #' @export 
-if ( ! isGeneric('transpose') ){ setGeneric('transpose', ## Name
+if ( ! isGeneric('transpose') ){ methods::setGeneric('transpose', ## Name
 		function (x) { 
 			standardGeneric('transpose')
 		}
@@ -40,9 +40,9 @@ setMethod('transpose', signature = c ('BioData'),
 				n = names(x$usedObj)[id]
 				new_N = NULL
 				if ( length(grep('MDSgenes',n)) == 1 ) {
-					new_N = str_replace(n, 'MDSgenes', 'MDS' )
+					new_N = stringr::str_replace(n, 'MDSgenes', 'MDS' )
 				}else {
-					new_N = str_replace(n, 'MDS', 'MDSgenes' )
+					new_N = stringr::str_replace(n, 'MDS', 'MDSgenes' )
 				}
 				new[[new_N]] = x$usedObj[[n]]
 				x$usedObj[[n]] = NULL

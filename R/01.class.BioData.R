@@ -28,7 +28,7 @@ require('R6')
 #' @field stats all stats with one result for each data row
 #' @export 
 BioData <- #withFormalClass(
-		R6Class(
+		R6::R6Class(
 				'BioData',
 				class = TRUE,
 				public = list ( 
@@ -128,13 +128,13 @@ BioData <- #withFormalClass(
 							self$samples$samples <- colnames(self$dat)
 							
 							if ( class(self$dat) != 'dgCMatrix' ) {
-								self$dat <- Matrix( as.matrix(self$dat), sparse=T ) ## should save up to 80% of memory!
+								self$dat <- Matrix::Matrix( as.matrix(self$dat), sparse=T ) ## should save up to 80% of memory!
 								rm(dat)
 								gc()
 							}
 							
 							self$sampleNamesCol <- 'samples'
-							self$version = sessionInfo('BioData')$otherPkgs$BioData$Version
+							self$version = utils::sessionInfo('BioData')$otherPkgs$BioData$Version
 							self$force.numeric()
 						},
 						data = function(...){
@@ -161,7 +161,7 @@ BioData <- #withFormalClass(
 						},
 						pwd = function () {
 							system( 'pwd > __pwd' )
-							t <- read.delim( file = '__pwd', header=F)
+							t <- utils::read.delim( file = '__pwd', header=F)
 							t <- as.vector(t[1,1])
 							t <- paste(t,"/",sep='')
 							unlink( '__pwd')
@@ -212,7 +212,7 @@ BioData <- #withFormalClass(
 #' @field stats all stats with one result for each data row
 #' @export tRNAMINT
 tRNAMINT <-
-		R6Class( 'tRNAMINT',
+		R6::R6Class( 'tRNAMINT',
 				inherit = BioData,
 				class = TRUE
 		)
@@ -244,7 +244,7 @@ tRNAMINT <-
 #' @field stats all stats with one result for each data row
 #' @export SingleCells
 SingleCells <-
-		R6Class( 'SingleCells',
+		R6::R6Class( 'SingleCells',
 				inherit = BioData,
 				class = TRUE,
 				public = list ( 
@@ -283,7 +283,7 @@ SingleCells <-
 #' @field stats all stats with one result for each data row
 #' @export MicroArray
 MicroArray <-
-		R6Class( 'MicroArray',
+		R6::R6Class( 'MicroArray',
 				inherit = BioData,
 				class = TRUE
 		)

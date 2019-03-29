@@ -66,7 +66,7 @@ setMethod('cleanUpGroup', signature = c ('BioData'),
 			#browser()
 			RFobj = bestGrouping(OK, 'New_Grouping', ...)
 			x$samples[,paste(group, 'original')] =  x$samples[,group]
-			x$samples[, group] = factor( predict( RFobj , t(as.matrix(x$data())) ) )#, levels=levels(x$samples[, group]))
+			x$samples[, group] = factor( stats::predict( RFobj , t(as.matrix(x$data())) ) )#, levels=levels(x$samples[, group]))
 			group_intersect_order( x,group, paste(group, 'original') )
 			colors_4( x, group, force=T)
 			print( paste("Grouping", group,"cleaned by grouping", otherGroup ))

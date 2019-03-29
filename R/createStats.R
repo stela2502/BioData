@@ -12,7 +12,7 @@
 #' @return the NGSexpressionSet with a set of ststs tables
 #' @title description of function createStats
 #' @export 
-if ( ! isGeneric('createStats') ){ setGeneric('createStats', ## Name
+if ( ! isGeneric('createStats') ){ methods::setGeneric('createStats', ## Name
 	function (x, condition, files=F, A=NULL, B=NULL, ...) { 
 		standardGeneric('createStats')
 	}
@@ -57,7 +57,7 @@ setMethod('createStats', signature = c ('BioData'),
 			}
 		}
 		if ( files ) {
-			writeStatTables( x )
+			#writeStatTables( x )
 		}
 		#eval( detach( 'package:DESeq2' ) )
 		x
@@ -76,8 +76,8 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			}
 			str = levels(x$samples[,condition])
 			Factor=x$samples[,condition]
-			design <- model.matrix( ~1+ Factor )
-			colnames(design) <- str_replace_all( colnames(design), 'Factor', '' )
+			design <- stats::model.matrix( ~1+ Factor )
+			colnames(design) <- stringr::str_replace_all( colnames(design), 'Factor', '' )
 			fit <- limma::lm.series(data$data(), design)
 			contr <- list()
 			i=1

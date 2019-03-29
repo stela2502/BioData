@@ -9,7 +9,7 @@
 #' @param opath the outpath if different from x$outpath
 #' @title description of function Split4Geo
 #' @export 
-if ( ! isGeneric('Split4Geo') ){ setGeneric('Split4Geo', ## Name
+if ( ! isGeneric('Split4Geo') ){ methods::setGeneric('Split4Geo', ## Name
 	function (x, opath = x$outpath ) { 
 		standardGeneric('Split4Geo')
 	}
@@ -26,7 +26,7 @@ setMethod('Split4Geo', signature = c ('BioData'),
 	for ( i in 1:ncol(x$data()) ) {
 		d <- cbind( rownames(x$data()), x$data()[,i] )
 		colnames(d) <- c( x$rownamescol, colnames(x$dat)[i] )
-		write.table( d, file= file.path( opath, paste(colnames(x$dat)[i], 'xls',sep='.' )), sep="\t",quote=F, row.names=F )
+		utils::write.table( d, file= file.path( opath, paste(colnames(x$dat)[i], 'xls',sep='.' )), sep="\t",quote=F, row.names=F )
 		system( paste("md5sum", file.path( opath, paste(colnames(x$dat)[i], 'xls',sep='.' )) , " >>", file.path(opath, 'md5sums.txt') ) )
 	}
 	invisible(x)

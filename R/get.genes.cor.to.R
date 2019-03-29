@@ -8,7 +8,7 @@
 #' @param output the VR outpath
 #' @title description of function get.genes.cor.to
 #' @export 
-if ( ! isGeneric('get.genes.cor.to') ){ setGeneric('get.genes.cor.to', ## Name
+if ( ! isGeneric('get.genes.cor.to') ){ methods::setGeneric('get.genes.cor.to', ## Name
 	function (x,gname,output) { 
 		standardGeneric('get.genes.cor.to')
 	}

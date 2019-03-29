@@ -8,7 +8,7 @@
 #' @param to select these names default=NULL
 #' @title description of function reduceTo
 #' @export 
-if ( ! isGeneric('reduceTo') ){ setGeneric('reduceTo', ## Name
+if ( ! isGeneric('reduceTo') ){ methods::setGeneric('reduceTo', ## Name
 		function ( x, what='row', to=NULL, ... ) { 
 			standardGeneric('reduceTo')
 		}

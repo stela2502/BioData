@@ -12,7 +12,7 @@
 #' @title normalize a BioData::R6 object
 #' @export normalize
 
-if ( ! isGeneric('normalize') ){ setGeneric('normalize', ## Name
+if ( ! isGeneric('normalize') ){ methods::setGeneric('normalize', ## Name
 	function ( object, ... , name=NULL) { 
 		standardGeneric('normalize')
 	}
@@ -68,7 +68,7 @@ setMethod('normalize', signature = c ('BioData'),
 #' @return the normalized data set (original data stored in slot 'raw'
 #' @title normalize a SingleCells::BioData::R6 object
 #' @export normalize_R_buggy
-if ( ! isGeneric('normalize_R_buggy') ){ setGeneric('normalize_R_buggy', ## Name
+if ( ! isGeneric('normalize_R_buggy') ){ methods::setGeneric('normalize_R_buggy', ## Name
 			function ( object, ... , name=NULL) { 
 				standardGeneric('normalize_R_buggy')
 			}
@@ -195,7 +195,7 @@ setMethod('normalize', signature = c ('MicroArray') ,
 		df_final <- apply(df_rank, 2, index_to_mean, my_mean=df_mean)
 		rownames(df_final) <- rownames(df)
 		
-		object$dat = Matrix( as.matrix(df_final) )
+		object$dat = Matrix::Matrix( as.matrix(df_final) )
 		
 		invisible(object)
 })

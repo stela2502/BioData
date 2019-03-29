@@ -13,7 +13,7 @@
 #' @param name the name for the new grouping (default = 'auto_clusters_gene.1:n')
 #' @title description of function clusters_gene
 #' @export 
-if ( ! isGeneric('clusters_gene') ){ setGeneric('clusters_gene', ## Name
+if ( ! isGeneric('clusters_gene') ){ methods::setGeneric('clusters_gene', ## Name
 	function (dataObj,clusterby="raw", useGrouping=NULL, groups.n = 3, 
 			ctype='hierarchical clust',onwhat="Expression", cmethod='ward.D2', name=NULL ) {
 		standardGeneric('clusters_gene')

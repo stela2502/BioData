@@ -20,7 +20,7 @@
 #' #data$samples$new_perfect_grouping <- predict(predictor, as.matrix(t(data$dat)))
 #' ## End(**Not run**)
 #' @export 
-if ( ! isGeneric('bestGrouping') ){ setGeneric('bestGrouping',
+if ( ! isGeneric('bestGrouping') ){ methods::setGeneric('bestGrouping',
 		function ( x, group , bestColname='QualifiedGrouping', cutoff=0.5, ntree=2000, ...){
 			standardGeneric('bestGrouping')
 		}
@@ -34,7 +34,7 @@ setMethod('bestGrouping', signature = c ('BioData'),
 			rf <- NULL
 			
 			if (  is.null( x$usedObj[[uObj]])){
-				x$usedObj[[uObj]] <- randomForest( x= t(as.matrix(fit_4_rf(x)$dat)), y=factor(x$samples[, group]),ntree=2000 )
+				x$usedObj[[uObj]] <- randomForest::randomForest( x= t(as.matrix(fit_4_rf(x)$dat)), y=factor(x$samples[, group]),ntree=2000 )
 			}
 			gc()
 			x$usedObj[[uObj]]

@@ -4,7 +4,7 @@
 #' @param ... source object specififc options
 #' @title create a BioData from an other object
 #' @export 
-if ( ! isGeneric('as_BioData') ){ setGeneric('as_BioData', ## Name
+if ( ! isGeneric('as_BioData') ){ methods::setGeneric('as_BioData', ## Name
 	function ( dat, ... ) { 
 		standardGeneric('as_BioData') ## der Aufruf von standardGeneric sorgt für das_BioData Dispatching
 	}
@@ -28,7 +28,7 @@ setMethod('as_BioData', signature = c ('list'),
 		samples$filename <- rownames(samples)
 		rownames(samples) <-1:nrow(samples)
 		ret <- BioData$new( 
-				dat= Matrix(dat$counts), 
+				dat= Matrix::Matrix(dat$counts), 
 				Samples = samples, 
 				annotation= dat$annotation,
 				namecol= 'filename', 
@@ -49,7 +49,7 @@ setMethod('as_BioData', signature = c ('list'),
 #' @export as_BioData
 setMethod('as_BioData', signature = c ('matrix'),
 		definition = function ( dat ) {
-				dat <- Matrix(dat)
+				dat <- Matrix::Matrix(dat)
 				snames <- colnames(dat)
 				
 			ret <- BioData$new( 
@@ -74,7 +74,7 @@ setMethod('as_BioData', signature = c ('data.frame'),
 			snames <- colnames(dat)
 			#dat$GeneID = rownames(dat)
 			ret <- BioData$new( 
-					dat=  Matrix(as.matrix(dat)), 
+					dat=  Matrix::Matrix(as.matrix(dat)), 
 					Samples = data.frame('sampleName' = snames ), 
 					annotation= data.frame( 'GeneID' = rownames(dat)),
 					namecol= 'sampleName', 
@@ -134,7 +134,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 			}
 			samples[,namecol] <- make.names(samples[,namecol])
 			
-			ret <- BioData$new( Matrix(dat@data), Samples=samples,
+			ret <- BioData$new( Matrix::Matrix(dat@data), Samples=samples,
 					annotation= dat@meta.gene, name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 			ret$usedObj <- dat@usedObj
 			class(ret) = c( 'SingleCells', 'BioData', 'R6')
@@ -196,15 +196,15 @@ setMethod('as_BioData', signature = c ('seurat'),
 					samples[,namecol] <- make.names(samples[,namecol])
 					ret <- BioData$new( dataa, Samples=samples[1:2,], annotation =dat@hvg.info[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
 					
-					ret$dat <- Matrix(dat@data)
+					ret$dat <- Matrix::Matrix(dat@data)
 					ret$samples <- samples
 					ret$annotation <- dat@hvg.info
 					
 					if ( ! is.null(dat@scale.data)){
-						ret$zscored <- Matrix(as.matrix(dat@scale.data))
+						ret$zscored <- Matrix::Matrix(as.matrix(dat@scale.data))
 					}
 					m <- match(colnames(dat@data), colnames(dat@raw.data))
-					ret$raw <- Matrix(as.matrix(dat@raw.data))[,m]
+					ret$raw <- Matrix::Matrix(as.matrix(dat@raw.data))[,m]
 					## now I need to manually remove unreliable data from the zscored information (set to -20)
 #					if ( FALSE ) { # slow and not correct any more!
 #						if ( ! is.null( ret$zscored )) {
@@ -390,9 +390,9 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	}
 	head <- readLines( file.path(dat,'matrix.mtx'), 3)
 	
-	head =  unlist( str_split( head[3], ' ') )
+	head =  unlist( stringr::str_split( head[3], ' ') )
 	
-	d = read.table( file.path(dat,'matrix.mtx') , skip = 3 , header=F )
+	d = utils::read.table( file.path(dat,'matrix.mtx') , skip = 3 , header=F )
 	
 	ma = Matrix::sparseMatrix( i=d[,1], j=d[,2], x=d[,3] )
 	message(paste("Matrix created with", ncol(ma) ,"cells and ", nrow(ma), "genes") )
@@ -403,9 +403,9 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	rm(d)
 	d= NULL
 	if ( file.exists( file.path(dat,'genes.tsv'))){
-		d = read.table( file.path(dat,'genes.tsv'), header=F )
+		d = utils::read.table( file.path(dat,'genes.tsv'), header=F )
 	}else {
-		d = read.table( file.path(dat,'features.tsv'), header=F )
+		d = utils::read.table( file.path(dat,'features.tsv'), header=F )
 	}
 	
 

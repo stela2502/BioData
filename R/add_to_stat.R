@@ -17,7 +17,7 @@ setGeneric('add_to_stat', ## Name
 setMethod('add_to_stat', signature = c ('BioData'),
 	definition = function ( x, stat, name ) {
 	if ( length( match('p.adj BF',colnames(stat) )) == 0 & length( match('hurdle',colnames(stat) ))) {
-		stat = cbind( stat, 'p.adj BF' = p.adjust(stat[,'hurdle'], method='bonferroni') )
+		stat = cbind( stat, 'p.adj BF' = stats::p.adjust(stat[,'hurdle'], method='bonferroni') )
 	}
 	if ( ! is.na( match( name, names(x$stats)))){
 		x$stats[[ match( name, names(x$stats)) ]] <- stat

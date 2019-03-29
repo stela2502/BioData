@@ -29,9 +29,9 @@ setMethod('merge_cells', signature = c ('BioData'),
 		switch( by,
 				median = f<- function (x ) { median(x) },
 				mean = f <- function(x) { mean(x) },
-				sd = f <- function(x) { sd(x) },
+				sd = f <- function(x) { stats::sd(x) },
 				sum = f <-function(x) { sum(x)},
-				var = f <- function(x) { var(x) }
+				var = f <- function(x) { stats::var(x) }
 		);
 	}
 	if ( is.null(f) ) {

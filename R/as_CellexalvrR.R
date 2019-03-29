@@ -30,7 +30,7 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 	## save space
 	forCellexal$raw = NULL
 	forCellexal$zscored = NULL
-	forCellexal$dat = drop0(forCellexal$dat)
+	forCellexal$dat = Matrix::drop0(forCellexal$dat)
 	
 	## store the important variables for the convert
 	forCellexal$usedObj$meta.cell.groups = meta.cell.groups

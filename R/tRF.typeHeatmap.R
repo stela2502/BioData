@@ -16,7 +16,7 @@
 #' function(x) \{ collaps(x,what='row',group='frag.type.and.length', fun = function(x) \{ sum( x, na.rm=TRUE) \} ) \}  
 #' @title description of function heatmap
 #' @export 
-if ( ! isGeneric('tRF.typeHeatmap') ){ setGeneric('tRF.typeHeatmap', ## Name
+if ( ! isGeneric('tRF.typeHeatmap') ){ methods::setGeneric('tRF.typeHeatmap', ## Name
 	function ( x, colGroup, norm.type=NULL, tRF.type=NULL, fname=NULL, main="Heatmap", fun=function(x) {collapse2codons(x)}, z.score=FALSE, brks=10) { 
 		standardGeneric('tRF.typeHeatmap')
 	}

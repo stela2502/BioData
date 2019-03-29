@@ -13,7 +13,7 @@
 #' @param col a vector of color names default=NULL
 #' @title description of function plot.legend
 #' @export 
-if ( ! isGeneric('plotLegend') ){ setGeneric('plotLegend', ## Name
+if ( ! isGeneric('plotLegend') ){ methods::setGeneric('plotLegend', ## Name
 		function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' ) { 
 			standardGeneric('plotLegend')
 		}
@@ -43,20 +43,20 @@ setMethod('plotLegend', signature = c ('BioData'),
 				file = file.path(x$outpath, paste( collapse='_',unlist(strsplit( c(file, colname), '\\s+', perl=T))))
 				h = 4 * ceiling(n /10)
 				if ( svg ) {
-					devSVG( file=paste(file,'svg',sep='.'), width= 4, height=h )
+					RSvgDevice::devSVG( file=paste(file,'svg',sep='.'), width= 4, height=h )
 				}
 				else if ( pdf ) {
-					pdf( file=paste(file, 'pdf', sep='.'), width= 4, height=h )
+					grDevices::pdf( file=paste(file, 'pdf', sep='.'), width= 4, height=h )
 				}
 				else {
-					png(file=paste(file, 'png', sep='.'), width= 400, height=h*100, type=X11type )
+					grDevices::png(file=paste(file, 'png', sep='.'), width= 400, height=h*100, type=X11type )
 				}
 			}
-			plot(1, type="n", axes=F, xlab="", ylab="", main=colname)
+			graphics::plot(1, type="n", axes=F, xlab="", ylab="", main=colname)
 			if (! is.na(match(colname, colnames(x$annotation) ))) {
-				legend( 'top', levels( x$annotation[, colname] ), fill=col )
+				graphics::legend( 'top', levels( x$annotation[, colname] ), fill=col )
 			}else if ( ! is.na(match(colname, colnames(x$samples) ))){
-				legend( 'top', levels( x$samples[, colname] ), fill=col )
+				graphics::legend( 'top', levels( x$samples[, colname] ), fill=col )
 			}else{
 				stop ( paste( 'The column name',colname, 
 								'is nether defined in the samples nor the annotation table:', 
@@ -65,7 +65,7 @@ setMethod('plotLegend', signature = c ('BioData'),
 				))
 			}
 			if ( ! is.null(file) ) {
-				dev.off()
+				grDevices::dev.off()
 			}
 		}
 )

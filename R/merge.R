@@ -81,7 +81,7 @@ setMethod('merge', signature = c ('BioData'),
 					}
 			)
 			
-			dat <- Matrix( 0 ,ncol=nrow(merged$samples), nrow=length(gnames))
+			dat <- Matrix::Matrix( 0 ,ncol=nrow(merged$samples), nrow=length(gnames))
 			rownames(dat) = gnames
 			colnames(dat) <- make.names(merged$samples[, snameCol])
 			merged$samples[, snameCol] <- colnames(dat)
@@ -158,7 +158,7 @@ setMethod('merge', signature = c ('BioData'),
 			
 			for ( n in 1:length(objects) ) {
 				x <- objects[[n]]
-				pb <- progress_estimated(100)
+				pb <- dplyr::progress_estimated(100)
 				steps = ceiling(ncol(x$dat)/100)
 				print ( paste( "Add",ncol(x$dat), "cells from", x$name ))
 				
@@ -194,7 +194,7 @@ setMethod('merge', signature = c ('BioData'),
 				print ( paste( "added object", x$name ) )
 			}
 			
-			tmp <- sparseMatrix( i=r, j=j, x=v, dims=dim(merged$dat) )
+			tmp <- Matrix::sparseMatrix( i=r, j=j, x=v, dims=dim(merged$dat) )
 			
 			#rm(dbh) 
 			colnames(tmp) <- colnames(merged$dat)

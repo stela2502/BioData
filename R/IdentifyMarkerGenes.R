@@ -20,8 +20,8 @@ setGeneric('IdentifyMarkerGenes', ## Name
 
 setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 		definition = function ( x, gname, settings=list(), names=NULL ) {
-			x$name <- str_replace_all( x$name, '\\s+', '_')
-			OPATH <- file.path( x$outpath,str_replace( x$name, '\\s', '_'))
+			x$name <- stringr::str_replace_all( x$name, '\\s+', '_')
+			OPATH <- file.path( x$outpath,stringr::str_replace( x$name, '\\s', '_'))
 			opath = file.path( OPATH,gname,"RFclust.mp" )
 			putScript <- function( n, ofile ) {
 				Rdata = paste(n,'RData', sep='.')
@@ -84,7 +84,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				)
 				for ( n in names ) {
 					new_g <-  paste( 'IdentifyMarkerGenes',  gname, n )
-					new_g <- str_replace_all( new_g, '\\s+', '_')
+					new_g <- stringr::str_replace_all( new_g, '\\s+', '_')
 					print (paste( "Processing:", new_g ))
 					g <- rep('rest', ncol(x$dat) )
 					g[which(tmp$samples[,gname] == n )] = n
@@ -102,7 +102,7 @@ setMethod('IdentifyMarkerGenes', signature = c ('BioData'),
 				}
 			}else { # ! is.null(x$usedObj$IdentifyMarkerGenes) 
 				for ( n in names(x$usedObj$IdentifyMarkerGenes)) {
-					if ( locked(x$usedObj$IdentifyMarkerGenes[[n]]) ) {
+					if ( RFclust.SGE::locked(x$usedObj$IdentifyMarkerGenes[[n]]) ) {
 						stop(paste( "Process for grouping", n ,"not finished!" ))
 					}
 					load(x$usedObj$IdentifyMarkerGenes[[n]])

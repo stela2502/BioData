@@ -96,7 +96,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			m <- min(data)
 			if ( m == -1) {
 				## new z.score function to keep lost info
-				brks <- unique(as.vector(c(m, m+1, quantile(data[which(data > m +1 )],seq(0,1,by=1/brks)),max(data))))
+				brks <- unique(as.vector(c(m, m+1, stats::quantile(data[which(data > m +1 )],seq(0,1,by=1/brks)),max(data))))
 				brks[1:2] = brks[1:2] - 1e-4
 				if ( is.null(heapmapCols)){
 					if ( green ) {
@@ -106,7 +106,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					}
 				}
 			}else {
-				brks <- unique(as.vector(c(m, quantile(data[which(data!= m)],seq(0,1,by=1/brks)),max(data))))
+				brks <- unique(as.vector(c(m, stats::quantile(data[which(data!= m)],seq(0,1,by=1/brks)),max(data))))
 				if ( is.null(heapmapCols)){heapmapCols = function(x){ c("black", gplots::bluered(x))}}
 			}
 			if ( ! is.null(ofile)){
@@ -126,11 +126,11 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					if ( height < 8){
 						height = 8
 					}
-					pdf( file=paste(ofile ,'pdf',sep='.'), width=10, height=height)
+					grDevices::pdf( file=paste(ofile ,'pdf',sep='.'), width=10, height=height)
 				}else{
 					width= ceiling(nrow(x$samples)/300) * 1600
 					height = ceiling( nrow(x$annotation) / 100 ) *800
-					png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type)
+					grDevices::png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type)
 				}
 				for ( v in colGroups ) {
 					plotLegend(x, file=paste(x$name, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
@@ -159,18 +159,18 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			)
 			
 			if ( ! is.null(ofile)){
-				dev.off()
+				grDevices::dev.off()
 				fn <- paste(file.path(x$outpath,x$name),'_legend_values.pdf',sep='.')
 				if ( ! file.exists(fn) ){
-					pdf( file=fn, width=8, height=4)
+					grDevices::pdf( file=fn, width=8, height=4)
 					Z <- as.matrix(1:(length(brks)-2))
-					image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
+					graphics::image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
 					if ( min(x$data()) == -1) {
-						axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
+						graphics::axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
 					}else {
-						axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
+						graphics::axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
 					}
-					dev.off()
+					grDevices::dev.off()
 				}
 			}
 			

@@ -33,7 +33,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 				}else {
 					error= paste( "The usedObj$specie",  x$usedObj$specie,  "is up to now not supported in the GO reports function" )
 				}
-				x$usedObj$GO2genes = mapIds(db, keys(db,'GO'), 'SYMBOL', 'GO', multiVals = 'list')
+				x$usedObj$GO2genes = AnnotationDbi::mapIds(db, keys(db,'GO'), 'SYMBOL', 'GO', multiVals = 'list')
 			}
 			
 			all = is.na(match(rownames(x$data()), genes ))
@@ -46,7 +46,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 					})
 			
 			
-			x$usedObj$analysis = new("topGOdata", ontology = ontology, allGenes=all 
+			x$usedObj$analysis = methods::new("topGOdata", ontology = ontology, allGenes=all 
 					,geneSel =  function(x) {x} ,  annot = topGO::annFUN.GO2genes, GO2genes= x$usedObj$GO2genes)
 			
 			
@@ -69,7 +69,7 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 			if ( !dir.exists( file.path( x$outpath, 'GOtables') ) ){
 				dir.create( file.path( x$outpath, 'GOtables') )
 			}
-			write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$outpath, 'tables',  GOfname ) )
+			utils::write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$outpath, 'tables',  GOfname ) )
 			browser()
 			for ( i in 1:nrow(allRes) ) {
 				allRes[i,1] = rmdLink(allRes[i,1],"http://amigo.geneontology.org/amigo/term/" )

@@ -95,7 +95,7 @@ setMethod('combineGroupings', signature = c ('BioData'),
 		
 		x$usedObj$tmpgroupID=0
 		steps = ceiling(ncol(x$dat)/100)
-		pb <- progress_estimated(100)
+		pb <- dplyr::progress_estimated(100)
 		print ( paste( "Calculating group overlap for", ncol(x$dat),"cells" ) )
 		for ( i in 1:ncol(x$dat) ) {
 			closestCells(i)

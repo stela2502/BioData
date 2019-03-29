@@ -8,7 +8,7 @@
 #' @param condition the column in the samples table to use as grouing variable
 #' @title description of function preprocess
 #' @export
-if ( ! isGeneric('preprocess') ){ setGeneric('preprocess', ## Name
+if ( ! isGeneric('preprocess') ){ methods::setGeneric('preprocess', ## Name
 		function (x, condition ) { 
 			standardGeneric('preprocess')
 		}

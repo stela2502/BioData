@@ -9,7 +9,7 @@
 #' @export 
 
 if ( ! isGeneric('loadObj') ){ 
-	setGeneric('loadObj', ## Name
+	methods::setGeneric('loadObj', ## Name
 		function ( file=NULL ){	
 			standardGeneric('loadObj')
 		}

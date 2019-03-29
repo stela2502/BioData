@@ -15,7 +15,7 @@
 #' @param dim the number of dimensions to return ( default 3)
 #' @title Calculate MDS projections for the 3D Make3Dobj function
 #' @export 
-if ( ! isGeneric('mds') ){ setGeneric('mds', ## Name
+if ( ! isGeneric('mds') ){ methods::setGeneric('mds', ## Name
 			function ( dataObj, ..., mds.type="PCA" , onwhat ='Expression', genes=F,  LLEK=2, useRaw=F, pythonEnv=NULL, dim=3) { 
 				standardGeneric('mds')
 			}
@@ -130,7 +130,7 @@ setMethod('mds', signature = c ('BioData'),
 						
 					}else if ( ! file.exists( 'tSNE_dim3_coods.csv' ) )  {
 						
-						write.table( t(tab), sep=",", file="TSNE_data.csv", quote=F )
+						utils::write.table( t(tab), sep=",", file="TSNE_data.csv", quote=F )
 						fileConn<-file( 'runTSNE.py' )
 						writeLines(c(
 										"from MulticoreTSNE import MulticoreTSNE as TSNE",
@@ -156,7 +156,7 @@ setMethod('mds', signature = c ('BioData'),
 						return (invisible(dataObj))
 					} else {
 						## OK the output file has been produced
-						mds.proj <- read.delim( 'tSNE_dim3_coods.csv', sep="," );
+						mds.proj <- utils::read.delim( 'tSNE_dim3_coods.csv', sep="," );
 						rownames(mds.proj) <- rownames(tab)
 					}
 				}else if ( mds.type == "TSNE_R"){
@@ -180,27 +180,27 @@ setMethod('mds', signature = c ('BioData'),
 					}
 					umap_config = umap.defaults
 					umap_config$n_components = dim
-					uMap = umap( as.matrix(tab), umap_config)
+					uMap = umap::umap( as.matrix(tab), umap_config)
 					mds.proj <- uMap$layout
 					
 					
 				}
 				
 				else if ( mds.type == "LLE"){
-					mds.proj <- LLE( tab, dim = dim, k = as.numeric(LLEK) )
+					mds.proj <- RDRToolbox::LLE( tab, dim = dim, k = as.numeric(LLEK) )
 					#	mds.trans <- LLE( t(tab), dim = 3, k = as.numeric(LLEK) )
 					
 				}else if ( mds.type == "ISOMAP"){
-					mds.proj <- Isomap( tab, dim = dim, k = as.numeric(LLEK) )$dim3
+					mds.proj <- RDRToolbox::Isomap( tab, dim = dim, k = as.numeric(LLEK) )$dim3
 					#	mds.trans <- Isomap( t(tab), dim = 3, k = as.numeric(LLEK) )$dim3
 					
 				}else if ( mds.type == "ZIFA" ) {
 					#stop( "Sorry ZIFA has to be double checked - are you working on normalized data - than ZIFA can not be applied!")
 					print ( "Running external python script to apply ZIFA dimensional reduction (Expression data only)" )
 					if ( genes ) {
-						write.table( dataObj$dat, file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
+						utils::write.table( dataObj$dat, file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
 					}else {
-						write.table( t(dataObj$dat), file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
+						utils::write.table( t(dataObj$dat), file="ZIFA_input.dat", sep=" ", col.names=F, row.names=F , quote=F)
 					}
 					write( c("from ZIFA import ZIFA","from ZIFA import block_ZIFA", "import numpy as np",
 									"Y = np.loadtxt('ZIFA_input.dat')", "Z, model_params = ZIFA.fitModel( Y, 3 )", 
@@ -208,7 +208,7 @@ setMethod('mds', signature = c ('BioData'),
 							file= 'ZIFA_calc.py' )
 					system( "python ZIFA_calc.py" )
 					Sys.sleep(5)
-					mds.proj <- read.delim( "TheMDS_ZIFA.xls", sep=' ', header=F)
+					mds.proj <- utils::read.delim( "TheMDS_ZIFA.xls", sep=' ', header=F)
 					if ( genes ) {
 						rownames(mds.proj) <- rownames(dataObj$dat)
 					}else {
@@ -217,7 +217,7 @@ setMethod('mds', signature = c ('BioData'),
 					colnames(mds.proj) <- c( 'x','y','z')
 					
 				} else if ( mds.type == "DDRTree" ) {
-					DDRTree_res <- DDRTree( t(tab), dimensions=3)
+					DDRTree_res <- DDRTree::DDRTree( t(tab), dimensions=3)
 					mds.proj <- t(DDRTree_res$Z)
 					rownames(mds.proj) <- rownames(tab)
 					dataObj$usedObj$DRRTree.genes <- DDRTree_res

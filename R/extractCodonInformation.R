@@ -7,7 +7,7 @@
 #' @param col the column conatining the codon information default= "Sequence.locations.in.tRNA.space..comma.deliminated."
 #' @title description of function extractCodonInformation
 #' @export 
-if ( ! isGeneric('extractCodonInformation') ){ setGeneric('extractCodonInformation', ## Name
+if ( ! isGeneric('extractCodonInformation') ){ methods::setGeneric('extractCodonInformation', ## Name
 		function ( x, col= "Sequence.locations.in.tRNA.space..comma.deliminated." ) { 
 			standardGeneric('extractCodonInformation')
 		}

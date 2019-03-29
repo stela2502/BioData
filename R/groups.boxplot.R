@@ -13,7 +13,7 @@
 #' @param Collapse if set will lead to a collapse of the sample groups into one value per gene. Supports all \code{\link{collaps}} by options.
 #' @title description of function groups_boxplot
 #' @export 
-if ( ! isGeneric('groups_boxplot') ){ setGeneric('groups_boxplot', ## Name
+if ( ! isGeneric('groups_boxplot') ){ methods::setGeneric('groups_boxplot', ## Name
 	function ( x, groupCol='GroupName', clusters, svg=F, fname='group_', width=800, height=800,mar=NULL, Collapse=NULL, ...) { 
 		standardGeneric('groups_boxplot')
 	}
@@ -43,7 +43,7 @@ setMethod('groups_boxplot', signature = c ( 'BioData') ,
 			devSVG ( file= fnames[i], width=width/130, height=height/130 )
 		}else{
 			fnames[i] =paste(x$outpath,fname,i,"_boxplot.png",sep='')
-			png( file=fnames[i],width=width,height=height )
+			grDevices::png( file=fnames[i],width=width,height=height )
 		}
 		
 		robj <- reduceTo( x,what='row',to= rownames(x$data())[which(clusters==i)], name=paste("group_",i,sep=''), copy=T )
@@ -59,13 +59,13 @@ setMethod('groups_boxplot', signature = c ( 'BioData') ,
 		names(d) <- gnames
 		A <- NULL
 		if ( ! is.null(mar) ){
-			A <- boxplot(d, main=paste('Cluster', i, ' - ',nrow(robj$data())," genes", sep='' ),outline=FALSE, par(mar=mar), ...  )
+			A <- graphics::boxplot(d, main=paste('Cluster', i, ' - ',nrow(robj$data())," genes", sep='' ),outline=FALSE, graphics::par(mar=mar), ...  )
 		}else {
-			A <- boxplot(d, main=paste('Cluster', i, ' - ',nrow(robj$data())," genes", sep='' ),outline=FALSE, ...  )
+			A <- graphics::boxplot(d, main=paste('Cluster', i, ' - ',nrow(robj$data())," genes", sep='' ),outline=FALSE, ...  )
 		}
 		mi <- min(c(mi,A$stats[1,]))
 		ma <- max(c(ma, A$stats[5,]))
-		dev.off()
+		grDevices::dev.off()
 	}
 	print ( paste(  "min",mi, 'max', ma) )
 	#print (paste('montage', paste(fnames, collapse= " "), "-geometry", paste("'", width, "x", height,"+0+0'",sep=''),paste(x$outpath,fname,"montage.png",sep=''), sep=' ' ))

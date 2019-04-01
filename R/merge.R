@@ -35,20 +35,20 @@ setMethod('merge', signature = c ('BioData'),
 										}
 										if ( is.null( x$samples$nUMI) | is.null(x$samples$nGene) ) {
 											if ( ! is.null(x$raw) ){
-												x$samples$nUMI <- apply( x$raw,2, sum)
+												x$samples$nUMI <- Matrix::colSums( x$raw )
 												x$samples$nGene <- apply( x$raw,2, function(a){ length(which(a>0)) })
 											}else {
-												x$samples$nUMI <- apply( x$dat,2, sum)
+												x$samples$nUMI <- Matrix::colSums( x$dat )
 												x$samples$nGene <- apply( x$dat,2, function(a){ length(which(a>0)) })
 											}
 										}
 										
 										if ( is.null(x$annotation$nUMI) | is.null(x$annotation$nCell) ){
 											if ( ! is.null(x$raw) ){
-												x$annotation$nUMI <- apply( x$raw,1, sum)
+												x$annotation$nUMI <- Matrix::rowSums( x$raw )
 												x$annotation$nCell <- apply( x$raw,1, function(a){ length(which(a>0)) })
 											}else {
-												x$annotation$nUMI <- apply( x$dat,1, sum)
+												x$annotation$nUMI <- Matrix::rowSums( x$dat )
 												x$annotation$nCell <- apply( x$dat,1, function(a){ length(which(a>0)) })
 											}
 										}
@@ -132,23 +132,12 @@ setMethod('merge', signature = c ('BioData'),
 			
 			## and now populate the data frame
 			print (paste( "Populate the new dat slot with dim", paste(dim(merged$dat),collapse=":" ) ))
-			pI = sum(unlist(lapply(objects, function(x) {
-										if ( is.null(x$raw)) {
-											length(x$dat@x)
-										}else {
-											length(x$raw@x )
-										}
-									})))
 			
-			pM = pI * 2 
-			#pI = 20000 
-			r = rep( NA, pI ) #rows
-			j = rep( NA, pI) #cols
-			v = rep( NA, pI) #vals
-			pos = 0
+			values= NULL;
+
 			## adding to Matrix - slow as hell
-			## pre_defining the vartors (adding to them) - slow as hell
-			## creating a temporary file - a huge imrovement, but a combo of the last 2 should be best
+			## pre_defining the vectors (adding to them) - slow as hell
+			## creating a temporary file - a huge improvement, but a combo of the last 2 should be best
 			## creating a table if data is more than 10000 ?
 			#file = filePath( Sys.getenv('SNIC_TMP'), 'tmp.table.sqlite')
 			#if ( file.exists(file)) {unlink( file )}
@@ -162,45 +151,23 @@ setMethod('merge', signature = c ('BioData'),
 				steps = ceiling(ncol(x$dat)/100)
 				print ( paste( "Add",ncol(x$dat), "cells from", x$name ))
 				
-				m <- match ( rownames(x$rawData()), gnames )
-				for ( i in 1:ncol(x$rawData()) ) {
-					mc <- match(make.names(colnames(x$rawData())[i]), colnames(merged$dat))
-					if ( is.na(mc) ) {
-						stop(paste( "Library error - sname" , colnames(x$rawData())[i], "not defined in the data colnames", mc ))
-					}
-					ok = which(x$rawData()[,i] > 0)
-					if ( length(ok) > 0 ) {
-						#write.table( cbind( r= m[ok] , j= rep(mc, length(ok), v= x$rawData()[ok,i]) ),file=file, quote=F, append=T, row.names=F, col.names=F )
-						add = (pos+1):(pos+length(ok)+1)
-						r[add] = m[ok] ## rows
-						j[add] = rep(mc, length(ok) ) ## cols
-						v[add] = x$rawData()[ok,i] ## vals
-						pos = pos+length(ok)
-					}
-					if ( i %% steps == 0 ) {
-						pb$tick()$print()
-						#print ( paste( "done with sample ",i, "(",nrow(t)," gene entries )"))
-					}
-				}
-				if ( pos > pM ) {
-					RSQLite::dbWriteTable(dbh,'datavalues',data.frame( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),append = TRUE)
-					#write.table( cbind( r= r[1:pos] , j= j[1:pos], v= v[1:pos] ),file=file, quote=F, append=T, row.names=F, col.names=F )
-					r = rep( NA, pI ) #rows
-					j = rep( NA, pI) #cols
-					v = rep( NA, pI) #vals
-					pos = 0
-				}
+				melted = FastWilcoxTest::meltSparseMatrix( x$rawData() )
+				## now I need to translate the ids for genes and cells
+				melted[,1] = match( rownames(x$dat), rownames(merged$dat))[melted[,1]]
+				melted[,2] = match( colnames(x$dat), colnames(merged$dat))[melted[,2]]
+				values = rbind( values, melted )
 				
 				print ( paste( "added object", x$name ) )
 			}
-			
-			tmp <- Matrix::sparseMatrix( i=r, j=j, x=v, dims=dim(merged$dat) )
+			#browser()
+			tmp <- Matrix::sparseMatrix( i=values[,1], j=values[,2], x=values[,3], dims=dim(merged$dat) )
 			
 			#rm(dbh) 
 			colnames(tmp) <- colnames(merged$dat)
 			rownames(tmp) <- rownames(merged$dat)
 			merged$dat = tmp
 			
+			rm( tmp, values)
 			class(merged) <- class(objects[[1]])
 			gc()
 			merged

@@ -12,14 +12,15 @@
 #' @title normalize a BioData::R6 object
 #' @export normalize
 
-if ( ! isGeneric('normalize') ){ methods::setGeneric('normalize', ## Name
+#if ( ! isGeneric('normalize') ){ 
+methods::setGeneric('normalize', ## Name
 	function ( object, ... , name=NULL) { 
 		standardGeneric('normalize')
 	}
 )
-}else {
-	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
-}
+#}else {
+#	print ("Onload warn generic function 'normalize' already defined - no overloading here!")
+#}
 
 setMethod('normalize', signature = c ('BioData'),
 		definition = function (  object, readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {

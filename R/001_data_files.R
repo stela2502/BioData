@@ -1,4 +1,33 @@
-#' @importFrom utils read.delim read.table
+#' @importFrom AnnotationDbi mapIds
+#' @importFrom DDRTree DDRTree
+#' @importFrom DESeq2 DESeq DESeqDataSetFromMatrix results
+#' @importFrom FastWilcoxTest CorMatrix NormalizeCells StatTest ZScore
+#' @importFrom MAST FromMatrix lrTest zlm
+#' @importFrom Matrix Matrix colSums drop0 rowSums sparseMatrix t
+#' @importFrom R6 R6Class
+#' @importFrom RDRToolbox Isomap LLE
+#' @importFrom RSQLite dbClearResult dbConnect dbDisconnect dbFetch dbGetQuery dbHasCompleted dbSendQuery dbWriteTable fetch
+#' @importFrom RSvgDevice devSVG
+#' @importFrom Rtsne Rtsne
+#' @importFrom Seurat CellCycleScoring CreateSeuratObject FindAllMarkers FindVariableGenes SetIdent
+#' @importFrom dplyr progress_estimated
+#' @importFrom gplots bluered
+#' @importFrom grDevices pdf png rainbow x11
+#' @importFrom graphics abline axis barplot boxplot hist image layout legend lines mtext par pie plot rect text title
+#' @importFrom knitr kable
+#' @importFrom limma toptable
+#' @importFrom mclust hclass
+#' @importFrom methods new setGeneric
+#' @importFrom pcaMethods bpca
+#' @importFrom randomForest randomForest
+#' @importFrom rgl axis3d bg3d bgplot3d grid3d par3d
+#' @importFrom stats anova cmdscale cor cutree density hclust kmeans predict quantile reorder runif sd var
+#' @importFrom stringr str_replace str_replace_all str_split
+#' @importFrom topGO GenTable runTest
+#' @importFrom umap umap
+#' @importFrom utils sessionInfo
+NULL;
+
 
 #' @name CellCycleGenes
 #' @title A simple table containing the Human and mouse orthologe ensembl ids for the cell cycle genes used in PMID28263960 using BioMart and GRCh38.p10

@@ -54,8 +54,8 @@ setMethod('convert_to', signature = c ('BioData'),
 		scran::rowData(ret) <- as.matrix(x$annotation)
 		scran::colData(ret) <- DataFrame(x$samples)
 		if ( ! is.null(x$annotation$gene.name) ) {
-			scran::scran::rowData(ret)$gene.symbol <- rowData(ret)$gene.name
-			scran::scran::rowData(ret)$gene.name <- rowData(ret)$ensembl_id.unique
+			scran::rowData(ret)$gene.symbol <- rowData(ret)$gene.name
+			scran::rowData(ret)$gene.name <- rowData(ret)$ensembl_id.unique
 		}
 	}
 	if ( type == 'Seurat') {

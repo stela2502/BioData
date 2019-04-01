@@ -10,5 +10,5 @@ To install it I recommend using R::devtools:
 
 library(devtools)
 
-install_git('https://github.com/stela2502/BioData.git', ref='testing')
+install_git('https://github.com/stela2502/BioData.git')
 

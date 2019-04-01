@@ -1,3 +1,5 @@
+context('tRNA class')
+
 #library(BioData)
 skip( "tRNA support depricated")
 x <- loadObj('TestData.tRNAMINT.RData')

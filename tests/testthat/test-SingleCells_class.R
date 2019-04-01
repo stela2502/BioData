@@ -35,7 +35,7 @@ reads = min(Matrix::colSums( x$dat))
 old = x$clone()
 normalize(x, reads)
 #all_equal(as.character(dim(x$dat)) ,as.character(c(nrow,ncol)))
-all_equal( as.vector(apply( x$dat,2, function(x) sum(x[which(x > 0 )]) )) , rep(reads, ncol(x$dat)) )
+expect_equal( as.vector(apply( x$dat,2, function(x) sum(x[which(x > 0 )]) )) , rep(reads, ncol(x$dat)) )
 
 d= lapply ( 1:ncol(x$dat), function( i ) {
 			raw = as.vector(x$raw[,i])
@@ -57,13 +57,17 @@ d= lapply ( 1:ncol(x$dat), function( i ) {
 ## z.score 
 z.score(x)
 
-expect_true ( length(which(as.matrix(x$zscored)[null_indx[4:length(null_indx)]] != 0)) == 0, "null normalized as 0")
+expect_true(length(x$zscored@x) == length(x$dat@x ), "null normalized as 0")
 
-expect_true ( length(which(as.matrix(x$zscored)[null_indx[1:3]] != -1)) == 0, "-1 values keept")
+null_indx = which( x$dat@x == -1 );
+
+expect_equal( x$zscored@x[null_indx], rep( -1 , length(null_indx)) );
 
 expect_equal( x$data(), x$zscored, info = "the data accessory function returns the z.scored data" ) 
 
-expect_true ( round(sd(x$zscored@x[which( x$zscored@x > 0)])) == 1, paste("z.scored sd not 1!", sd(x$zscored@x[which( x$zscored@x > 0)])) )
+d = apply( x$zscored, 1, function(d) { sd(d[which(d > 0 )])})
+
+expect_equal ( as.vector(d), rep( 1, nrow(x$dat)) )
 
 context( "single cells mds" )
 
@@ -71,5 +75,8 @@ mds(x)
 
 expect_true( is.null(x$usedObj$pr), "initial pca speed up existing" )
 
-expect_true( is.null(x$usedObj$MDS[['Expression PCA']]), "PCA data existing" )
+expect_true(! is.null(x$usedObj$MDS[['Raw Expression PCA']]), "PCA data existing" )
+
+expect_true( ncol(x$usedObj$MDS[['Raw Expression PCA']]) == 3, "3D_mds" )
+
 

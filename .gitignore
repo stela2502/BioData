@@ -17,3 +17,4 @@ scratchbord/outpath/*
 inst/doc
 /testObject/
 /tSNE_dim3_coods.csv
+/Test_pCMF.R

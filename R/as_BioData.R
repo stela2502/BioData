@@ -21,6 +21,7 @@ if ( ! isGeneric('as_BioData') ){ methods::setGeneric('as_BioData', ## Name
 setMethod('as_BioData', signature = c ('list'),
 	definition = function ( dat ) {
 	ret = NULL
+  
 	if (all.equal( names ( dat), c("counts" ,"annotation", "targets", "stat")  ) ) {
 		samples <- data.frame(t(dat$stat))
 		colnames(samples) <- as.character(t(samples[1,]))

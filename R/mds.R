@@ -178,7 +178,7 @@ setMethod('mds', signature = c ('BioData'),
 						stop("package 'umap' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}
-					umap_config = umap.defaults
+					umap_config = umap::umap.defaults
 					umap_config$n_components = dim
 					uMap = umap::umap( as.matrix(tab), umap_config)
 					mds.proj <- uMap$layout

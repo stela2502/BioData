@@ -9,7 +9,7 @@
 #' @importFrom RSQLite dbClearResult dbConnect dbDisconnect dbFetch dbGetQuery dbHasCompleted dbSendQuery dbWriteTable fetch
 #' @importFrom RSvgDevice devSVG
 #' @importFrom Rtsne Rtsne
-#' @importFrom Seurat CellCycleScoring CreateSeuratObject FindAllMarkers FindVariableGenes SetIdent
+#' @importFrom Seurat CellCycleScoring CreateSeuratObject FindAllMarkers SetIdent
 #' @importFrom dplyr progress_estimated
 #' @importFrom gplots bluered
 #' @importFrom grDevices pdf png rainbow x11

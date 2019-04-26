@@ -4,8 +4,6 @@
 #' @description  normalize the expression data (sample wise) using DEseq2
 #' @param x The BioData object (NGS expression data, not single cells)
 #' @param readCounts The number of reads from each bam file or another value you want to normalize the data to
-#' @param to_gene_length FALSE whether or not to normalize the data to gene length
-#' @param geneLengthCol the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)
 #' @param name the new name of the object (deafule old name + normalized)
 #' @param force replace old norm data (FALSE)
 #' @return the normalized data set (original data stored in NGS$raw
@@ -23,7 +21,7 @@ methods::setGeneric('normalize', ## Name
 #}
 
 setMethod('normalize', signature = c ('BioData'),
-		definition = function (  object, readCounts=NULL, to_gene_length=FALSE, geneLengthCol='transcriptLength', force=FALSE ,name=NULL) {
+		definition = function (  object, readCounts=NULL, force=FALSE ,name=NULL) {
 			if ( ! object$snorm ){
 				
 				if ( is.null(object$raw) ){
@@ -35,7 +33,9 @@ setMethod('normalize', signature = c ('BioData'),
 					readCounts <- as.vector( DESeq2::estimateSizeFactorsForMatrix ( as.matrix(object$raw)) )
 				}
 				object$samples$SizeFactor <- readCounts
-				object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
+				logThis(object)
+				object$dat = FastWilcoxTest::NormalizeSample( object$dat, readCounts )	
+				#object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
 				colnames(object$dat) = colnames(object$raw)
 				rownames(object$dat) = rownames(object$raw)
 				if (length(to_gene_length ) > 0 ){

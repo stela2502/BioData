@@ -20,13 +20,23 @@ setGeneric('as_cellexalvr', ## Name
 
 setMethod('as_cellexalvr', signature = c ('BioData'),
 	definition = function (x, outpath, specie, meta.cell.groups, meta.genes.groups = NULL, userGroups=NULL, minGene=1 ) {
-	normUMI <- apply( x$dat, 1, function(d) { sum(exp(d[which(d > 0 )] )) } )
-	forCellexal <- reduceTo( x, what='row', to = rownames(merged$dat)[which(normUMI >= minGene  ) ], name=x$name )
+		if ( ! file.exists(outpath) ) {
+			stop("Please create the outpath")
+		}
+		normUMI <- apply( x$dat, 1, function(d) { sum(expm1(d[which(d > 0 )] )) } )
+	
+	forCellexal <- reduceTo( x, what='row', to = rownames(x$dat)[which(normUMI >= minGene  ) ], name=x$name, copy=T )
 	## get rid of -1 values
 	bad = which(forCellexal$dat@x < 0 )
 	if ( length(bad) > 0 )
 		forCellexal$dat@x[bad] = 0
-	
+	MDS <- names(x$usedObj)[grep ( 'MDS', names(x$usedObj))]
+	OK = grep ( '_dim_' , MDS, invert= TRUE )
+	if ( length(OK) > 0){
+		lapply( MDS[OK],  function(n) {
+			forCellexal$usedObj[[n]] = x$usedObj[[n]]
+		} )
+	}
 	## save space
 	forCellexal$raw = NULL
 	forCellexal$zscored = NULL
@@ -42,12 +52,12 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 	
 	save( forCellexal, file="forCellexal.RData" )
 	
-	script = paste( sep="\n", "library(cellexalvrr)",
+	script = paste( sep="\n", "library(cellexalvrR)",
 			"options(warn=-1)",
 			paste( sep="", 'load("forCellexal.RData")' ),
 			paste( sep="", "try({class(forCellexal) = 'list' }, silent=T) ## changes class to environment"  ),
 			paste( sep="", 
-"test = cellexalvrr( forCellexal, 
+"test = as_cellexalvrR( forCellexal, 
 	meta.cell.groups =forCellexal$usedObj$meta.cell.groups,
 	meta.genes.groups = forCellexal$usedObj$meta.genes.groups,
 	userGroups = forCellexal$usedObj$userGroups,
@@ -56,6 +66,13 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 			paste( sep="", "if ( !file.exists(forCellexal$usedObj$outpath)) { dir.create(forCellexal$usedObj$outpath)}" ),
 			paste( sep="", "export2cellexalvr( test, '", forCellexal$usedObj$outpath ,"' )")
 	)
+	
+	
+	fileConn<-file("forCellexal_convert.R")
+	writeLines(script, fileConn)
+	close(fileConn)
+	
+	
 	print (paste ("create and run script forCellexal_convert.R" ) )
 	system( "Rscript forCellexal_convert.R")
 	print ( paste("please check the outpath", forCellexal$usedObj$outpath ))

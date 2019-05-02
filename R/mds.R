@@ -180,6 +180,7 @@ setMethod('mds', signature = c ('BioData'),
 					}
 					umap_config = umap::umap.defaults
 					umap_config$n_components = dim
+					browser()
 					uMap = umap::umap( as.matrix(tab), umap_config)
 					mds.proj <- uMap$layout
 					

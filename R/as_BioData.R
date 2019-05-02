@@ -128,6 +128,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 				}
 			}
 			#storage.mode(dat@data) <- 'numeric'
+			browser()
 			if ( nrow(dat@userGroups) == nrow(dat@meta.cell)){
 				samples <- data.frame(cbind(dat@meta.cell, dat@userGroups))
 			}else {
@@ -264,7 +265,6 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	sth <- RSQLite::dbSendQuery(dbh, q )
 	t <- RSQLite::dbFetch(sth)
 	ret <- Matrix::sparseMatrix( i=t[,1], j=t[,2], x=t[,3])
-	#ret = ret[,-which(Matrix::colSums(ret) == 0) ]
 	
 	## gives the same result as the old function! EXTREMELY much faster!
 	if(is.null(useS)){

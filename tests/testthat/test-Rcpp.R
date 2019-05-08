@@ -1,4 +1,4 @@
-conext('Rcpp')
+context('Rcpp')
 
 set.seed(1)
 ncol=10
@@ -29,7 +29,7 @@ expect_equal( dim(x$dat), dim(x$zscored)) # dims are correct
 zero  <- which( x$dat@x == -1 )
 zeroZ <- which( x$zscored@x == -1 )
 
-all_equal( zeroZ, zero) # zscore does not change the droped cells (-1)
+expect_equal( zeroZ, zero) # zscore does not change the droped cells (-1)
 
 d = x$zscored[1,]
 expect_equal(mean(d[which(d > 0 )]), 10) # projects into 10+-1

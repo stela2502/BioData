@@ -154,12 +154,11 @@ setMethod('merge', signature = c ('BioData'),
 				melted = FastWilcoxTest::meltSparseMatrix( x$rawData() )
 				## now I need to translate the ids for genes and cells
 				melted[,1] = match( rownames(x$dat), rownames(merged$dat))[melted[,1]]
-				melted[,2] = match( colnames(x$dat), colnames(merged$dat))[melted[,2]]
+				melted[,2] = match( make.names(colnames(x$dat)), colnames(merged$dat))[melted[,2]]
 				values = rbind( values, melted )
 				
 				print ( paste( "added object", x$name ) )
 			}
-			#browser()
 			tmp <- Matrix::sparseMatrix( i=values[,1], j=values[,2], x=values[,3], dims=dim(merged$dat) )
 			
 			#rm(dbh) 

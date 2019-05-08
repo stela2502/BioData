@@ -34,15 +34,11 @@ setMethod('normalize', signature = c ('BioData'),
 				}
 				object$samples$SizeFactor <- readCounts
 				logThis(object)
-				object$dat = FastWilcoxTest::NormalizeSample( object$dat, readCounts )	
+				object$dat = FastWilcoxTest::NormalizeSamples( object$dat, readCounts )	
 				#object$dat =  data.frame(t(apply(object$dat,1, function(a) { a / readCounts } ) ))
 				colnames(object$dat) = colnames(object$raw)
 				rownames(object$dat) = rownames(object$raw)
-				if (length(to_gene_length ) > 0 ){
-					for ( i in 1:nrow(object$dat)) {
-						object$dat[i,] <- object$dat[i,]/ (object$annotation[i,geneLengthCol ] / 1000)
-					}
-				}
+
 				object$snorm=TRUE
 				if(is.null(name)){
 					name = paste( object$name ,'DESeq2_normalized' )

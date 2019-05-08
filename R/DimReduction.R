@@ -65,6 +65,11 @@ setMethod('DimReduction', signature = c ('BioData'),
 			else 
 				method= 'bpca'
 		}
+		featureSum = Matrix::colSums( tmp)
+		bad = which(featureSum == 0)
+		if ( length(bad) > 0 ) {
+			tmp = tmp[,-bad]
+		}
 		if ( method == 'irlba' ) {
 			message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
 			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n )

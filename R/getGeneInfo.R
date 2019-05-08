@@ -2,7 +2,7 @@
 #' @aliases getGeneInfo,BioData-method
 #' @rdname getGeneInfo-methods
 #' @docType methods
-#' @description getGeneInfo is a poverful function, that uses the annotation packages RSQLite tables to select information.
+#' @description getGeneInfo is a powerful function, that uses the annotation packages RSQLite tables to select information.
 #' @title description of function getEnsembl
 #' @param x the query string or a vector of query strings
 #' @param species either 'mMus', 'Hs' or a AnnotationDbi object

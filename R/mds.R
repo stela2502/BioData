@@ -180,7 +180,6 @@ setMethod('mds', signature = c ('BioData'),
 					}
 					umap_config = umap::umap.defaults
 					umap_config$n_components = dim
-					browser()
 					uMap = umap::umap( as.matrix(tab), umap_config)
 					mds.proj <- uMap$layout
 					
@@ -218,7 +217,12 @@ setMethod('mds', signature = c ('BioData'),
 					colnames(mds.proj) <- c( 'x','y','z')
 					
 				} else if ( mds.type == "DDRTree" ) {
-					DDRTree_res <- DDRTree::DDRTree( t(tab), dimensions=3)
+					## requires the DDRTree libraray to be linked
+					if (!requireNamespace("DDRTree", quietly = TRUE,logical.return=TRUE )) {
+						stop("package 'DDRTree' needed for this function to work. Please install it.",
+								call. = FALSE)
+					}
+					DDRTree_res <- DDRTree::DDRTree( t(tab), dimensions=100)
 					mds.proj <- t(DDRTree_res$Z)
 					rownames(mds.proj) <- rownames(tab)
 					dataObj$usedObj$DRRTree.genes <- DDRTree_res

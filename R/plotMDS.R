@@ -1,4 +1,25 @@
-plotMDS <- function(obj, mds, group, genes, x=1, y=2, green=F ) {
+#' @name plotMDS
+#' @aliases plotMDS,BioData-method
+#' @rdname plotMDS-methods
+#' @docType methods
+#' @description Create 2D plts of any MDS and a list of feature plots
+#' @param obj The BioData object
+#' @param mds The name of the MDS to plot
+#' @param group Which sample grouping(s) to plot onm the MDS  
+#' @param genes Which genes to color the MDS with
+#' @param x MDS dimension on the x axis default=1
+#' @param y MDS dimension on the y axis default=2
+#' @param green show the gene expression lost during normalization in green default=F
+#' @title description of function plotMDS
+#' @export 
+if ( ! isGeneric('plotMDS') ){setGeneric('plotMDS', ## Name
+	function (obj, mds, group, genes, x=1, y=2, green=F ) { 
+		standardGeneric('plotMDS')
+	}
+) }
+
+setMethod('plotMDS', signature = c ('BioData'),
+	definition = function (obj, mds, group, genes, x=1, y=2, green=F ) {
 	mds.dat = NULL
 	if ( ! is.null(obj$usedObj$MDS[[mds]] )) {
 		mds.dat = obj$usedObj$MDS[[mds]]
@@ -13,7 +34,7 @@ plotMDS <- function(obj, mds, group, genes, x=1, y=2, green=F ) {
 	if ( is.null(mds.dat)) {stop("MDS data not part of this object!") }
 	for ( g in group ) {
 		colors_4(obj, g) ## if the color is not already defined do it here
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=6 , height=6)
+		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=10 , height=10)
 		o = order(obj$samples[,g])
 		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), pch=16 )
 		dev.off()
@@ -69,11 +90,11 @@ plotMDS <- function(obj, mds, group, genes, x=1, y=2, green=F ) {
 			}
 			col = COLS[d]
 		}
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=6, height=6)
+		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=10, height=10)
 		d = order(d)
 		bad = grep('#FFFFFF', col)
 		if ( length(bad) > 0 ){ col[bad] = '#FFDBDB' }
 		plot ( mds.dat[d,x], mds.dat[d,y], col=col[d], xlab=paste('dim',x), ylab=paste('dim', y), pch=16, main=g )
 		dev.off()
 	}
-}
+} )

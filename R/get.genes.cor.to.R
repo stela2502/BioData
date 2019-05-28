@@ -34,7 +34,7 @@ setMethod('get.genes.cor.to', signature = c ('BioData'),
 			goi <- as.vector(t(this[gname,]))
 		}
 		cor.values <-  FastWilcoxTest::CorMatrix( this, goi)
-		names(cor.values) = rownames(dat)
+		names(cor.values) = rownames(x)
 		
 		#calc.cor <- function(v,comp){
 		#	cor(v,comp)

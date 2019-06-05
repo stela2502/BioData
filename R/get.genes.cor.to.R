@@ -41,7 +41,6 @@ setMethod('get.genes.cor.to', signature = c ('BioData'),
 		#}
 		#cor.values <- apply(x$data(),1,calc.cor,comp=goi)
 	
-		sort(cor.values)
-	
+		cor.values
 } )
 

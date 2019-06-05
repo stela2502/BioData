@@ -8,11 +8,12 @@
 #' @param n  how many eigenvectors to collapse to default=100
 #' @param method which method ('auto', 'irlba', 'bpca')
 #' @param force re-produced the dataset even if it already exists default=FALSE
+#' @param ... additional options for the pca method(s)
 #' @title initial dimensional reduction step based on PCA
 #' @return the name of the result object in the usedObj list.
 #' @export
 if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
-	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) { 
+	function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE, ... ) { 
 		standardGeneric('DimReduction')
 	}
 ) }
@@ -72,12 +73,12 @@ setMethod('DimReduction', signature = c ('BioData'),
 		}
 		if ( method == 'irlba' ) {
 			message ( "irlba::prcomp_irlba is used to save memory and time (more than 1e+6 values)" )
-			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n )
+			x$usedObj[[PCA_name]] <- irlba::prcomp_irlba ( tmp, center=T, n=n, ... )
 			rownames(x$usedObj[[PCA_name]]$x) = cmpTo
 			
 		}else if ( method == 'bpca') {
 			message ( "pcaMethods::bpca to also use the holes (0 values)" )
-			x$usedObj[[PCA_name]] <- pcaMethods::bpca( as.matrix(tmp), nPcs=n )
+			x$usedObj[[PCA_name]] <- pcaMethods::bpca( as.matrix(tmp), nPcs=n, ... )
 			rownames(x$usedObj[[PCA_name]]@scores) = cmpTo
 		}else {
 			stop( paste("method", method, "is not defined here" ) )

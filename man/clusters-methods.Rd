@@ -31,3 +31,6 @@ clusters(dataObj, clusterby = "raw", useGrouping = NULL,
 This function clusters the data based on hclust, mclust or the kmeans algorithm.
 This function can be used to cluster any data slot the BioData class offers (see combination of onwhat and clusterby).
 }
+\examples{
+clusters( TestData , clusterby = "TSNE_R", groups.n = 3, ctype = "kmeans", onwhat= 'MDS', name = "kmeansTSNE_R clusters" )
+}

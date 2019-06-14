@@ -284,6 +284,7 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	rownames(ret) <- as.character(t(RSQLite::dbFetch(sth)))[1:nrow(ret)]
 	RSQLite::dbClearResult(sth)
 	rm(sth)
+	#browser()
 	if (  ! is.null(useS) ) {
 		q <- paste("select",cells$name,"from", cells$table, " where id IN (", paste( useS, collapse= ", ") , ") ", 'order by id' )	 
 	}else {
@@ -332,6 +333,7 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 			#mat$'ensembl_id' <- rownames(mat)
 			gene_UMI <- gene_UMI[ match(rownames(mat),gene_UMI$gname ),]
 			colnames(mat) <- make.names(colnames(mat))
+	        
 			ret <- BioData$new( mat, annotation=gene_UMI ,
 					Samples= data.frame( 'cell_id' = colnames(mat) ), namecol='cell_id', namerow= 'gname', name='from.cellranger' )
 			class(ret) <- c( 'SingleCells', class(ret))
@@ -430,8 +432,5 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	gc()
 	message( paste("Final object with",ncol(ret$dat),"cells and", nrow(ret$dat),"genes") )
 	return( ret )
-	
-	
-	
 	
 }

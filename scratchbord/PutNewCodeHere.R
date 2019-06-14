@@ -1,79 +1,23 @@
-plotMDS <- function(obj, mds, group, genes, x=1, y=2, green=F ) {
-	mds.dat = NULL
-	if ( ! is.null(obj$usedObj$MDS[[mds]] )) {
-		mds.dat = obj$usedObj$MDS[[mds]]
-	}else if ( ! is.null(obj$usedObj$MDS_PCA100[[mds]] )){
-		mds.dat = obj$usedObj$MDS_PCA100[[mds]]
+reorder_on_wilcox_results <- function( x, statsN, column , cutoff=1e-8 ) {
+	if ( is.null(x$stats[[statsN]])) {
+		stop( paste( seq="", "statsN '",statsN,"' is not in the list of stats results:", 
+						paste(collapse("', '", names(x$stats)))))
 	}
-	fname <- function( parts ) {
-		n = paste(parts, collapse="_")
-		paste(stringr::str_replace_all( n, "\\s\\s+",'_'),'svg', sep='.')
+	if ( is.null( x$samples[,column])) {
+		stop( paste ( "Samples column", column, "Iis not defined"))
 	}
+	distanceM = NULL
+	data = x$stats[[statsN]]
+	for ( k in 1:max(as.numeric(data[,'cluster']))){
+		this = as.vector(data[which(data[,'cluster'] == k),'gene'])
+		distanceM = rbind(distanceM, unlist( lapply( 1:max(as.numeric(data[,'cluster'])) , function(i, other) {
+									this = as.vector(data[which(data[,'cluster'] == i),'gene'])
+									length( intersect( this, other))
+								}, this ) ) / length(this)
+		)
+	}
+	diag(distanceM) = 0
+	new_order =  hclust(dist( distanceM), method='ward.D2' )$order
+	reorder_grouping( x, group = column, new_order= levels( x$samples[,column])[new_order])
 	
-	if ( is.null(mds.dat)) {stop("MDS data not part of this object!") }
-	for ( g in group ) {
-		colors_4(obj, g) ## if the color is not already defined do it here
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=6 , height=6)
-		o = order(obj$samples[,g])
-		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), pch=16 )
-		dev.off()
-	}
-	m = min(obj$data())
-	getF <- function(v) {
-		l = levels(factor( v ))
-		if ( length(which( l == 0)) == 0 ) {
-			l= c(0,l)
-		}
-		if ( length(which( l == m)) == 0 ) {
-			l= c(m,l)
-		}
-		factor( v, levels=l)
-	}
-	
-	for ( g in genes ) {
-		n <- as.numeric(obj$data()[g,] )
-		col = NULL
-		COLS = NULL
-		d = NULL
-		if ( m == -1 | m == -21){
-			if ( length(table(n)) < 20 ) {
-				## no need to break that into bins
-				d = getF(n)
-			}else {
-				brks= c( (m-.1),m+1-.1 , as.vector(quantile(n[which(n > 0)],seq(0,1,by=0.1)) ) )
-				brks = unique(as.numeric(sprintf("%2.6e", brks)))
-				brks[3] = brks[3] - 1e-5
-				brks[length(brks)] = brks[length(brks)]  + 0.1
-				d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-			}
-			if ( green) {
-				COLS = c('#006D2C', 'black', gplots::bluered(length(levels(d)) -2  ))
-			}else{
-				COLS = c('black', 'black', gplots::bluered(length(levels(d)) -2  ))
-			}
-			
-			if ( length(COLS) == 3 ) {
-				COLS[3] = 'blue'
-			}
-			if ( length(COLS) == 4 ) {
-				COLS[4] = 'red'
-			}
-			col = COLS[d]
-		}else {
-			brks= c( (m-.1),m,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
-			brks = unique(as.numeric(sprintf("%2.6e", brks)))
-			d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-			COLS = c('black', gplots::bluered(length(brks) -1  ))
-			if ( length(COLS) == 2 ) {## the second col is white - not good!
-				COLS[2] = 'blue'
-			}
-			col = COLS[d]
-		}
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=6, height=6)
-		d = order(d)
-		bad = grep('#FFFFFF', col)
-		if ( length(bad) > 0 ){ col[bad] = '#FFDBDB' }
-		plot ( mds.dat[d,x], mds.dat[d,y], col=col[d], xlab=paste('dim',x), ylab=paste('dim', y), pch=16, main=g )
-		dev.off()
-	}
 }

@@ -1,0 +1,99 @@
+# Effect of removing RP[SL] ribosomal transcripts from the dataset prior to normalization
+
+The cell cycle is a huge confounding factor in single cell data analysisi. 
+Likely due to the fact, that ribosomal RNAs (rRNA) are expressed from multiple loci 
+whereas 'normal' genomic genes are expressed from two copies only. 
+Hence the dynamic range in rRNA expression differs from from the dynamic range of diploid genes. The other species that is expressed from multi copy DNA is mitochondrial RNA and this one is excluded from analysis is e.g. the Seurat examples.
+So why should one keep the rRNAs in the analysis and suffer fromthere huge impact on the overall expression?
+
+Two questions would arrise from this:
+
+1. Are rRNAs expressed at a higher rate than diploid RNAs?
+
+2. Do we get better results from a dataset without rRNAs?
+
+# Set up of the analysis
+
+I will follow a standard analysis pathway using my BioData SingelCells class.
+
+1. keep / remove the rRNA data
+
+2. normalize to 3000 UMIs log and z.score the data
+
+3. identify differential genes
+
+
+```{r}
+dataKeep = TestData$clone()
+dataLoose = TestData$clone()
+
+reduceTo(dataLoose, what='row', to = rownames(dataLoose)[-grep ( 'Rp[sl]', rownames(dataLoose))],name='NoRibosomal_transcripts')
+
+normalize(dataKeep, 3000)
+logThis(dataKeep)
+z.score(dataKeep)
+Cpp_FindAllMarkers( dataKeep, 'sname',.1, .1)
+
+tmp = dataKeep$stats[[1]]
+tmp=tmp[order(tmp[,'p_val_adj']),]
+GOIkeep = unique(as.vector(tmp[1:200,'gene'] ))
+
+
+normalize(dataLoose, 3000)
+logThis(dataLoose)
+z.score(dataLoose)
+Cpp_FindAllMarkers( dataLoose, 'sname', .1, .1)
+
+tmp = dataLoose$stats[[1]] 
+tmp=tmp[order(tmp[,'p_val_adj']),]
+GOIloose = unique(as.vector(tmp[1:200,'gene'] ))
+
+length(intersect( GOIloose, GOIkeep))
+## There should be only an overlap of 6 genes here!
+
+paste( collapse=' ', GOIkeep)
+## manually upload to https://david-d.ncifcrf.gov/
+# ONE Kegg pathway associated with the list:
+# 	KEGG_PATHWAY 	Ribosome 	RT 		72 	75,0 	1,2E-138 	1,6E-137
+
+
+paste( collapse=' ', GOIloose)
+## manually upload to https://david-d.ncifcrf.gov/
+## 18 KEGG entries with the top being: 
+#  	KEGG_PATHWAY 	Antigen processing and presentation 	RT 		9 	9,2 	9,1E-7 	7,5E-5
+#	KEGG_PATHWAY 	Leukocyte transendothelial migration 	RT 		7 	7,1 	5,3E-4 	2,1E-2
+# 	KEGG_PATHWAY 	Tight junction 	RT 		6 	6,1 	6,1E-3 	1,5E-1
+
+```
+
+As this pathway result is not convincing me I would like to see the expression patterns of these genes:
+
+```{r}
+
+noRP <- reduceTo(dataLoose, copy=T, what='row', to=GOIloose, name='loose' )
+colors_4( noRP, 'sname')
+x11(type='cairo')
+complexHeatmap( noRP, colGroups=c('sname') , main ="Rp[sl] genes removed")
+
+withRP <- reduceTo(dataKeep, copy=T, what='row', to=GOIkeep, name='keep' )
+colors_4( withRP, 'sname')
+x11(type='cairo')
+complexHeatmap( withRP, colGroups=c('sname') , main ="Rp[sl] genes kept")
+
+```
+
+# Wrap up
+
+For this TabularMuris dataset removing Rp[sl] genes before the normalization process does seam to greatily benefit the data.
+Not only do the identified genes have more diverse function, the data does seam to be more normal, too.
+
+Of cause this is no final argument for or against keeping the rRNA signials before normalizing the data, but a strong hint as to try both approaches.
+
+
+
+
+
+
+
+```
+

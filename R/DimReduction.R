@@ -19,7 +19,7 @@ if ( ! isGeneric('DimReduction') ){setGeneric('DimReduction', ## Name
 ) }
 
 setMethod('DimReduction', signature = c ('BioData'),
-	definition = function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE ) {
+	definition = function ( x, genes=FALSE, n=100, method=c('auto','irlba', 'bpca'), force=FALSE, ... ) {
 	
 	PCA_name = 'pr'
 	cmpTo = colnames(x$dat)

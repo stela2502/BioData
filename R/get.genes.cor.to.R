@@ -6,10 +6,11 @@
 #' @param x the BioData object
 #' @param gname the gene name of interst
 #' @param output the VR outpath
+#' @param method corelate genes using 'FastWilcoxTest::CorMatrix' or 'propr::perb'
 #' @title description of function get.genes.cor.to
 #' @export 
 if ( ! isGeneric('get.genes.cor.to') ){ methods::setGeneric('get.genes.cor.to', ## Name
-	function (x,gname,output) { 
+	function (x,gname,output, method=c('FastWilcoxTest::CorMatrix', 'propr::perb')) { 
 		standardGeneric('get.genes.cor.to')
 	}
 )
@@ -18,9 +19,8 @@ if ( ! isGeneric('get.genes.cor.to') ){ methods::setGeneric('get.genes.cor.to', 
 }
 
 setMethod('get.genes.cor.to', signature = c ('BioData'),
-	definition = function (x, gname, output) {
+	definition = function (x, gname, output, method=c('FastWilcoxTest::CorMatrix', 'propr::perb') ) {
 	
-		
 		this = x$data()
 		bad = which(this@x == -1 )
 		if ( length(bad > 0 ) )
@@ -33,7 +33,14 @@ setMethod('get.genes.cor.to', signature = c ('BioData'),
 		}else {
 			goi <- as.vector(t(this[gname,]))
 		}
-		cor.values <-  FastWilcoxTest::CorMatrix( this, goi)
+		if ( method == "FastWilcoxTest::CorMatrix"){
+			cor.values <-  FastWilcoxTest::CorMatrix( this, goi)
+		}
+		else if (method == "propr::perb" ){
+			#this is a sparse matrix...
+			system.time(cor.mat <- propr::perb(as.matrix(t(this))))
+
+		}
 		names(cor.values) = rownames(x)
 		
 		#calc.cor <- function(v,comp){

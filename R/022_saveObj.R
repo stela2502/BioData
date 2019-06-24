@@ -29,6 +29,7 @@ setMethod('saveObj', signature = c ('BioData'),
 			if ( !is.null(data$zscored)) {
 				data$zscored = Matrix::drop0(data$zscored)
 			}
+			gc()
 			save(data , file=file.path(data$outpath, file) )
 			
 		}

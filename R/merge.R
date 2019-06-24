@@ -18,7 +18,12 @@ setGeneric('merge', ## Name
 	}
 )
 
-setMethod('merge', signature = c ('BioData'),
+setMethod('merge', signature= c( x='BioData', objects='BioData'), 
+	definition = function ( x, objects ) {
+	merge( x, list( objects ) );
+} )
+
+setMethod('merge', signature = c (x='BioData', objects='list'),
 		definition = function ( x, objects=list() ) {
 			objects = lapply(c(x, objects), function(x){if(is.null(x$rawData)) { x= renew(x) }; x } )
 			
@@ -36,20 +41,20 @@ setMethod('merge', signature = c ('BioData'),
 										if ( is.null( x$samples$nUMI) | is.null(x$samples$nGene) ) {
 											if ( ! is.null(x$raw) ){
 												x$samples$nUMI <- Matrix::colSums( x$raw )
-												x$samples$nGene <- apply( x$raw,2, function(a){ length(which(a>0)) })
+												x$samples$nGene <- FastWilcoxTest::ColNotZero (x$raw)
 											}else {
 												x$samples$nUMI <- Matrix::colSums( x$dat )
-												x$samples$nGene <- apply( x$dat,2, function(a){ length(which(a>0)) })
+												x$samples$nGene <- FastWilcoxTest::ColNotZero (x$dat)
 											}
 										}
 										
 										if ( is.null(x$annotation$nUMI) | is.null(x$annotation$nCell) ){
 											if ( ! is.null(x$raw) ){
 												x$annotation$nUMI <- Matrix::rowSums( x$raw )
-												x$annotation$nCell <- apply( x$raw,1, function(a){ length(which(a>0)) })
+												x$annotation$nCell <- FastWilcoxTest::ColNotZero (Matrix::t(x$raw))
 											}else {
 												x$annotation$nUMI <- Matrix::rowSums( x$dat )
-												x$annotation$nCell <- apply( x$dat,1, function(a){ length(which(a>0)) })
+												x$annotation$nCell <- FastWilcoxTest::ColNotZero (Matrix::t(x$dat))
 											}
 										}
 										rownames(x$dat)
@@ -144,7 +149,6 @@ setMethod('merge', signature = c ('BioData'),
 			#dbh <- RSQLite::dbConnect(RSQLite::SQLite(),dbname=file )
 			#dbh <- RSQLite::dbConnect(RSQLite::SQLite(),":memory:" )
 			# OK as I anyhow put all this info into memory - why not allocate the vectors according to the requirements?
-			
 			for ( n in 1:length(objects) ) {
 				x <- objects[[n]]
 				pb <- dplyr::progress_estimated(100)

@@ -13,6 +13,8 @@
 #' @param cmethod the method to used with the hclust clustering (default = 'ward.D2')
 #' @param name the name for the new grouping (default = 'auto_clusters.1:n')
 #' @title create a grouping based on either the raw data or a MDS projection
+#' @examples
+#' clusters( TestData , clusterby = "TSNE_R", groups.n = 3, ctype = "kmeans", onwhat= 'MDS', name = "kmeansTSNE_R clusters" )
 #' @export
 
 # if ( ! isGeneric('clusters') ){ 

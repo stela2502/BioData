@@ -76,7 +76,7 @@ setMethod('Cpp_FindAllMarkers', signature = c ('BioData'),
                 BAD= which(grp.vec != n )
                 if ( length(OK) > 0 && length(BAD) > 0 ){
                         r = as.data.frame(
-                                        FastWilcoxTest::StatTest( Matrix::t( x$dat), OK, BAD, logfc.threshold, minPct )
+                                        FastWilcoxTest::StatTest( Matrix::t( tmpM ), OK, BAD, logfc.threshold, minPct )
                         )
                         r= r[order( r[,'p.value']),]
                         r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
@@ -86,7 +86,8 @@ setMethod('Cpp_FindAllMarkers', signature = c ('BioData'),
 
         stats = NULL;
         grp.vec = as.vector(x$samples[,condition])
-
+		tmpM = x$dat
+		tmpM@x[which(tmpM@x < 0)] = 0
         for ( n in  unique( sort(grp.vec)) ) {
                 stats = rbind( stats, CppStats(n) )
         }

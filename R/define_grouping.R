@@ -68,7 +68,10 @@ setMethod('define_grouping', signature = c (x='BioData', basedOn='character' ),
 	}else {
 		stop( paste( "you miss the old group names", paste( unique(t(x$samples[ grep('noName', new),basedOn] ) ), collapse=", " ), "in your newNames list"  ) )
 	}
-	colors_4( x, colname )
+	colors_4( x, colname, force=TRUE )
+		
+	reorder_grouping (x, basedOn , unlist(new_order), what = what)
+	
 	invisible(x)
 	
 }  )

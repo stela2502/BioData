@@ -26,10 +26,6 @@
 
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}
 
-\item{to_gene_length}{FALSE whether or not to normalize the data to gene length}
-
-\item{geneLengthCol}{the column in the annotation data.frame to (in addition) normalize the genes to (e.g. trancript length)}
-
 \item{x}{The SingleCells::BioData::R6 object}
 
 \item{name}{the name of the new object}

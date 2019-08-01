@@ -66,11 +66,12 @@ setMethod('ontologyLogPage', signature = c ('BioData'),
 						, collapse=" "
 				)
 			}
-			if ( !dir.exists( file.path( x$outpath, 'GOtables') ) ){
-				dir.create( file.path( x$outpath, 'GOtables') )
-			}
-			utils::write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$outpath, 'tables',  GOfname ) )
-			browser()
+			#if ( !dir.exists( file.path( x$outpath, 'GOtables') ) ){
+			#	dir.create( file.path( x$outpath, 'GOtables') )
+			#}
+			#browser()
+			#utils::write.table(GOI_2_genes, sep='\t', quote=F, row.names=F, file= file.path( x$outpath, 'tables',  GOfname ) )
+			#browser()
 			for ( i in 1:nrow(allRes) ) {
 				allRes[i,1] = rmdLink(allRes[i,1],"http://amigo.geneontology.org/amigo/term/" )
 			}

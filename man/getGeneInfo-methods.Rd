@@ -28,7 +28,7 @@ getGeneInfo(x, species = "mMus", from, from_tab = NULL,
 A vector of ids
 }
 \description{
-getGeneInfo is a poverful function, that uses the annotation packages RSQLite tables to select information.
+getGeneInfo is a powerful function, that uses the annotation packages RSQLite tables to select information.
 }
 \examples{
 CellCycle_gene_symbols <- getGeneInfo(

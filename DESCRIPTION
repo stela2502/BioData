@@ -1,6 +1,6 @@
 Package: BioData
 Title: The package allows to annotate a numeric data.table with col and row data
-Version: 1.2.4.04
+Version: 1.2.4.05
 Authors@R: person("Stefan", "Lang", email = "Stefan.Lang@med.lu.se", role = c("aut", "cre"))
 Description: The package is a R6 class to store numeric data on biological
     experiments that most of the time have complex annotation for both columns and
@@ -41,7 +41,7 @@ Imports:
     DDRTree,
 	DESeq2,
 	dplyr,
-	FastWilcoxTest (>= 0.1.5),
+	FastWilcoxTest (>= 0.1.8),
 	ggplot2,
 	GO.db,
 	gplots,

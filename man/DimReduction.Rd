@@ -15,6 +15,8 @@
 \item{method}{which method ('auto', 'irlba', 'bpca')}
 
 \item{force}{re-produced the dataset even if it already exists default=FALSE}
+
+\item{...}{additional options for the pca method(s)}
 }
 \value{
 the name of the result object in the usedObj list.

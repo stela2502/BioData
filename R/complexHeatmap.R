@@ -17,18 +17,19 @@
 #' @param brks how many breaks should the expression value color key have (default=10)
 #' @param X11type sometimes needed for compatibility (default = 'cairo')
 #' @param green if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)
+#' @param noBreaks show linear data colors instead of bined ones; impossible if green=TRUE (default =FALSE)
 #' @title description of function complexHeatmap
 #' @export 
 setGeneric('complexHeatmap', ## Name
 		function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE, subpath='', 
-				main = '',  heapmapCols= function(x){ c("darkgrey", gplots::bluered(x))}, brks=10, X11type= 'cairo', green = F ) { 
+				main = '',  heapmapCols= function(x){ c("darkgrey", gplots::bluered(x))}, brks=10, X11type= 'cairo', green = F, noBreaks = F ) { 
 			standardGeneric('complexHeatmap')
 		}
 )
 
 setMethod('complexHeatmap', signature = c ('BioData'),
 		definition = function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE,
-				subpath='', main = '' ,  heapmapCols=NULL, brks=10, X11type= 'cairo', green = F ) {
+				subpath='', main = '' ,  heapmapCols=NULL, brks=10, X11type= 'cairo', green = F, noBreaks = F ) {
 			
 			Rowv = FALSE
 			Colv = FALSE
@@ -149,31 +150,51 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					brks= c( -3,-2,-1, 0, 1, 2, 3 )
 				}
 			}
-			heatmap.3(
-					data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv= is.null(RowSideColors), Colv = is.null(ColSideColors),  key=F, symkey=FALSE,
-					trace='none', 
-					ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
-					RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 
-					cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", 
-					lwid=c(0.5,4), lhei=c(1,4)
-			)
-			
-			if ( ! is.null(ofile)){
-				grDevices::dev.off()
-				fn <- paste(file.path(x$outpath,x$name),'_legend_values.pdf',sep='.')
-				if ( ! file.exists(fn) ){
-					grDevices::pdf( file=fn, width=8, height=4)
-					Z <- as.matrix(1:(length(brks)-2))
-					graphics::image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
-					if ( min(x$data()) == -1) {
-						graphics::axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
-					}else {
-						graphics::axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
-					}
+			if (noBreaks) {
+				OK = which(data > 0 )
+				#browser()
+				data[OK] = data[OK] - min(data[OK])+1e-6
+				data[which(data>3)] = 3
+				data[which(data < 0 )] = 0
+				
+				heatmap.3(
+						data, col=c('black', gplots::bluered(8) ), Rowv= is.null(RowSideColors), Colv = is.null(ColSideColors),  key=T, symkey=FALSE,
+						trace='none', 
+						ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
+						RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 
+						cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", 
+						lwid=c(0.5,4), lhei=c(1,4)
+				)
+				if ( ! is.null(ofile)){
 					grDevices::dev.off()
 				}
 			}
+			else {
+				heatmap.3(
+						data, breaks=brks,col=heapmapCols(length(brks)-2), Rowv= is.null(RowSideColors), Colv = is.null(ColSideColors),  key=F, symkey=FALSE,
+						trace='none', 
+						ColSideColors=ColSideColors,ColSideColorsSize=ColSideColorsSize, 
+						RowSideColors=RowSideColors,RowSideColorsSize=RowSideColorsSize, 
+						cexRow=0.6,cexCol=0.7,main=main, dendrogram=dendrogram, labCol = "", 
+						lwid=c(0.5,4), lhei=c(1,4)
+				)
 			
+				if ( ! is.null(ofile)){
+					grDevices::dev.off()
+					fn <- paste(file.path(x$outpath,x$name),'_legend_values.pdf',sep='.')
+					if ( ! file.exists(fn) ){
+						grDevices::pdf( file=fn, width=8, height=4)
+						Z <- as.matrix(1:(length(brks)-2))
+						graphics::image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
+						if ( min(x$data()) == -1) {
+						graphics::axis( 1, at=c(0,0.1,0.2,1), labels=c('lost','NA','low','high') )
+						}else {
+							graphics::axis( 1, at=c(0,0.1,1), labels=c('NA','low','high') )
+						}
+						grDevices::dev.off()
+					}
+				}
+			}
 			invisible(x)
 		}
 )

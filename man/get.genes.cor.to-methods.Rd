@@ -11,6 +11,8 @@
 \item{gname}{the gene name of interst}
 
 \item{output}{the VR outpath}
+
+\item{method}{corelate genes using 'FastWilcoxTest::CorMatrix' or 'propr::perb'}
 }
 \description{
 VR function that exports all genes correlating to the input gene name

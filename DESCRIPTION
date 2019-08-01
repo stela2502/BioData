@@ -60,7 +60,7 @@ Imports:
 	RSvgDevice,
 	Rtsne,
 	R.utils,
-	Seurat (<= 2.3.3),
+	Seurat (<= 2.3.4),
 	stringr,
 	topGO,
 	umap,

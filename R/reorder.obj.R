@@ -32,8 +32,8 @@ setMethod('reorder.samples', signature = c ('BioData'),
 			if (isS4(x$usedObj$pr) ) {
 				x$usedObj$pr@scores = x$usedObj$pr@scores[idx,]
 			}
-			else if ( !is.null(x$usedObj$pr) ) {
-				x$usedObj$pr = x$usedObj$pr[idx,]
+			else if ( !is.null(x$usedObj$pr$x) ) {
+				x$usedObj$pr$x = x$usedObj$pr$x[idx,]
 			}
 			x$samples <- x$samples[idx ,]
 			invisible(x)
@@ -83,8 +83,13 @@ setMethod('reorder.genes', signature = c ('BioData'),
 			}
 			lapply( names(x$usedObj$MDSgene),reorder.mds, idx, x, 'MDSgene')
 			lapply( names(x$usedObj$MDSgenes_PCA100),reorder.mds, idx, x, 'MDSgenes_PCA100')
+
 			if ( !is.null(x$usedObj$prGenes) ) {
-				x$usedObj$pr = x$usedObj$prGenes[idx,]
+				if ( is.S4(x$usedObj$prGenes)){
+					x$usedObj$prGenes@scores = x$usedObj$prGenes@scores[idx,]
+				}else {
+					x$usedObj$prGenes$x = x$usedObj$prGenes$x[idx,]
+				}
 			}
 			x$annotation <- t
 			invisible(x)

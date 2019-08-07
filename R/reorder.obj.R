@@ -85,7 +85,7 @@ setMethod('reorder.genes', signature = c ('BioData'),
 			lapply( names(x$usedObj$MDSgenes_PCA100),reorder.mds, idx, x, 'MDSgenes_PCA100')
 
 			if ( !is.null(x$usedObj$prGenes) ) {
-				if ( is.S4(x$usedObj$prGenes)){
+				if ( isS4(x$usedObj$prGenes)){
 					x$usedObj$prGenes@scores = x$usedObj$prGenes@scores[idx,]
 				}else {
 					x$usedObj$prGenes$x = x$usedObj$prGenes$x[idx,]

@@ -95,6 +95,21 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
+			m = matrix(1,ncol=10, nrow=10)
+ 			rownames(m) =paste( 'gene', 1:10)
+ 			colnames(m) =paste( 'cell', 1:10)
+			ret = as_BioData(m) 
+
+			ret$dat = dat@data
+			ret$samples=cbind( 'cell.name' = colnames(ret$dat), dat@userGroups )
+			ret$usedObj <- dat@usedObj
+			ret$usedObj$Seurat.meta.cell = dat@meta.cell
+			class(ret) = c( 'SingleCells', 'BioData', 'R6')
+
+			return( ret)
+
+			
+
 			ok = which(lapply(colnames(dat@meta.cell) , function(x) { all.equal( as.character(as.vector(dat@meta.cell[,x])), colnames(dat@data)) == T } )==T)
 			namecol = NULL
 			if ( length(ok) == 0) {
@@ -145,86 +160,34 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 		
 )
 
+
 #' @describeIn as_BioData convert a seurat object into a SingleCells::BioData::R6 object
 #' @docType methods
 #' @param dat a seurat object
 #' @title convert a seurat object into BioData
 #' @export as_BioData
-setMethod('as_BioData', signature = c ('seurat'),
+setMethod('as_BioData', signature = c ('Seurat'),
 				definition = function ( dat ) {
-					#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
-					ok = which(lapply(colnames(dat@meta.data) , function(x) { all.equal( as.character(as.vector(dat@meta.data[,x])), colnames(dat@data)) == T } )==T)
-					if ( length(ok) == 0) {
-						if (all.equal( rownames(dat@meta.data), colnames(dat@data)) ){
-							dat@meta.data = cbind( cell.name = colnames(dat@data), dat@meta.data)
-							namecol = 'cell.name'
-						}
-					}
-					else {
-						namecol = colnames(dat@meta.data)[ok]
-						namecol = namecol[1]
-					}
-					namerow = NULL
-					if (nrow(dat@hvg.info)==0) {
-						dat@hvg.info <- data.frame( 'Gene.Symbol' = rownames(dat@data),'useless' = rep( 0, nrow(dat@data) ) )
-						rownames(dat@hvg.info) = rownames(dat@data)
-						namerow = 'Gene.Symbol'
-					}else {
-						ok = which(lapply(colnames(dat@hvg.info) , function(x) { all.equal( as.character(as.vector(dat@hvg.info[,x])), rownames(dat@data)) == T } )==T)
-						if ( length(ok) == 0) {
-							## add the missing info
-							if (all.equal( rownames(dat@hvg.info), rownames(dat@data)) == TRUE ){
-								dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info)
-								namerow = 'gene.name'
-							}else {
-								m <- match( rownames(dat@hvg.info), rownames(dat@data))
-								dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info[order(m),])
-								namerow = 'gene.name'
-							}
-						}
-						else {
-							namerow = colnames(dat@hvg.info)[ok]
-							namerow = make.names(namerow[1])
-							## now cast the hvg.info into the same order as the data object.
-							m <- match( rownames(dat@hvg.info), rownames(dat@data))
-							dat@hvg.info = cbind( gene.name = rownames(dat@data), dat@hvg.info[order(m),])
-						}
-					}
-					#storage.mode(dat@data) <- 'numeric'
-			
-					dataa <- as.matrix(dat@data[1:2,1:2])
-					samples <- data.frame(as.matrix(dat@meta.data))
 					
-					samples[,namecol] <- make.names(samples[,namecol])
-					ret <- BioData$new( dataa, Samples=samples[1:2,], annotation =dat@hvg.info[1:2,], name= 'from.cellexalvr', namecol= namecol, namerow=namerow, outpath='./' )
-					
-					ret$dat <- Matrix::Matrix(dat@data)
-					ret$samples <- samples
-					ret$annotation <- dat@hvg.info
-					
-					if ( ! is.null(dat@scale.data)){
-						ret$zscored <- Matrix::Matrix(as.matrix(dat@scale.data))
-					}
-					m <- match(colnames(dat@data), colnames(dat@raw.data))
-					ret$raw <- Matrix::Matrix(as.matrix(dat@raw.data))[,m]
-					## now I need to manually remove unreliable data from the zscored information (set to -20)
-#					if ( FALSE ) { # slow and not correct any more!
-#						if ( ! is.null( ret$zscored )) {
-#							d <- function( i, obj) {
-#								drop <- which(obj$raw[,i] == 0)
-#								if ( length(drop) > 0 ){
-#									print ( paste( 'line', i, 'drop', length(drop)) )
-#									ret$zscored[drop,i] = -20
-#								}
-#								0
-#							}
-#							lapply(  1:ncol(ret$dat), d, ret)
-#						}
-#					}
-					ret$zscored= NULL
+ 					m = matrix(1,ncol=10, nrow=10)
+ 					rownames(m) =paste( 'gene', 1:10)
+ 					colnames(m) =paste( 'cell', 1:10)
+					ret = as_BioData(m) 
+					ret$dat = dat@assays$RNA@data
+					ret$raw = Seurat::GetAssayData(t, slot = "counts")
+					nCell = FastWilcoxTest::ColNotZero( Matrix::t(ret$dat) )
+					varG = rep( FALSE, nrow(ret$dat))
+					varG[ match(  Seurat::VariableFeatures(dat), rownames(ret))] = TRUE
+					ret$annotation= data.frame( GeneID = rownames(ret$dat), 'nCell' = nCell, varGene = varG )
+					ret$samples = dat@meta.data
+					ret$samples$nUMI = ret$samples$nFeature_RNA
+					CreateBin( ret )
+					ret$name = dat@project.name
+					ret$logged = TRUE
+					ret$snorm = TRUE
 					class(ret) = c( 'SingleCells', 'BioData', 'R6')
 					ret
-				}  
+				}
 )
 
 

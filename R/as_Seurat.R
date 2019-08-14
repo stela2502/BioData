@@ -23,20 +23,22 @@ setMethod('as_Seurat', signature = c ('BioData'),
 		object <- Seurat::CreateSeuratObject(
 				x$raw,
 				project = x$name,
-				min.cells =1,
-				min.genes =1,
-				normalization.method = "LogNormalize",
-				scale.factor = 10000
+		#		min.cells =1,
+		#		min.genes =1,
+		#		normalization.method = "LogNormalize",
+		#		scale.factor = 10000
 		)
+		object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
 	}else {
 		object <- Seurat::CreateSeuratObject(
 				x$dat,
 				project = x$name,
-				min.cells =1,
-				min.genes =1,
-				normalization.method = "LogNormalize",
-				scale.factor = 10000
+		#		min.cells =1,
+		#		min.genes =1,
+		#		normalization.method = "LogNormalize",
+		#		scale.factor = 10000
 		)
+		object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
 	}
 	if ( ! fromRaw ) {
 		message("replacing Seurat norm data with BioData norm data")

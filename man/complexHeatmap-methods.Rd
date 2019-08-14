@@ -9,7 +9,8 @@
 complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
   colColors = NULL, rowColors = NULL, pdf = FALSE, subpath = "",
   main = "", heapmapCols = function(x) {     c("darkgrey",
-  gplots::bluered(x)) }, brks = 10, X11type = "cairo", green = F)
+  gplots::bluered(x)) }, brks = 10, X11type = "cairo", green = F,
+  noBreaks = F)
 }
 \arguments{
 \item{x}{the BioData object}
@@ -37,6 +38,8 @@ complexHeatmap(x, ofile = NULL, colGroups = NULL, rowGroups = NULL,
 \item{X11type}{sometimes needed for compatibility (default = 'cairo')}
 
 \item{green}{if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)}
+
+\item{noBreaks}{show linear data colors instead of bined ones; impossible if green=TRUE (default =FALSE)}
 }
 \description{
 plot the PCR heatmap using the heatmap.3 function included in this package

@@ -77,36 +77,28 @@ setMethod('convert_to', signature = c ('BioData'),
 		}
 		if ( is.null(x$raw)) {
 			ret <- Seurat::CreateSeuratObject(
-				as.matrix(x$dat),
+				counts=as.matrix(x$dat),
 				project = x$name,
 				min.cells = min.cells,
-				min.genes = min.genes,
-				normalization.method = normalization.method,
-				scale.factor = scale.factor
+				min.features = min.genes,
+		#		normalization.method = normalization.method,
+		#		scale.factor = scale.factor
 			)
 		}else {
 			ret <- Seurat::CreateSeuratObject(
-					as.matrix(x$raw),
+					counts=as.matrix(x$raw),
 					project = x$name,
 					min.cells = min.cells,
-					min.genes = min.genes,
-					normalization.method = normalization.method,
-					scale.factor = scale.factor
+					min.features = min.genes,
+		#			normalization.method = normalization.method,
+		#			scale.factor = scale.factor
 			)
 		}
-		ret <- Seurat::FindVariableGenes(ret)
-		
-		m <- match( rownames(ret@data) , rownames(x$dat) )
-		ret@hvg.info <- cbind(ret@hvg.info, x$annotation[m,])
-		
-		
-		n <- as.vector(ret@meta.data$nUMI )
-		m <- min( n )
-		brks= c( (m-.1),m ,as.vector(quantile(n[which(n != m)],seq(0,1,by=0.1)) ))
-		brks = unique(as.numeric(sprintf("%2.6e", brks)))
-		d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
-		ret@meta.data$nUMI_bins <- d		
-		
+		ret <- Seurat::NormalizeData( ret, normalization.method = normalization.method, scale.factor = scale.factor )
+		#ret <- Seurat::FindVariableGenes(ret)
+		m <- match( colnames(ret@assays$RNA@data) , rownames(x$dat) )
+
+		ret@meta.data = cbind( ret@meta.data, x$samples[m,] )	
 		
 	}
 	ret

@@ -27,9 +27,9 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 	
 	forCellexal <- reduceTo( x, what='row', to = rownames(x$dat)[which(normUMI >= minGene  ) ], name=x$name, copy=T )
 	## get rid of -1 values
-	bad = which(forCellexal$dat@x < 0 )
+	bad = which(forCellexal$zscored@x < 0 )
 	if ( length(bad) > 0 )
-		forCellexal$dat@x[bad] = 0
+		forCellexal$zscored@x[bad] = 0
 	MDS <- names(x$usedObj)[grep ( 'MDS', names(x$usedObj))]
 	OK = grep ( '_dim_' , MDS, invert= TRUE )
 	if ( length(OK) > 0){
@@ -39,8 +39,8 @@ setMethod('as_cellexalvr', signature = c ('BioData'),
 	}
 	## save space
 	forCellexal$raw = NULL
-	forCellexal$zscored = NULL
-	forCellexal$dat = Matrix::drop0(forCellexal$dat)
+	forCellexal$dat = NULL
+	forCellexal$zscored = Matrix::drop0(forCellexal$zscored)
 	
 	## store the important variables for the convert
 	forCellexal$usedObj$meta.cell.groups = meta.cell.groups

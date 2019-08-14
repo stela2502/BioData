@@ -1,6 +1,6 @@
 Package: BioData
 Title: The package allows to annotate a numeric data.table with col and row data
-Version: 1.2.5
+Version: 1.3.0
 Authors@R: person("Stefan", "Lang", email = "Stefan.Lang@med.lu.se", role = c("aut", "cre"))
 Description: The package is a R6 class to store numeric data on biological
     experiments that most of the time have complex annotation for both columns and
@@ -60,7 +60,7 @@ Imports:
 	RSvgDevice,
 	Rtsne,
 	R.utils,
-	Seurat (<= 2.3.4),
+	Seurat (>= 3.0.0),
 	stringr,
 	topGO,
 	umap,

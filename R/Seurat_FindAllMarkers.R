@@ -18,32 +18,34 @@ setGeneric('Seurat_FindAllMarkers', ## Name
 setMethod('Seurat_FindAllMarkers', signature = c ('BioData'),
 	definition = function ( x , condition, logfc.threshold = 1, minPct=0.1 ) {
 	
-	object <- as_Seurat( x, group=condition, fromRaw=F ) ## I want to use MY data
+	stop( "Please use the FAstWilcoxTest based test 10x speed improvement - same results!")
 	
-	stats = Seurat::FindAllMarkers( object, logfc.threshold = logfc.threshold, minPct = minPct )
+	# object <- as_Seurat( x, group=condition, fromRaw=F ) ## I want to use MY data
+	
+	# stats = Seurat::FindAllMarkers( object, logfc.threshold = logfc.threshold, minPct = minPct )
 
-	CppStats <- function( n ) {
-		print ( paste("Calc wilcox test for",n) )
-		OK = which(grp.vec == n )
-		BAD= which(grp.vec != n )
-		if ( length(OK) > 0 && length(BAD) > 0 ){
-			r = as.data.frame(
-					FastWilcoxTest::StatTest( Matrix::t( x$dat), OK, BAD, logfc.threshold, minPct )
-			)
-			r= r[order( r[,'p.value']),]
-			r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
-		}
-		r
-	}
+	# CppStats <- function( n ) {
+	# 	print ( paste("Calc wilcox test for",n) )
+	# 	OK = which(grp.vec == n )
+	# 	BAD= which(grp.vec != n )
+	# 	if ( length(OK) > 0 && length(BAD) > 0 ){
+	# 		r = as.data.frame(
+	# 				FastWilcoxTest::StatTest( Matrix::t( x$dat), OK, BAD, logfc.threshold, minPct )
+	# 		)
+	# 		r= r[order( r[,'p.value']),]
+	# 		r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
+	# 	}
+	# 	r
+	# }
 	
-	stats = NULL;
-	grp.vec = as.vector(x$samples[,condition])
+	# stats = NULL;
+	# grp.vec = as.vector(x$samples[,condition])
 	
-	for ( n in  unique( sort(grp.vec)) ) {
-		stats = rbind( stats, CppStats(n) )
-	}
+	# for ( n in  unique( sort(grp.vec)) ) {
+	# 	stats = rbind( stats, CppStats(n) )
+	# }
 	
-	x$stats[[name]] = stats
+	# x$stats[[name]] = stats
 	
 	invisible(x)
 } )

@@ -33,7 +33,7 @@ setMethod('copy_grouping', signature = c ('BioData'),
 		m = m[-which(is.na(m))]
 	}
 	if ( ! all( is.na(x$samples[m,newgname]))) {
-		stop( paste("the action would delete data in the target object",x$name" - STOP"))
+		stop( paste("the action would delete data in the target object",x$name, " - STOP"))
 	}else {
 		x$samples[m,newgname] = paste(sep="_", from$name, from$samples[,gname] )
 	}

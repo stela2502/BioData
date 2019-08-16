@@ -7,7 +7,7 @@
 \alias{as_BioData,matrix-method}
 \alias{as_BioData,data.frame-method}
 \alias{as_BioData,cellexalvrR-method}
-\alias{as_BioData,seurat-method}
+\alias{as_BioData,Seurat-method}
 \alias{as_BioData,character-method}
 \title{create a BioData from an other object}
 \usage{
@@ -19,7 +19,7 @@
 
 \S4method{as_BioData}{cellexalvrR}(dat)
 
-\S4method{as_BioData}{seurat}(dat)
+\S4method{as_BioData}{Seurat}(dat)
 
 \S4method{as_BioData}{character}(dat, minUMI = 100, minGexpr = NULL)
 }
@@ -55,7 +55,7 @@ create a BioData from an other object
 
 \item \code{cellexalvrR}: convert a cellexalvrR object to a SingleCells::BioData::R6 object
 
-\item \code{seurat}: convert a seurat object into a SingleCells::BioData::R6 object
+\item \code{Seurat}: convert a seurat object into a SingleCells::BioData::R6 object
 
 \item \code{character}: character path or sqlite3 database name
 }}

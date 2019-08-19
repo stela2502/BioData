@@ -51,12 +51,18 @@ setMethod('reduceTo', signature = c ('BioData'),
 						}
 						if ( length(x$stats) > 0 ) {
 							lapply( names(x$stats) , function(name) {
-										statIDs <- match(tolower(to) ,tolower(x$stats[[name]][,1]) )
-										if ( length(which(is.na(statIDs))) > 0 ){
-											statIDs <- match(tolower(to) ,tolower(rownames(x$stats[[name]]) ) )
-										}
-										add_to_stat( x, x$stats[[name]][statIDs,] , name )
+										if ( length( grep('Cpp_FindAllMarkers' ,name) )== 1 ){
+											statIDs <- match(tolower(x$stats[[name]][,'gene']) , tolower(to) )
+											statIDs= which(is.na(statIDs) == F)
+											add_to_stat( x, x$stats[[name]][statIDs,] , name )
+										}else {
+											statIDs <- match(tolower(to) ,tolower(x$stats[[name]][,1]) )
+											if ( length(which(is.na(statIDs))) > 0 ){
+												statIDs <- match(tolower(to) ,tolower(rownames(x$stats[[name]]) ) )
+											}
+											add_to_stat( x, x$stats[[name]][statIDs,] , name )
 										#x$stats[[name]] <- x$stats[[name]][statIDs,]
+										}
 									} )
 						}
 						x$usedObj$pr  = x$usedObj$prGenes = NULL

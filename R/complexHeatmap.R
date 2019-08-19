@@ -97,6 +97,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			m <- min(data)
 			if ( m == -1) {
 				## new z.score function to keep lost info
+				#browser()
 				brks <- unique(as.vector(c(m, m+1, stats::quantile(data[which(data > m +1 )],seq(0,1,by=1/brks)),max(data))))
 				brks[1:2] = brks[1:2] - 1e-4
 				if ( is.null(heapmapCols)){
@@ -112,7 +113,9 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			if ( ! is.null(ofile)){
 				## here I need more magic
-				x$name = paste( collapse='_',unlist(strsplit( x$name, '\\s+', perl=T)))
+				#browser()
+				x$name = paste( collapse='_',unlist(strsplit( x$name, '[\\.\\s\\\\\\?-]+', perl=T)))
+				ofile = paste( collapse='_',unlist(strsplit( ofile, '[\\s\\\\\\?-]+', perl=T)))
 				if ( length(grep(.Platform$file.sep, ofile)) == 0 ) {
 					ofile <- file.path(x$outpath,ofile) ## you can also put it specifily somewhere else.
 				}else {
@@ -134,10 +137,10 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					grDevices::png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type)
 				}
 				for ( v in colGroups ) {
-					plotLegend(x, file=paste(x$name, 'col'), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'col', sep="_"), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
 				}
 				for ( v in rowGroups ) {
-					plotLegend(x, file=paste(x$name, 'row'), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'row', sep="_"), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
 				}
 			}
 			if ( length(brks) < 3 ) {
@@ -154,7 +157,13 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 				OK = which(data > 0 )
 				#browser()
 				data[OK] = data[OK] - min(data[OK])+1e-6
-				data[which(data>3)] = 3
+				if ( mean(data[OK]) < 5) {
+					data[which(data>3)] = 3
+				}else {
+					#browser()
+					#data[which(data>13)] = 13
+				}
+				
 				data[which(data < 0 )] = 0
 				
 				heatmap.3(

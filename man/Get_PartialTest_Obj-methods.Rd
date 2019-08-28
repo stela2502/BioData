@@ -6,8 +6,8 @@
 \alias{Get_PartialTest_Obj,BioData-method}
 \title{description of function Get_PartialTest_Obj}
 \usage{
-Get_PartialTest_Obj(obj, groupA, groupB, pcut = 1e-05,
-  logfc.threshold = 0.1, minPct = 0.1)
+Get_PartialTest_Obj(obj, groupA, groupB, k = NULL, pcut = 1e-05,
+  logfc.threshold = 0.1, minPct = 0.1, debug = F)
 }
 \arguments{
 \item{obj}{The BioData object}
@@ -16,11 +16,15 @@ Get_PartialTest_Obj(obj, groupA, groupB, pcut = 1e-05,
 
 \item{groupB}{the inner grouping column name}
 
+\item{k}{amount of gene groups (default 1 per 20 genes)}
+
 \item{pcut}{the cutoff p value default=1e-5}
 
 \item{logfc.threshold}{Cpp test option default= .1}
 
 \item{minPct}{Cpp test option default= .1}
+
+\item{debug}{lets you debug the mds part default false}
 }
 \description{
 Process the 2 group comparison data and return a summary object

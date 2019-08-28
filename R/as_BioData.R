@@ -328,6 +328,10 @@ setMethod('as_BioData', signature = c ('character'),
 
 load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	err = NULL
+	mtxFile = 'matrix.mtx'
+	barFile = 'barcodes.tsv'
+	geneFile = 'features.tsv'
+	
 	for( f in c('barcodes.tsv','matrix.mtx') ) {
 		if ( ! file.exists(file.path(dat,f)) ) {
 			if ( file.exists(file.path(dat,paste(f,sep='.', 'gz')))) {
@@ -341,39 +345,57 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	for( f in c('genes.tsv','features.tsv') ) {
 		if ( file.exists(file.path(dat,f)) ) {
 			OK = 1
+			geneFile = f
 		}
 		if ( file.exists(file.path(dat,paste(f,sep='.', 'gz')))) {
 			system( paste('gunzip ', file.path(dat,paste(f,sep='.', 'gz'))) )
 			OK = 1
+			geneFile = f
 		}	
 	}
 	if ( OK == 0 ) {
-		err = c( err, paste("file", file.path(dat,'features.tsv'), "does not exists" ) )
+		## check if the output is kallisto output
+		OK = 1
+		err2 = ""
+		for ( f in c( 'genes.genes.txt', 'genes.barcodes.txt','genes.mtx')){
+			if ( ! file.exists(file.path(dat,f)) ) {
+				if ( file.exists(file.path(dat,paste(f,sep='.', 'gz')))) {
+					system( paste('gunzip ', file.path(dat,paste(f,sep='.', 'gz'))) )
+				}else {
+					err2 = c( err2, paste("file", file.path(dat,f), "does not exists" ) )
+					OK = 0
+				}
+			}
+		}
+		if ( OK ) {
+			## load kallisto data
+			mtxFile  = 'genes.mtx'
+			barFile  = 'genes.barcodes.txt'
+			geneFile = 'genes.genes.txt'
+			err= NULL;
+		}else {
+			err = c( err, paste("file", file.path(dat,'features.tsv'), "does not exists" , err2) )
+		}
 	}
 	
 	if ( ! is.null(err)) {
 		stop( paste(sep="\n", err))
 	}
-	head <- readLines( file.path(dat,'matrix.mtx'), 3)
+	head <- readLines( file.path(dat, mtxFile), 3)
 	
 	head =  unlist( stringr::str_split( head[3], ' ') )
 	
-	d = utils::read.table( file.path(dat,'matrix.mtx') , skip = 3 , header=F )
+	d = utils::read.table( file.path(dat,mtxFile) , comment.char="%", skip =1, header=F )
 	
 	ma = Matrix::sparseMatrix( i=d[,1], j=d[,2], x=d[,3] )
 	message(paste("Matrix created with", ncol(ma) ,"cells and ", nrow(ma), "genes") )
 	
-	d = scan( file.path(dat,'barcodes.tsv') , what='character')
+	d = scan( file.path(dat,barFile) , what='character')
 	colnames(ma) = d[1:ncol(ma)]
 	
 	rm(d)
 	d= NULL
-	if ( file.exists( file.path(dat,'genes.tsv'))){
-		d = utils::read.table( file.path(dat,'genes.tsv'), header=F )
-	}else {
-		d = utils::read.table( file.path(dat,'features.tsv'), header=F )
-	}
-	
+	d = utils::read.table( file.path(dat,geneFile), header=F )
 
 	rownames(ma) = d[1:nrow(ma),1]
 	
@@ -381,8 +403,13 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	ret = as_BioData(matrix( 1, ncol=2, nrow=2, dimnames= list( c('A','B'), c('C','D')) ))
 	ret$dat = ma
 	ret$samples = data.frame( 'samples' = colnames(ma), 'nUMI' = Matrix::colSums(ma) )
-	ret$annotation= data.frame( GeneID= d[1:nrow(ma),1], 'gene_name' = d[1:nrow(ma),2], 'nUMI' = Matrix::rowSums(ma))
-	changeNames(ret, 'row', 'gene_name')
+	if ( ncol(d) > 1 ){
+		ret$annotation= data.frame( GeneID= d[1:nrow(ma),1], 'gene_name' = d[1:nrow(ma),2], 'nUMI' = Matrix::rowSums(ma))
+		changeNames(ret, 'row', 'gene_name')
+	}
+	else {
+		ret$annotation= data.frame( GeneID= d[1:nrow(ma),1], 'nUMI' = Matrix::rowSums(ma))
+	}
 	#ret$rownamescol = 'gene_name'
 	
 	reduceTo(ret, what='col', to=colnames(ret$dat)[which(ret$samples$nUMI >=  minUMI )], copy=F)

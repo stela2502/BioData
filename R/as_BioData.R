@@ -391,6 +391,9 @@ load_10x <- function ( dat, minUMI=100, minGexpr=NULL ) {
 	message(paste("Matrix created with", ncol(ma) ,"cells and ", nrow(ma), "genes") )
 	
 	d = scan( file.path(dat,barFile) , what='character')
+	if ( nrow(ma) == length(d) ) {
+		ma = Matrix::t(ma)
+	}
 	colnames(ma) = d[1:ncol(ma)]
 	
 	rm(d)

@@ -22,6 +22,7 @@ setMethod('saveObj', signature = c ('BioData'),
 				file=paste(stringr::str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
 			}
 			print ( paste('data exported to', file.path(data$outpath,file) ) )
+			print ( timestamp() )
 			data$dat = Matrix::drop0(data$dat)
 			if ( !is.null(data$raw)) {
 				data$raw = Matrix::drop0(data$raw)
@@ -31,6 +32,7 @@ setMethod('saveObj', signature = c ('BioData'),
 			}
 			gc()
 			save(data , file=file.path(data$outpath, file) )
+			print (tools::md5sum( file.path(data$outpath, file)) )
 			
 		}
 )

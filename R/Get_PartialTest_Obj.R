@@ -27,7 +27,7 @@ setMethod('Get_PartialTest_Obj', signature = c ('BioData'),
 		if ( length(unique(unlist(stats)))<50 ) {
 			stop( "less than 50 significant genes detected - please lower the cutoff!")
 		}
-		forPlot <- reduceTo( obj, what='row', to=unique(unlist(stats)), copy=T, name=paste(obj$name, groupA,groupB, logfc.threshold, minPct , sep="_", pcut ) )
+		forPlot <- reduceTo( obj, what='row', to=unique(unlist(lapply(stats, as.vector ))), copy=T, name=paste(obj$name, groupA,groupB, logfc.threshold, minPct , sep="_", pcut ) )
         ## now create the gene groups:
         for( i in 1:length(stats) ){
                 forPlot$annotation[,names(stats)[i]] = "No"

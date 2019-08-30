@@ -77,9 +77,15 @@ setMethod('Cpp_FindAllMarkers', signature = c ('BioData'),
                 OK = which(grp.vec == n )
                 BAD= which(grp.vec != n )
                 if ( length(OK) > 0 && length(BAD) > 0 ){
+						r = NULL
                         r = as.data.frame(
                                         FastWilcoxTest::StatTest( Matrix::t( tmpM ), OK, BAD, logfc.threshold, minPct )
                         )
+						t= ''
+						try ( { t = class(r)} ,silent=T )
+						if ( ! t == 'data.frame'){
+							browser()
+						}
                         r= r[order( r[,'p.value']),]
                         r = cbind( r, cluster= rep(n,nrow(r) ), gene=rownames(x$dat)[r[,1]] )
                 }

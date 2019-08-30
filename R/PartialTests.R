@@ -41,8 +41,23 @@ setMethod('PartialTests', signature = c ('BioData'),
             if ( length( grep( groupB, names(Test$stats))) > 0 ){
                 Test$stats=list()
             }
-            Cpp_FindAllMarkers( Test, groupB, logfc.threshold= logfc.threshold, minPct= minPct)
-            Test$stats[[  grep( groupB, names(Test$stats)) ]]
+			tryCatch ( {
+				Cpp_FindAllMarkers( Test, groupB, 
+						logfc.threshold= logfc.threshold, 
+						minPct= minPct) 
+				Test$stats[[  grep( groupB, names(Test$stats)) ]]
+			},error = function(cond) { 
+				message( paste("Cpp_FindAllMarkers failed for", groupA, "+", groupB ) ) 
+				
+				Test$stats[[ 'FAILED' ]] = data.frame( 
+						"colID"  =0, "logFC" =0, "fracExprIN" =0, 
+						"fracExprOUT"=0, "rank.sum" =0, "p.value" =1,    
+						"cluster" =NA, "gene" =NA, "p_val_adj" = 1  
+				)
+			}
+			)
+			
+            
         } )
         names(stats) = paste( groupA, levels(obj$samples[,groupA]), sep=".")
         obj$usedObj[[thisN]] = stats

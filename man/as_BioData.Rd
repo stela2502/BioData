@@ -44,6 +44,9 @@
 }
 \description{
 create a BioData from an other object
+
+Supports sqlite3 databases as used in the cellexalVR application, 
+10X output files and kallisto out files.
 }
 \section{Methods (by class)}{
 \itemize{

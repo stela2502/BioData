@@ -305,7 +305,9 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 			ret
 }
 
-
+#' Supports sqlite3 databases as used in the cellexalVR application, 
+#' 10X output files and kallisto out files.
+#' 
 #' @describeIn as_BioData character path or sqlite3 database name
 #' @docType methods
 #' @param dat a sqlite database as created by the cellexalvrR::export2cellexalvr() function

@@ -22,23 +22,24 @@ setMethod('reorder_on_wilcox_results', signature = c ('BioData'),
 						paste(collapse="', '", names(x$stats))))
 	}
 	if ( is.null( x$samples[,column])) {
-		stop( paste ( "Samples column", column, "Iis not defined"))
+		stop( paste ( "Samples column", column, "is not defined"))
 	}
 	distanceM = NULL
 	data = x$stats[[statsN]]
 	data = data[which(data[,'p_val_adj'] < cutoff),]
-	for ( k in 1:max(as.numeric(data[,'cluster']))){
+	for ( k in names(table(data[,'cluster'])) ){
 		this = as.vector(data[which(data[,'cluster'] == k),'gene'])
-		distanceM = rbind(distanceM, unlist( lapply( 1:max(as.numeric(data[,'cluster'])) , function(i, other) {
+		
+		distanceM = rbind(distanceM, unlist( lapply( names(table(data[,'cluster'])) , function(i, other) {
 									this = as.vector(data[which(data[,'cluster'] == i),'gene'])
 									length( intersect( this, other))
 								}, this ) ) / length(this)
 		)
 	}
 	diag(distanceM) = 0
-	colnames(distanceM) = levels(x$samples[,column])
-	
-	new_order =  hclust(dist( distanceM), method='ward.D2' )$order
+	rownames(distanceM) = colnames(distanceM) = levels(x$samples[,column])
+	rownames(distanceM)
+	new_order =  levels(x$samples[,column])[hclust(dist( distanceM), method='ward.D2' )$order]
 	reorder_grouping( x, group = column, new_order= new_order )
 	
 } )

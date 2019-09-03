@@ -18,6 +18,7 @@ setMethod('getTopSigGenes', signature = c ('BioData'),
 	definition = function (x, name, n=100 ) {
 	
 	all_markers = x$stats[[name]]
+	all_markers = all_markers[ which( all_markers$logFC > 0),]
 	
 	if ( length( match( 'gene', colnames(all_markers))) == 0  ){
 		stop("This function is mean to parse Cpp or Seurat stat output tables only" )

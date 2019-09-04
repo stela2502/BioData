@@ -65,7 +65,12 @@ setMethod('reduceTo', signature = c ('BioData'),
 										}
 									} )
 						}
+						# to be sure that is really OK
 						x$usedObj$pr  = x$usedObj$prGenes = NULL
+						## but the MDS objects should probably be reduced...
+						for ( listIDs in grep( '^MDS', names(x$usedObj)) ) {
+							
+						}
 						x$name = name
 					}else {
 						print (paste( "None of the probesets matched the probesets in",x$name, "-> keep everything!"))
@@ -103,7 +108,15 @@ setMethod('reduceTo', signature = c ('BioData'),
 						if ( length(x$stats) > 0 ) {
 							x$stats = list()
 						}
-						x$usedObj$prGenes = NULL
+						# to be sure that is really OK
+						x$usedObj$pr  = x$usedObj$prGenes = NULL
+						## but the MDS objects should probably be reduced...
+						for ( listIDs in grep( '^MDS', names(x$usedObj)) ) {
+							for (n in names(x$usedObj[[listID]])){
+								x$usedObj[[listID]][n] = x$usedObj[[listID]][n][useOnly,]
+								names(x$usedObj[[listID]])[n] = paste(x$name, sep="_", n)
+							}
+						}
 						x$name = name
 						
 					}else {

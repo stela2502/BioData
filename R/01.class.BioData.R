@@ -67,6 +67,13 @@ BioData <- #withFormalClass(
 							if ( length(names(self$stats)) > 0 ){
 								cat ( "P values were calculated for ", length(names(self$stats)) -1, " condition(s)\n")
 							}
+							MDSnames = NULL
+							for( listID in grep('^MDS', names(self$usedObj)) ){
+								MDSnames = c( MDSnames, names(self$usedObj[[listID]]))
+							}
+							if ( ! is.null(MDSnames) ) {
+								cat (paste("Dimension reduction data names: ",paste( MDSnames,collapse=','),"\n") )
+							}
 						},
 						initialize = function (dat,Samples, annotation=NULL, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
 							

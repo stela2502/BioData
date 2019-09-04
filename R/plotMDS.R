@@ -10,16 +10,20 @@
 #' @param x MDS dimension on the x axis default=1
 #' @param y MDS dimension on the y axis default=2
 #' @param green show the gene expression lost during normalization in green default=F
+#' @param pdf use pdf instead of png output (default TRUE)
+#' @param width width of the plots (default pdf 10)
+#' @param height height of the plots (default pdf 10)
+#' @param ... additional plot arguments for the 2D dr plot
 #' @title description of function plotMDS
 #' @export 
 if ( ! isGeneric('plotMDS') ){setGeneric('plotMDS', ## Name
-	function (obj, mds, group, genes, x=1, y=2, green=F ) { 
+	function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10,... ) { 
 		standardGeneric('plotMDS')
 	}
 ) }
 
 setMethod('plotMDS', signature = c ('BioData'),
-	definition = function (obj, mds, group, genes, x=1, y=2, green=F ) {
+	definition = function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10, ... ) {
 	mds.dat = NULL
 	if ( ! is.null(obj$usedObj$MDS_PCA100_dim_2[[mds]] )){
 		print( "Propper 2D dimension reduction found" )
@@ -38,15 +42,25 @@ setMethod('plotMDS', signature = c ('BioData'),
 	}
 	fname <- function( parts ) {
 		n = paste(parts, collapse="_")
-		paste(stringr::str_replace_all( n, "\\s\\s+",'_'),'svg', sep='.')
+		if ( pdf ) {
+			n =paste(stringr::str_replace_all( n, "\\s\\s+",'_'),'pdf', sep='.')
+		}else {
+			n = paste(stringr::str_replace_all( n, "\\s\\s+",'_'),'png', sep='.')
+		}
+		return(n)
 	}
 	
 	if ( is.null(mds.dat)) {stop("MDS data not part of this object!") }
 	for ( g in group ) {
 		colors_4(obj, g) ## if the color is not already defined do it here
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=10 , height=10)
+		
+		if ( pdf ){
+			pdf( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=width, height=height)
+		}else {
+			png( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=width, height=height)
+		}
 		o = order(obj$samples[,g])
-		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), pch=16 )
+		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), ... )
 		dev.off()
 	}
 	m = min(obj$data())
@@ -62,6 +76,11 @@ setMethod('plotMDS', signature = c ('BioData'),
 	}
 	
 	for ( g in genes ) {
+		if ( is.na( match( g, rownames(obj)))){
+			stop( paste("gene",g, 
+				"not found in the data object", 
+				obj$name ))
+		}
 		n <- as.numeric(obj$data()[g,] )
 		col = NULL
 		COLS = NULL
@@ -100,11 +119,16 @@ setMethod('plotMDS', signature = c ('BioData'),
 			}
 			col = COLS[d]
 		}
-		svg( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=10, height=10)
+		if ( pdf ){
+			pdf( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=width, height=height)
+		}else {
+			png( file.path( obj$outpath, fname( c(obj$name, mds, x, y, g) )), width=width, height=height)
+		}
+		
 		d = order(d)
 		bad = grep('#FFFFFF', col)
 		if ( length(bad) > 0 ){ col[bad] = '#FFDBDB' }
-		plot ( mds.dat[d,x], mds.dat[d,y], col=col[d], xlab=paste('dim',x), ylab=paste('dim', y), pch=16, main=g )
+		plot ( mds.dat[d,x], mds.dat[d,y], col=col[d], xlab=paste('dim',x), ylab=paste('dim', y), main=g, ... )
 		dev.off()
 	}
 } )

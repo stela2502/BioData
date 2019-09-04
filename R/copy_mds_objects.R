@@ -20,22 +20,21 @@ setMethod('copy_mds_objects', signature = c ('BioData'),
 	if ( is.null(nameExt)){
 		nameExt = from$name
 	}
-	lapply( names(from$usedObj)[grep ( 'MDS', names(from$usedObj))],
-			function(n) {
-				new_name = paste( nameExt, n, sep="_" )
-				if ( is.null(x$usedObj[[n]] )){
-					x$usedObj[[n]] = list()
-				}
-				x$usedObj[[n]] = from$usedObj[[n]]
-				## fix the ordering
-				lapply( names( from$usedObj[[n]] ), function(n2) {
-							m = match( colnames(x$dat), rownames (from$usedObj[[n]][[n2]]))
-							if ( all.equal(  colnames(x$dat), rownames (from$usedObj[[n]][[n2]])[m] ) == FALSE ) {
-								stop( paste( n,"->", n2, "sample names do not overlap between", x$name, "and", from$name ))
-							}
-							x$usedObj[[n]][[paste(nameExt, n2, sep="_" )]] = from$usedObj[[n]][[n2]][m,]
-						})      
-				NULL
-			})   
+	useOnly = match( colnames(x), colnames(from) )
+	if ( all(unlist(lapply(useOnly, is.na))) ){
+		stop( paste( n,"->", n2, "sample names do not overlap between", x$name, "and", from$name ))
+	}
+	if ( length(which(is.na(useOnly))) >0){
+		stop( "MDS objects do not overlap 100% (missing entries in from)")
+	}		
+	
+	for ( listName in names(from$usedObj)[ grep( '^MDS', names(from$usedObj)) ] ) {
+		for (n in names(from$usedObj[[listName]])){
+			if ( is.null(x$usedObj[[listName]])){ x$usedObj[[listName]] = list()}
+			new_name = paste( nameExt, n, sep="_" )
+			x$usedObj[[listName]][[new_name]] = from$usedObj[[listName]][[n]][useOnly,]
+		}
+	}
+	 
 	invisible(x)
 } )

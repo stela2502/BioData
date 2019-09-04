@@ -21,9 +21,19 @@ if ( ! isGeneric('plotMDS') ){setGeneric('plotMDS', ## Name
 setMethod('plotMDS', signature = c ('BioData'),
 	definition = function (obj, mds, group, genes, x=1, y=2, green=F ) {
 	mds.dat = NULL
-	if ( ! is.null(obj$usedObj$MDS[[mds]] )) {
+	if ( ! is.null(obj$usedObj$MDS_PCA100_dim_2[[mds]] )){
+		print( "Propper 2D dimension reduction found" )
+		mds.dat = obj$usedObj$MDS_PCA100_dim_2[[mds]]
+	}else if ( ! is.null(obj$usedObj$MDS_dim_2[[mds]] )) {
+		print( "Propper 2D dimension reduction found" )
+		mds.dat = obj$usedObj$MDS_dim_2[[mds]]
+	}
+	else if ( ! is.null(obj$usedObj$MDS[[mds]] )) {
+		print( "3D dimension reduction object using dim 1 and 2" )
 		mds.dat = obj$usedObj$MDS[[mds]]
-	}else if ( ! is.null(obj$usedObj$MDS_PCA100[[mds]] )){
+	}
+	else if ( ! is.null(obj$usedObj$MDS_PCA100[[mds]] )){
+		print( "3D dimension reduction object using dim 1 and 2" )
 		mds.dat = obj$usedObj$MDS_PCA100[[mds]]
 	}
 	fname <- function( parts ) {

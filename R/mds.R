@@ -77,7 +77,10 @@ setMethod('mds', signature = c ('BioData'),
 			}
 			this.k <- paste(onwhat,mds.type)
 			if ( useRaw )
-				this.k = paste( 'Raw', this.k) 
+				this.k = paste( 'Raw', this.k)
+			if ( dim != 3){
+				this.k = paste( sep="_" ,this.k, dim,'dims')
+			}
 			
 			## MDS code
 			if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$dat) )==F ) {

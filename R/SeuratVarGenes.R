@@ -18,6 +18,7 @@ setMethod('SeuratVarGenes', signature = c ('BioData'),
 	m = x$dat
 	m@x[which(m@x == -1)] = 0
 	var = Seurat::FindVariableFeatures (m)
+	x$annotation$VarGeneValue = var[,4]
 	x$annotation$VarGene = FALSE
 	x$annotation$VarGene [ match( rownames(m)[which(var[,4] > minVar)], rownames(x))] = TRUE
 	invisible(x)

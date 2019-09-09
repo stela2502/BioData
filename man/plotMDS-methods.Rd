@@ -19,6 +19,14 @@
 \item{y}{MDS dimension on the y axis default=2}
 
 \item{green}{show the gene expression lost during normalization in green default=F}
+
+\item{pdf}{use pdf instead of png output (default TRUE)}
+
+\item{width}{width of the plots (default pdf 10)}
+
+\item{height}{height of the plots (default pdf 10)}
+
+\item{...}{additional plot arguments for the 2D dr plot}
 }
 \description{
 Create 2D plts of any MDS and a list of feature plots

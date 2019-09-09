@@ -87,14 +87,6 @@ setMethod('reduceTo', signature = c ('BioData'),
 							to <- to[ ! is.na(useOnly)]
 							useOnly <- useOnly[ ! is.na(useOnly) ]
 						}
-						for (n in x$drop){
-							if ( ! is.null(x[[n]]) ) {
-								x[[n]] <- NULL
-							}
-							if ( ! is.null(x$usedObj[[n]]) ) {
-								x$usedObj[[n]] <- NULL
-							}
-						}
 						
 						x$dat <- x$dat[,useOnly]
 						x$samples <- x$samples[useOnly,]
@@ -107,6 +99,14 @@ setMethod('reduceTo', signature = c ('BioData'),
 						}
 						if ( length(x$stats) > 0 ) {
 							x$stats = list()
+						}
+						for (n in x$drop){
+							if ( ! is.null(x[[n]]) ) {
+								x[[n]] <- NULL
+							}
+							if ( ! is.null(x$usedObj[[n]]) ) {
+								x$usedObj[[n]] <- NULL
+							}
 						}
 						# to be sure that is really OK
 						x$usedObj$pr  = x$usedObj$prGenes = NULL

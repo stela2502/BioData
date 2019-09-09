@@ -6,10 +6,12 @@
 #' @description  function used by DEseq Do not use
 #' @param x the BioData
 #' @param condition the column in the samples table to use as grouing variable
+#' 		  The condition will be used as formular paste('~', condition) 
+#'        and can therfore contain more complex function like 'batch + condition' 
 #' @title description of function preprocess
 #' @export
 if ( ! isGeneric('preprocess') ){ methods::setGeneric('preprocess', ## Name
-		function (x, condition ) { 
+		function (x, condition, add=NULL ) { 
 			standardGeneric('preprocess')
 		}
 )
@@ -22,6 +24,7 @@ setMethod('preprocess', signature = c ('BioData'),
 			if ( is.null( x$usedObj[['cds']]) ) {
 				x$usedObj[['cds']] <- list()
 			}
+			
 			if ( is.na( match( condition, names(x$usedObj[['cds']]) ) )) {
 				#condition <- as.factor(x$samples[,condition])
 				dat <- list()
@@ -36,6 +39,7 @@ setMethod('preprocess', signature = c ('BioData'),
 				rownames(s) <- make.names(rownames(s))
 				#browser()
 				#storeage.mode(t) <- 'numeric'
+				
 				dat$cds <- DESeq2::DESeqDataSetFromMatrix(
 					t,
 					x$samples,

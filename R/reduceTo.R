@@ -111,7 +111,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 						# to be sure that is really OK
 						x$usedObj$pr  = x$usedObj$prGenes = NULL
 						## but the MDS objects should probably be reduced...
-						for ( listIDs in grep( '^MDS', names(x$usedObj)) ) {
+						for ( listID in grep( '^MDS', names(x$usedObj)) ) {
 							for (n in names(x$usedObj[[listID]])){
 								new_name = paste(x$name, sep="_", n)
 								## need to modify the old one and then rename!

@@ -44,3 +44,6 @@ setMethod('reorder_grouping', signature = c ('BioData'),
 		invisible(obj)
 	} 
 )
+
+
+

@@ -33,7 +33,7 @@ setMethod('collaps', signature = c ('BioData'),
 					median = f<- function (x ) { median(x) },
 					mean = f <- function(x) { mean(x) },
 					sd = f <- function(x) { stats::sd(x) },
-					sum = f <-function(x) { sum(x)},
+					sum = f <-function(x) { sum(x[which(x > 0)])},
 					var = f <- function(x) { stats::var(x) }
 			);
 			}
@@ -88,7 +88,7 @@ setMethod('collaps', signature = c ('BioData'),
 			) }, silent=TRUE )
 			dataObj$samples = new_samples	
 			colnames(mm) <- as.vector(new_samples[, dataObj$sampleNamesCol])
-			dataObj$dat <- mm
+			dataObj$dat <- Matrix::Matrix(as.matrix(mm), sparse=T)
 			if ( ! is.null(mr)){
 				colnames(mr) <- as.vector(new_samples[, dataObj$sampleNamesCol])
 				dataObj$raw = mr

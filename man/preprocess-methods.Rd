@@ -8,7 +8,9 @@
 \arguments{
 \item{x}{the BioData}
 
-\item{condition}{the column in the samples table to use as grouing variable}
+\item{condition}{the column in the samples table to use as grouing variable
+   The condition will be used as formular paste('~', condition) 
+and can therfore contain more complex function like 'batch + condition'}
 }
 \description{
 create the count dataset and normalize it following DEseq standard

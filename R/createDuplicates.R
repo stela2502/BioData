@@ -24,6 +24,7 @@ setMethod('createDuplicates', signature = c ('BioData'),
 	## now get the raw data and merge
 	total = table( x$samples[,group])
 	total = round(total * randomCellsFrac)
+	total[which(total < 5)] = 5
 	res = NULL
 	groupCombo = NULL
 	for ( n in levels( x$samples[,group])) {
@@ -33,7 +34,11 @@ setMethod('createDuplicates', signature = c ('BioData'),
 		sample1 = sample( THIS, total[n] )
 		sample2 = sample( OTHER, total[n] )
 		add = tab[,sample1] +  tab[,sample2]
-		colnames(add) = paste(sep='_', colnames(tab)[sample1], colnames(tab[sample2]))
+		if ( class(add) == 'numeric') {
+			message( "We have only gotten a numeric object not a dgCMatrix as add object!")
+			browser()
+		}
+		colnames(add) = paste(sep='_', colnames(tab)[sample1], colnames(tab)[sample2])
 		groupCombo= c( groupCombo, paste(sep=" + ", as.vector(x$samples[sample1,group]), as.vector(x$samples[sample2,group])  ))
 		res= Matrix::cBind( res, add)
 	}

@@ -1,5 +1,21 @@
+#' @name createDuplicates
+#' @aliases createDuplicates,BioData-method
+#' @rdname createDuplicates-methods
+#' @docType methods
+#' @description Create artificial duplicates using the raw data stored in the object.
+#' @param x a SingleCells object
+#' @param group which group should be the basis to create duplicates (only inter group duplicates will be created)
+#' @param randomCellsFrac how many random cell should be created default=.1
+#' @title description of function createDuplicates
+#' @export 
+if ( ! isGeneric('createDuplicates') ){setGeneric('createDuplicates', ## Name
+	function ( x, group, randomCellsFrac=.1 ) { 
+		standardGeneric('createDuplicates')
+	}
+) }
 
-createDuplicates <- function ( x, group, randomCellsFrac=.1 ) {
+setMethod('createDuplicates', signature = c ('BioData'),
+	definition = function ( x, group, randomCellsFrac=.1 ) {
 	if ( !is.null(x$raw) ){
 		tab = x$raw
 	}else {
@@ -29,4 +45,4 @@ createDuplicates <- function ( x, group, randomCellsFrac=.1 ) {
 	merged$samples=data.frame( 'sampleName' = colnames(res), "Group_combo" = groupCombo)
 	class(merged) = class(x)
 	merged
-}
+} )

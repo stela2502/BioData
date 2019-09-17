@@ -72,7 +72,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 				## start the calculations!
 				if ( dir.exists(opath)){
 					if ( opath == '' ) {
-						stop( "Are you mad? Not giving me an tmp path to delete?")
+						stop( "For security reasons you must provide an absolute tmp path - files in there will be deleted?")
 					}
 					system( paste('rm -f ',opath,"/*",tname,'*', sep='') )
 				}else {

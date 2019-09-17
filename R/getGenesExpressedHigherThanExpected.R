@@ -32,7 +32,7 @@ setMethod('getGenesExpressedHigherThanExpected', signature = c ('SingleCells'),
 		if ( sum(is.na(match( c(OrderN, DataN), colnames(x$annotation) )))==0 ){	
 		#if ( ! is.null(x$annotation[, OrderN]) & ! is.null(x$annotation[, DataN])){
 			print( paste( "The columns", DataN, "and", OrderN,"are existsing - no re-calculation") )
-			return( sort(rownames(merged)[which(merged$annotation[,OrderN] <= n )]))
+			return( sort(rownames(x)[which(x$annotation[,OrderN] <= n )]))
 		}
 		
 		obj <- reduceTo( x, copy=T, what='col', to= colnames(x)[which(x$samples[,group] == name)], name=name)

@@ -26,6 +26,8 @@ setMethod('findDuplicates', signature = c ('SingleCells'),
 	## first I need to get the data volume down to the variable genes.
 	x$samples$InTeRnAlNoTuSe = 'notUse'
 	
+	comment( "Accessing VarGenes")
+	
 	x$samples$total = factor(rep('total', ncol(x$dat)))
 	genes = unlist( getGenesExpressedHigherThanExpected( x,'total', n= 1300 ))
 	

@@ -13,7 +13,7 @@ if ( ! isGeneric('auto_reorder_grouping') ){setGeneric('auto_reorder_grouping', 
 	}
 ) }
 
-setMethod('auto_reorder_grouping', signature = c ('SingleCells'),
+setMethod('auto_reorder_grouping', signature = c ('BioData'),
 	definition = function ( x, group ) {
 	
 	colapsed = collaps( x, groupCol= group , copy=T, by='sum')

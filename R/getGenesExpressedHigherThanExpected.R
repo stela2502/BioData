@@ -19,7 +19,7 @@
 #' @aliases getGenesExpressedHigherThanExpected,BioData-method
 #' @rdname getGenesExpressedHigherThanExpected-methods
 #' @docType methods
-#' @description 
+#' @description My personal VarGenes function.
 #' @param x a SingleCells object
 #' @param group a samples grouping used to subset the original object
 #' @param ref the correlating samples group (default nUMI)

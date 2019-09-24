@@ -36,7 +36,7 @@ setMethod('copy_grouping', signature = c ('BioData'),
 		stop( paste("the action would delete data in the target object",x$name, " - STOP"))
 	}else {
 		x$samples[m,newgname] = 
-				factor( paste(sep="_", from$name, from$samples[,gname] ), 
+				factor( paste(sep="_", from$name, as.vector(from$samples[,gname]) ), 
 					levels = paste(sep="_", from$name, levels(from$samples[,gname]) )) 
 	}
 	colors_4( x, newgname, force=T)

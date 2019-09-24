@@ -49,8 +49,7 @@ setMethod('plotMDS', signature = c ('BioData'),
 		}
 		return(n)
 	}
-	
-	if ( is.null(mds.dat)) {stop("MDS data not part of this object!") }
+	if ( is.null(mds.dat)) {message("MDS data not part of this object!"); browser() }
 	for ( g in group ) {
 		colors_4(obj, g) ## if the color is not already defined do it here
 		
@@ -62,6 +61,11 @@ setMethod('plotMDS', signature = c ('BioData'),
 		o = order(obj$samples[,g])
 		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), ... )
 		dev.off()
+		#browser()
+		plotLegend( obj, colname=g,
+				file= fname( c(obj$name,'legend', mds, x, y, g) )
+			,pdf=T
+		)
 	}
 	m = min(obj$data())
 	getF <- function(v) {

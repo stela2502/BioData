@@ -15,7 +15,7 @@
 \item{n}{get the top interesting genes default= 300 (in each group!)}
 }
 \description{
-description of function getGenesExpressedHigherThanExpected
+My personal VarGenes function.
 }
 \details{
 To identify variable genes is almost the first thing that every single cell analysis strategy does.

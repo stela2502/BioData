@@ -298,7 +298,7 @@ MicroArray <-
 ## obtained from https://rappster.wordpress.com/2015/04/03/r6s3-and-s4-getting-the-best-of-both-worlds/
 
 .onAttach <- function(libname, pkgname) {
-	#packageStartupMessage("Welcome to my package BioData")
+	packageStartupMessage(paste("Loading BioData version", packageVersion('BioData') ))
 	where <- as.environment("package:BioData")
 	clss <- list(
 			c("BioData", "R6"),

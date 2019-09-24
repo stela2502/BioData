@@ -69,10 +69,14 @@ BioData <- #withFormalClass(
 							}
 							MDSnames = NULL
 							for( listID in grep('^MDS', names(self$usedObj)) ){
-								MDSnames = c( MDSnames, names(self$usedObj[[listID]]))
-							}
-							if ( ! is.null(MDSnames) ) {
-								cat (paste("Dimension reduction data names: ",paste( MDSnames,collapse=','),"\n") )
+								if ( length(  names(self$usedObj[[listID]])) > 0) {
+									cat (paste( sep="",
+										names(self$usedObj)[listID], 
+										" entries: '",
+										paste( MDSnames,collapse="', '"), 
+										"'") 
+									)
+								}
 							}
 						},
 						initialize = function (dat,Samples, annotation=NULL, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){

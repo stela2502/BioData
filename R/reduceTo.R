@@ -69,7 +69,7 @@ setMethod('reduceTo', signature = c ('BioData'),
 						x$usedObj$pr  = x$usedObj$prGenes = NULL
 						## but the MDS objects should probably be reduced...
 						for ( listIDs in grep( '^MDS', names(x$usedObj)) ) {
-							
+							## no, they actually loose there validity and should if anything be manually copied over.
 						}
 						x$name = name
 					}else {
@@ -111,16 +111,17 @@ setMethod('reduceTo', signature = c ('BioData'),
 						# to be sure that is really OK
 						x$usedObj$pr  = x$usedObj$prGenes = NULL
 						## but the MDS objects should probably be reduced...
-						for ( listID in grep( '^MDS', names(x$usedObj)) ) {
-							for (n in names(x$usedObj[[listID]])){
-								new_name = paste(x$name, sep="_", n)
-								## need to modify the old one and then rename!
-								try( {	
-									x$usedObj[[listID]][[n]] = x$usedObj[[listID]][[n]][useOnly,]
-									names(x$usedObj[[listID]])[match(n, names(x$usedObj[[listID]]))] = new_name
-								})
-							}
-						}
+						## NO this creates a mess! I now have a copy_mds function that can do that if needed! 
+#						for ( listID in grep( '^MDS', names(x$usedObj)) ) {
+#							for (n in names(x$usedObj[[listID]])){
+#								new_name = paste(x$name, sep="_", n)
+#								## need to modify the old one and then rename!
+#								try( {	
+#									x$usedObj[[listID]][[n]] = x$usedObj[[listID]][[n]][useOnly,]
+#									names(x$usedObj[[listID]])[match(n, names(x$usedObj[[listID]]))] = new_name
+#								})
+#							}
+#						}
 						x$name = name
 						
 					}else {

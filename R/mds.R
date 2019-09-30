@@ -48,23 +48,11 @@ setMethod('mds', signature = c ('BioData'),
 				mds_store <- 'MDS'
 				if ( genes )
 					mds_store <- 'MDSgenes'
-				
-				tab=t(as.matrix(dataObj$data()))
-				if ( genes) {
-					tab = t(tab)
-				}
 			}else {
 				mds_store <- 'MDS_PCA100'
 				if ( genes )
 					mds_store <- 'MDSgenes_PCA100'
-				
-				PCA_name = DimReduction(dataObj, n=100, genes = genes, method='auto', force = FALSE)
-				
-				if ( ! isS4(dataObj$usedObj[[PCA_name]])  ){
-					tab <- dataObj$usedObj[[PCA_name]]$x
-				}else {
-					tab <- dataObj$usedObj[[PCA_name]]@scores
-				}
+
 			}
 			
 			if ( dim != 3){
@@ -81,7 +69,21 @@ setMethod('mds', signature = c ('BioData'),
 			if ( dim != 3){
 				this.k = paste( sep="_" ,this.k, dim,'dims')
 			}
-			
+			getData = function() {
+			if ( useRaw ) {
+				tab=t(as.matrix(dataObj$data()))
+				if ( genes) {
+					tab = t(tab)
+				}
+			}else {
+				PCA_name = DimReduction(dataObj, n=100, genes = genes, method='auto', force = FALSE)
+				if ( ! isS4(dataObj$usedObj[[PCA_name]])  ){
+					tab <- dataObj$usedObj[[PCA_name]]$x
+				}else {
+					tab <- dataObj$usedObj[[PCA_name]]@scores
+				}
+			}
+			}
 			## MDS code
 			if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$dat) )==F ) {
 				mds.proj <- NULL
@@ -167,6 +169,7 @@ setMethod('mds', signature = c ('BioData'),
 						stop("package 'Rtsne' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}
+					tab = getData()
 					if ( useRaw ){
 						mds.proj <- Rtsne::Rtsne( tab, dims=dim , check_duplicates =F, pca_center=F, verbose=T, pca=T )$Y
 					}else {
@@ -181,6 +184,7 @@ setMethod('mds', signature = c ('BioData'),
 						stop("package 'umap' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}
+					tab = getData()
 					umap_config = umap::umap.defaults
 					umap_config$n_components = dim
 					uMap = umap::umap( as.matrix(tab), umap_config)
@@ -190,10 +194,12 @@ setMethod('mds', signature = c ('BioData'),
 				}
 				
 				else if ( mds.type == "LLE"){
+					tab = getData()
 					mds.proj <- RDRToolbox::LLE( tab, dim = dim, k = as.numeric(LLEK) )
 					#	mds.trans <- LLE( t(tab), dim = 3, k = as.numeric(LLEK) )
 					
 				}else if ( mds.type == "ISOMAP"){
+					tab = getData()
 					mds.proj <- RDRToolbox::Isomap( tab, dim = dim, k = as.numeric(LLEK) )$dim3
 					#	mds.trans <- Isomap( t(tab), dim = 3, k = as.numeric(LLEK) )$dim3
 					
@@ -225,6 +231,7 @@ setMethod('mds', signature = c ('BioData'),
 						stop("package 'DDRTree' needed for this function to work. Please install it.",
 								call. = FALSE)
 					}
+					tab = getData()
 					DDRTree_res <- DDRTree::DDRTree( t(tab), dimensions=100)
 					mds.proj <- t(DDRTree_res$Z)
 					rownames(mds.proj) <- rownames(tab)
@@ -244,5 +251,5 @@ setMethod('mds', signature = c ('BioData'),
 			}
 			gc()
 			invisible(dataObj)
-		} 
+		}
 )

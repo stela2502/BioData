@@ -25,13 +25,16 @@ setMethod('copy_mds_objects', signature = c ('BioData'),
 		stop( paste( n,"->", n2, "sample names do not overlap between", x$name, "and", from$name ))
 	}
 	if ( length(which(is.na(useOnly))) >0){
-		stop( "MDS objects do not overlap 100% (missing entries in from)")
+		stop( "Warning: MDS objects do not overlap 100% (missing entries in from)")
 	}		
 	
 	for ( listName in names(from$usedObj)[ grep( '^MDS', names(from$usedObj)) ] ) {
 		for (n in names(from$usedObj[[listName]])){
 			if ( is.null(x$usedObj[[listName]])){ x$usedObj[[listName]] = list()}
-			new_name = paste( nameExt, n, sep="_" )
+			new_name = n
+			if ( nameExt != "" ) {
+				new_name = paste( nameExt, n, sep="_" )
+			}
 			x$usedObj[[listName]][[new_name]] = from$usedObj[[listName]][[n]][useOnly,]
 		}
 	}

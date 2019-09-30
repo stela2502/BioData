@@ -49,7 +49,7 @@ setMethod('clusters', signature = c ('BioData'),
 				check_and_replace <- function( name, list) {
 					if ( length(grep(name, names(list) )) ==1 ){
 						name = names(list)[grep(name, names(list) )]
-						print ( paste( "name changed to",name))
+						message ( paste( "name changed to",name))
 					}
 					name
 				}
@@ -117,9 +117,9 @@ setMethod('clusters', signature = c ('BioData'),
 				clusters <- dataObj$usedObj[['clusters']]
 				dataObj$usedObj$usedGrouping <- name
 				dataObj <- colors_4(dataObj, name )
-				print ("used a new grouing")
+				message ("used a new grouing")
 			}else {
-				print ( "reusing old grouping" )
+				message ( "reusing old grouping" )
 				dataObj$usedObj$usedGrouping <- useGrouping
 			}
 			## now I want to create some gene clusters too based on hclust only

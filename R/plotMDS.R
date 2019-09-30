@@ -33,11 +33,11 @@ setMethod('plotMDS', signature = c ('BioData'),
 		mds.dat = obj$usedObj$MDS_dim_2[[mds]]
 	}
 	else if ( ! is.null(obj$usedObj$MDS[[mds]] )) {
-		print( "3D dimension reduction object using dim 1 and 2" )
+		print( paste("3D dimension reduction object using dim",x, "and",y ) )
 		mds.dat = obj$usedObj$MDS[[mds]]
 	}
 	else if ( ! is.null(obj$usedObj$MDS_PCA100[[mds]] )){
-		print( "3D dimension reduction object using dim 1 and 2" )
+		print( paste("3D dimension reduction object using dim",x, "and",y ) )
 		mds.dat = obj$usedObj$MDS_PCA100[[mds]]
 	}
 	fname <- function( parts ) {

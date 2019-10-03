@@ -60,6 +60,7 @@ setMethod('plotMDS', signature = c ('BioData'),
 		}
 		o = order(obj$samples[,g])
 		plot ( mds.dat[o,x], mds.dat[o,y], col=obj$usedObj$colorRange[[g]][obj$samples[o,g]], xlab=paste('dim',x), ylab=paste('dim', y), ... )
+		
 		dev.off()
 		#browser()
 		plotLegend( obj, colname=g,

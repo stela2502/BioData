@@ -112,16 +112,16 @@ setMethod('reduceTo', signature = c ('BioData'),
 						x$usedObj$pr  = x$usedObj$prGenes = NULL
 						## but the MDS objects should probably be reduced...
 						## NO this creates a mess! I now have a copy_mds function that can do that if needed! 
-#						for ( listID in grep( '^MDS', names(x$usedObj)) ) {
-#							for (n in names(x$usedObj[[listID]])){
-#								new_name = paste(x$name, sep="_", n)
-#								## need to modify the old one and then rename!
-#								try( {	
-#									x$usedObj[[listID]][[n]] = x$usedObj[[listID]][[n]][useOnly,]
-#									names(x$usedObj[[listID]])[match(n, names(x$usedObj[[listID]]))] = new_name
-#								})
-#							}
-#						}
+						for ( listID in grep( '^MDS', names(x$usedObj)) ) {
+							for (n in names(x$usedObj[[listID]])){
+								new_name = paste(x$name, sep="_", n)
+								## need to modify the old one and then rename!
+								try( {	
+									x$usedObj[[listID]][[n]] = x$usedObj[[listID]][[n]][useOnly,]
+									names(x$usedObj[[listID]])[match(n, names(x$usedObj[[listID]]))] = new_name
+								})
+							}
+						}
 						x$name = name
 						
 					}else {

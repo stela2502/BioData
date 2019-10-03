@@ -230,8 +230,11 @@ setMethod('mds', signature = c ('BioData'),
 					if (!requireNamespace("DDRTree", quietly = TRUE,logical.return=TRUE )) {
 						stop("package 'DDRTree' needed for this function to work. Please install it.",
 								call. = FALSE)
+					}else {
+						attachNamespace( 'DDRTree' )
 					}
 					tab = getData()
+					
 					DDRTree_res <- DDRTree::DDRTree( t(tab), dimensions=100)
 					mds.proj <- t(DDRTree_res$Z)
 					rownames(mds.proj) <- rownames(tab)

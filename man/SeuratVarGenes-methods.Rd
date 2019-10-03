@@ -6,12 +6,12 @@
 \alias{SeuratVarGenes,BioData-method}
 \title{description of function SeuratVarGenes}
 \usage{
-SeuratVarGenes(x, minVar = 1)
+SeuratVarGenes(x, n = 300)
 }
 \arguments{
 \item{x}{The BioData object}
 
-\item{minVar}{the min scaled varianze (default=1)}
+\item{n}{the maount of genes you want (default 300)}
 }
 \description{
 Pathetic function to use the Seurat FindVariableFeatures function

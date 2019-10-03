@@ -1,32 +1,35 @@
+pseudotimeTest <- function ( x, a, b, grouping, outpath=NULL,  n=100, plotGenes=NULL ) {
 
-createDuplicates <- function ( x, group, randomCellsFrac=.1 ) {
-	if ( !is.null(x$raw) ){
-		tab = x$raw
-	}else {
-		tab = x$dat
+	if ( is.null( outpath )) {
+		outpath = x$outpath
 	}
-	## now get the raw data and merge
-	total = table( x$samples[,group])
-	total = round(total * randomCellsFrac)
-	res = NULL
-	groupCombo = NULL
-	for ( n in levels( x$samples[,group])) {
-		THIS= match( x$samples[, group], n )
-		OTHER = which(is.na(THIS))
-		THIS=which(is.na(THIS) == F)
-		sample1 = sample( THIS, total[n] )
-		sample2 = sample( OTHER, total[n] )
-		add = tab[,sample1] +  tab[,sample2]
-		colnames(add) = paste(sep='_', colnames(tab)[sample1], colnames(tab[sample2]))
-		groupCombo= c( groupCombo, paste(sep=" + ", as.vector(x$samples[sample1,group]), as.vector(x$samples[sample2,group])  ))
-		res= Matrix::cBind( res, add)
-	}
-	rownames(res) = rownames( tab )
-	merged <- as_BioData(matrix( 1, ncol=2, nrow=2, dimnames= list( c('A','B'), c('C','D')) ))
-	merged$dat = res
-	merged$annotation= data.frame( 'GeneID' = rownames(res), 'info'=rep( 'ArtificialDuplicate', nrow(res)) )
+	fit = lm( b~a )
 	
-	merged$samples=data.frame( 'sampleName' = colnames(res), "Group_combo" = groupCombo)
-	class(merged) = class(x)
-	merged
+	png ( file="Pseudotime.png", width=800, height=800)
+	plot( a ,  b, col= x$usedObj$colorRange[[grouping]][ x$samples[,grouping]] )
+	lines( a,  fit$fitted.values, lwd=1.5, col='red' )
+	dev.off()
+	dat = x$dat
+	dat@x[which(dat@x == -1)] = 0
+	traj.corGenes = FastWilcoxTest::CorMatrix( dat, fit$fitted.values )
+	names(traj.corGenes) = rownames(x)
+	traj.corGenes =traj.corGenes[ which( ! is.na(traj.corGenes))]
+	
+	genes = c( sort(names(traj.corGenes[order(traj.corGenes)[1:n]])), sort(names(traj.corGenes[order(traj.corGenes, decreasing=T)[1:n]]))   ) 
+	
+	for ( gname in unique(c( plotGenes, genes ) ) ){
+		fname = paste(sep="_", gname, "traj.corGenes", smooth,"factor.png" )
+		message(fname)
+		d = as.data.table(list( fit$fitted.values, dat[gname, ] ))
+		d[which(d[,'V2'] < 0), 'V2'] = 0
+		png( file.path( 'Tail_smoothed_expression', fname), width=800, height=800)
+	
+		x = frollmean(d[, V1], smooth)
+		y = frollmean(d[, V2], smooth)
+		plot( x, y ,  main = gname, xlab='pseudotime', ylab='smoothed expression', type='l', lwd=5 )
+#       plot(loess( y ~ x, se=F , span=0.1),  main = gname, xlab='pseudotime', ylab='smoothed expression', type='l', lwd=5 )
+		dev.off()
+	}
+	
 }
+

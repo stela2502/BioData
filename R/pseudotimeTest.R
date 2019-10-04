@@ -10,6 +10,9 @@
 #' the pseudotime will be added to the annotation table (both replacing old data!).
 #' 
 #' The function returns the top/bottom (n) correlating genes.
+#' 
+#' The rolling mean values that are summing up only expression values from one group 
+#' are colored in the group colour all others are black. 
 #'  
 #' @name pseudotimeTest
 #' @aliases pseudotimeTest,BioData-method
@@ -111,7 +114,7 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 		}else if ( type == 'table' ) {
 			func = function( start, x, smooth) { length(names(table(as.vector(x[(start-smooth):start])))) }
 		}else {
-			stop ( "the roll function needs either mean or table as type!" )
+			stop ( "the roll function needs either 'mean' or 'table' as type!" )
 		}
 		#browser()
 		unlist(lapply ( (smooth+1):length(x), func, x, smooth ) )

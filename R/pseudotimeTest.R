@@ -53,6 +53,12 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 				grDevices::png ( file=paste(fname,'png', sep="."), width=800, height=800)
 			}
 		}
+	Ra = range(a)
+	Rb = range(b)
+	rev.oder = FALSE
+	if ( abs( Rb[1] - Rb[2]) > abs(Ra[1] - Ra[2]) ) {
+		rev.order=TRUE
+	}
 	if ( is.null( outpath )) {
 		outpath = x$outpath
 	}
@@ -66,47 +72,48 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 		stop( "This function needs names on the a vector" )
 	}
 	#browser()
-	ls = loess( b ~ a )
-	fit = list()
-	fit$fitted.values <- predict( ls)
-	o = order(a)
-	if ( invert ) {
-		o = order(a,  decreasing=T)
+			pred2D <- function( a, b ) {
+				fit = list()
+				fit$a = a
+				ls = loess( b ~ a )
+				fit$b = predict( ls)
+				fit$fitted.values = fit$b
+				o = order(a)
+				if ( invert ) {	o = rev(o)	}
+				fit$time = FastWilcoxTest::euclidian_distances( a[o], fit$b[o], sum=T )
+				names(fit$time) = names(a)[o]
+				m = match( names(a), names(fit$time))
+				fit$time= fit$time[m]
+				fit
+			}
+	fit = NULL
+	if ( rev.order ) {
+		fit = pred2D( b,a )
+		tmp = fit$a
+		fit$a= fit$b
+		fit$b = tmp
+		rm(tmp)
+	}else {
+		fit = pred2D( a,b )
 	}
-	
-	time = FastWilcoxTest::euclidian_distances( a[o], fit$fitted.values[o], sum=T )
-	names(time) = names(a)[o]
-	m = match( names(a), names(time))
-	time= time[m]
-	fit$orig = fit$fitted.values
-	fit$fitted.values = time
 	
 	openPlot( file.path( outpath,"Pseudotime" ) )
 	plot( a ,  b, col= x$usedObj$colorRange[[grouping]][ x$samples[,grouping]] , pch=16)
-	o = order( fit$fitted.values )
-	points( a[o], fit$orig[o] , lwd=1.5, col=gplots::bluered(length(a)), pch=16, cex=2 )
-	#lines( a,  fit$fitted.values, lwd=1.5, col='red' )
+	o = order( fit$time )
+	points( fit$a[o], fit$b[o] , lwd=1.5, col=gplots::bluered(length(a)), pch=16, cex=2 )
 	dev.off()
-				
-#	fit = lm( b~a )
-#	png ( file=file.path( outpath,"Pseudotime.png"), width=800, height=800)
-#	plot( a ,  b, col= x$usedObj$colorRange[[grouping]][ x$samples[,grouping]] )
-#	lines( a,  fit$fitted.values, lwd=1.5, col='red' )
-#	dev.off()
+
 	dat = x$dat
 	dat@x[which(dat@x == -1)] = 0
 	Matrix::drop0(dat)
 	
-	fit$fitted.values = fit$fitted.values - min( fit$fitted.values )
-	traj.corGenes = FastWilcoxTest::CorMatrix( dat, fit$fitted.values )
+	traj.corGenes = FastWilcoxTest::CorMatrix( dat, fit$time )
 	names(traj.corGenes) = rownames(x)
 	x$annotation$cor2pseudotime = traj.corGenes 
 	traj.corGenes =traj.corGenes[ which( ! is.na(traj.corGenes))]
 	
 	genes = c( sort(names(traj.corGenes[order(traj.corGenes)[1:n]])), sort(names(traj.corGenes[order(traj.corGenes, decreasing=T)[1:n]]))   ) 
 	
-	## stable variables:
-	#browser()
 	roll = function( x, smooth, type ) {
 		func = NULL
 		if ( type=='mean') {
@@ -119,8 +126,8 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 		#browser()
 		unlist(lapply ( (smooth+1):length(x), func, x, smooth ) )
 	}
-	o = order( fit$fitted.values ) ## time
-	X = roll ( fit$fitted.values[o], smooth, 'mean' )
+	o = order( fit$time )
+	X = roll ( fit$time[o], smooth, 'mean' )
 	colV = roll ( as.numeric(x$samples[o,grouping]), smooth , 'mean' )
 	colD = roll ( as.numeric(x$samples[o,grouping]), smooth , 'table' )
 	col = x$usedObj$colorRange[[grouping]][ round( colV ) ]
@@ -187,7 +194,9 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 		dev.off()
 	}
 	}
-	x$samples$Pseudotime = fit$fitted.values
+	x$samples$Pseudotime = fit$time
+	x$samples$PseudotimeX = fit$a
+	x$samples$PseudotimeY = fit$b
 	
 	genes
 	

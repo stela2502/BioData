@@ -14,14 +14,15 @@
 #' The rolling mean values that are summing up only expression values from one group 
 #' are colored in the group colour all others are black. 
 #'  
-#' @name pseudotimeTest
-#' @aliases pseudotimeTest,BioData-method
-#' @rdname pseudotimeTest-methods
+#' @name pseudotimeTest3D
+#' @aliases pseudotimeTest3D,BioData-method
+#' @rdname pseudotimeTest3D-methods
 #' @docType methods
 #' @description Calculate and plot pseudotime relevant information.
 #' @param x a BioData object (preferably a SingleCells object)
 #' @param a the first time defining vector (e.g. a MDS dimension)
 #' @param b the second time defining vector (e.g. a MDS dimension)
+#' @patam c the third time defining vector (e.g. a MDS dimension)
 #' @param grouping a samples grouping to color the Pseudotime plot.
 #' @param outpath a outpath for the files  default=x$outpath
 #' @param n how many genes to plot on both sides default=100
@@ -31,17 +32,17 @@
 #' @param cleanFolder remove all files from the outpout folder before creating new ones (default FALSE)
 #' @param plotType ( 'png', 'png_high_res', 'pdf' )
 #' @param summaryPlot the name of the summary plot file ( default NULL no summary plot)
-#' @title description of function pseudotimeTest
+#' @title description of function pseudotimeTest3D
 #' @export 
-if ( ! isGeneric('pseudotimeTest') ){setGeneric('pseudotimeTest', ## Name
-	function ( x, a, b, grouping, outpath=NULL,  n=100, plotGenes=NULL, smooth=100, 
+if ( ! isGeneric('pseudotimeTest3D') ){setGeneric('pseudotimeTest3D', ## Name
+	function ( x, a, b, c,grouping, outpath=NULL,  n=100, plotGenes=NULL, smooth=100, 
 			invert=FALSE, cleanFolder=FALSE, plotType='png', summaryPlot=NULL ) { 
-		standardGeneric('pseudotimeTest')
+		standardGeneric('pseudotimeTest3D')
 	}
 ) }
 
-setMethod('pseudotimeTest', signature = c ('BioData'),
-	definition = function ( x, a, b, grouping, outpath=NULL,  n=100, plotGenes=NULL, 
+setMethod('pseudotimeTest3D', signature = c ('BioData'),
+	definition = function ( x, a, b,c, grouping, outpath=NULL,  n=100, plotGenes=NULL, 
 			smooth = 100, invert=FALSE, cleanFolder=FALSE, plotType='png' , summaryPlot=NULL ) {
 
 		openPlot <- function(fname) {
@@ -65,19 +66,65 @@ setMethod('pseudotimeTest', signature = c ('BioData'),
 	if ( is.null( names(a) )) {
 		stop( "This function needs names on the a vector" )
 	}
-	#browser()
-	ls = loess( b ~ a )
-	fit = list()
-	fit$fitted.values <- predict( ls)
-	o = order(a)
-	if ( invert ) {
-		o = order(a,  decreasing=T)
-	}
 	
-	time = FastWilcoxTest::euclidian_distances( a[o], fit$fitted.values[o], sum=T )
+	newTime = pcaMethods::bpca( cbind(a,b,c), nPcs=1 )@scores
+	
+	o= order(newTime)	
+	
+	## would a partial loess work??
+	## identify turns
+	localLoess <- function (ids, a,b,c ) {
+		## return a 3d loess line part
+		ret = list()
+		ranges = lapply( list(a,b,c), function(d) { r = range(d[ids]); r[2] - r[1]} )
+		
+		## 3 possibilites
+		if ( which( ranges==max( ranges)) == 1 ){
+			ls = loess( b[ids] ~ a[ids] )
+			ret$x = a[ids]
+			ret$y = predict( ls)
+			ls = loess( c[ids] ~a[ids] )
+			ret$z = predict( ls)
+			browser()
+		}else if ( which( ranges==max( ranges)) == 2 ) {
+			browser()
+		}else {
+			browser()
+		}
+		
+		ls = loess( b[ids] ~ a[ids] )
+		ret$x = a[ids]
+		ret$y = predict( ls)
+		ls = loess( c[ids] ~a[ids] )
+		ret$z = predict( ls)
+		ret
+	}
+	ret= list()
+	ls = loess( b[o] ~ a[o] )
+	ret$x = a[o]
+	ret$y = predict( ls)
+	ls = loess( c[o] ~a[o] )
+	ret$z = predict( ls)
+	
+	
+	partialRes = lapply( 
+			split(o,ceil(seq_along(o)/length(seq_along) /(length(o)/4))),
+			localLoess, a,b,c )
+	
+	time = unlist( lapply( partialRes, function(d) {newT = FastWilcoxTest::euclidian_distances3d( d$x, d$y, d$z, sum=F ); newT[1] = newT[2]/2; newT } ))
+	## sum it up here 
+	d=lapply ( 2:length(time), function (i) { time[i] = time[i] + time[i-1];NULL } )
+	
 	names(time) = names(a)[o]
 	m = match( names(a), names(time))
 	time= time[m]
+	
+	
+	
+	rgl::plot3d( ret, col=gplots::bluered(length(o)) )
+	rgl::rgl.points( a,b,c, col= x$usedObj$colorRange[[grouping]][ x$samples[,grouping]])
+	
+	browser()
 	fit$orig = fit$fitted.values
 	fit$fitted.values = time
 	

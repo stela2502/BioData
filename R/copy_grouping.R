@@ -28,18 +28,20 @@ setMethod('copy_grouping', signature = c ('BioData'),
 		x$samples[,newgname] = NA
 	}
 	m = match( colnames(x), colnames(from) )
-	
+	OK = 1:ncol(x$dat)
 	if ( length(which(is.na(m))) > 0 ){
-		stop( paste("There are cells missing in object", from$name, "that are part of the target object", x$name ))
+		warning( paste("There are cells missing in object", from$name, "that are part of the target object", x$name ))
+		OK = which(is.na(m)==F)
+		m = m[OK]
 		
 	}
 	if ( ! all( is.na(x$samples[m,newgname]))) {
 		stop( paste("the action would delete data in the target object",x$name, " - STOP"))
 	}else {
 		if ( ! is.factor(from$samples[,gname])) {
-			x$samples[,newgname] = from$samples[m,gname]
+			x$samples[OK,newgname] = from$samples[m,gname]
 		}else {
-			x$samples[,newgname] = 
+			x$samples[OK,newgname] = 
 				factor( paste(sep="_", from$name, as.vector(from$samples[m,gname]) ), 
 					levels = paste(sep="_", from$name, levels(from$samples[m,gname]) )) 
 		}

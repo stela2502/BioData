@@ -15,12 +15,16 @@ setGeneric('SeuratVarGenes', ## Name
 
 setMethod('SeuratVarGenes', signature = c ('BioData'),
 	definition = function ( x, n=300  ) {
-	m = x$dat
-	m@x[which(m@x == -1)] = 0
-	var = Seurat::FindVariableFeatures (m)
-	x$annotation$VarGeneValue = var[,4]
-	x$annotation$VarGene = FALSE
-	OK = order(x$annotation$VarGeneValue, decreasing=T)[1:n]
-	x$annotation$VarGene [ match( rownames(m)[OK], rownames(x))] = TRUE
-	sort(rownames(x)[which(x$annotation$VarGene ==TRUE)])
+		if ( !is.null( x$annotation$VarGeneValue) ) {
+			message("the annotatrion column VarGeneValue does exist - no re-calculation")
+		}else {
+			m = x$dat
+			m@x[which(m@x == -1)] = 0
+			var = Seurat::FindVariableFeatures (m)
+			x$annotation$VarGeneValue = var[,4]
+		}
+		x$annotation$VarGene = FALSE
+		OK = order(x$annotation$VarGeneValue, decreasing=T)[1:n]
+		x$annotation$VarGene [ match( rownames(m)[OK], rownames(x))] = TRUE
+		sort(rownames(x)[which(x$annotation$VarGene ==TRUE)])
 } )

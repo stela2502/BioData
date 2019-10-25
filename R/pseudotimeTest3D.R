@@ -67,58 +67,49 @@ setMethod('pseudotimeTest3D', signature = c ('BioData'),
 		stop( "This function needs names on the a vector" )
 	}
 	
-	newTime = pcaMethods::bpca( cbind(a,b,c), nPcs=1 )@scores
+	#newTime = pcaMethods::bpca( cbind(a,b,c), nPcs=1 )@scores
 	
-	o= order(newTime)	
+	#o= order(newTime)	
 	
 	## would a partial loess work??
 	## identify turns
 	localLoess <- function (ids, a,b,c ) {
 		## return a 3d loess line part
 		ret = list()
-		ranges = lapply( list(a,b,c), function(d) { r = range(d[ids]); r[2] - r[1]} )
+		inp = list( a=a, b=b, c=c )
+		ranges = unlist(lapply( list(a,b,c), function(d) { r = range(d[ids]); r[2] - r[1]} ))
+		inp$order= c('a','b','c')[ order( ranges )]
 		
-		## 3 possibilites
-		if ( which( ranges==max( ranges)) == 1 ){
-			ls = loess( b[ids] ~ a[ids] )
-			ret$x = a[ids]
-			ret$y = predict( ls)
-			ls = loess( c[ids] ~a[ids] )
-			ret$z = predict( ls)
-			browser()
-		}else if ( which( ranges==max( ranges)) == 2 ) {
-			browser()
-		}else {
-			browser()
-		}
+		ls = loess( inp[[inp$order[2]]][ids] ~ inp[[inp$order[1]]][ids] )
+		ret[[inp$order[1]]] = inp[[inp$order[1]]][ids]
+		ret[[inp$order[2]]] = predict( ls)
+		ls = loess(  inp[[inp$order[3]]][ids] ~ inp[[inp$order[1]]][ids] )
+		ret[[inp$order[3]]] = predict( ls )
 		
-		ls = loess( b[ids] ~ a[ids] )
-		ret$x = a[ids]
-		ret$y = predict( ls)
-		ls = loess( c[ids] ~a[ids] )
-		ret$z = predict( ls)
-		ret
+		RET = list( 'x' = ret$a, 'y' = ret$b, 'z' = ret$c)
+		RET
 	}
-	ret= list()
-	ls = loess( b[o] ~ a[o] )
-	ret$x = a[o]
-	ret$y = predict( ls)
-	ls = loess( c[o] ~a[o] )
-	ret$z = predict( ls)
+#	ret= list()
+#	ls = loess( b[o] ~ a[o] )
+#	ret$x = a[o]
+#	ret$y = predict( ls)
+#	ls = loess( c[o] ~a[o] )
+#	ret$z = predict( ls)
 	
+	res = localLoess( 1:ncol(x$dat), a, b, c)
 	
-	partialRes = lapply( 
-			split(o,ceil(seq_along(o)/length(seq_along) /(length(o)/4))),
-			localLoess, a,b,c )
+#	partialRes = lapply( 
+#			split(o,ceil(seq_along(o)/length(seq_along) /(length(o)/4))),
+#			localLoess, a,b,c )
 	
-	time = unlist( lapply( partialRes, function(d) {newT = FastWilcoxTest::euclidian_distances3d( d$x, d$y, d$z, sum=F ); newT[1] = newT[2]/2; newT } ))
+	time = FastWilcoxTest::euclidian_distances3d( res$x, res$y, res$z, sum=T )
+	
 	## sum it up here 
-	d=lapply ( 2:length(time), function (i) { time[i] = time[i] + time[i-1];NULL } )
+#	d=lapply ( 2:length(time), function (i) { time[i] = time[i] + time[i-1];NULL } )
 	
 	names(time) = names(a)[o]
 	m = match( names(a), names(time))
 	time= time[m]
-	
 	
 	
 	rgl::plot3d( ret, col=gplots::bluered(length(o)) )

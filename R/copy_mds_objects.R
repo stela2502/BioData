@@ -6,17 +6,18 @@
 #' By default the name of the otehr BioData object is combined to the MDS name
 #' @param x the BioData object the MDS tables should be copied to
 #' @param from the BioData object that provides the MDS tables 
+#' @param name name the MDS you want to copy (default NULL copy all)
 #' @param nameExt the attached name (default from$name)
 #' @title copy MDS structures and checking that the dimensions and order is OK.
 #' @export 
 setGeneric('copy_mds_objects', ## Name
-	function ( x, from, nameExt=NULL) { ## Argumente der generischen Funktion
+	function ( x, from, name=NULL, nameExt=NULL) { ## Argumente der generischen Funktion
 		standardGeneric('copy_mds_objects') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
 
 setMethod('copy_mds_objects', signature = c ('BioData'),
-	definition = function ( x, from, nameExt=NULL) {
+	definition = function ( x, from, name=NULL, nameExt=NULL) {
 	if ( is.null(nameExt)){
 		nameExt = from$name
 	}
@@ -30,6 +31,11 @@ setMethod('copy_mds_objects', signature = c ('BioData'),
 	
 	for ( listName in names(from$usedObj)[ grep( '^MDS', names(from$usedObj)) ] ) {
 		for (n in names(from$usedObj[[listName]])){
+			if ( !is.null( name )) {
+				if ( n != name ) {
+					next;
+				}				
+			}
 			if ( is.null(x$usedObj[[listName]])){ x$usedObj[[listName]] = list()}
 			new_name = n
 			if ( nameExt != "" ) {

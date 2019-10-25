@@ -52,7 +52,7 @@ setMethod('mds', signature = c ('BioData'),
 				mds_store <- 'MDS_PCA100'
 				if ( genes )
 					mds_store <- 'MDSgenes_PCA100'
-
+				
 			}
 			
 			if ( dim != 3){
@@ -70,19 +70,19 @@ setMethod('mds', signature = c ('BioData'),
 				this.k = paste( sep="_" ,this.k, dim,'dims')
 			}
 			getData = function() {
-			if ( useRaw ) {
-				tab=t(as.matrix(dataObj$data()))
-				if ( genes) {
-					tab = t(tab)
-				}
-			}else {
-				PCA_name = DimReduction(dataObj, n=100, genes = genes, method='auto', force = FALSE)
-				if ( ! isS4(dataObj$usedObj[[PCA_name]])  ){
-					tab <- dataObj$usedObj[[PCA_name]]$x
+				if ( useRaw ) {
+					tab=t(as.matrix(dataObj$data()))
+					if ( genes) {
+						tab = t(tab)
+					}
 				}else {
-					tab <- dataObj$usedObj[[PCA_name]]@scores
+					PCA_name = DimReduction(dataObj, n=100, genes = genes, method='auto', force = FALSE)
+					if ( ! isS4(dataObj$usedObj[[PCA_name]])  ){
+						tab <- dataObj$usedObj[[PCA_name]]$x
+					}else {
+						tab <- dataObj$usedObj[[PCA_name]]@scores
+					}
 				}
-			}
 			}
 			## MDS code
 			if ( (is.null(dataObj$usedObj[[mds_store]][[this.k]])) ||  all.equal( rownames(dataObj$usedObj[[mds_store]][[this.k]]), colnames(dataObj$dat) )==F ) {
@@ -253,6 +253,7 @@ setMethod('mds', signature = c ('BioData'),
 				dataObj$usedObj[[mds_store]][[this.k]]<- mds.proj
 			}
 			gc()
+			message( paste("Finished with MDS", this.k) )
 			invisible(dataObj)
 		}
 )

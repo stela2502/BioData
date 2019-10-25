@@ -6,16 +6,17 @@
 #' @param x The BioData object
 #' @param group Which group should be used as identity in the seurat object (default=NULL)
 #' @param fromRaw create the Seurat object from the raw unnormalized data (default =TRUE)
+#' @param norm normalize the seurat data (default = TRUE)
 #' @title convert BioData to Seurat
 #' @export 
 setGeneric('as_Seurat', ## Name
-	function ( x , group=NULL, fromRaw = T ) { 
+	function ( x , group=NULL, fromRaw = T, norm=TRUE ) { 
 		standardGeneric('as_Seurat')
 	}
 )
 
 setMethod('as_Seurat', signature = c ('BioData'),
-	definition = function ( x , group=NULL, fromRaw = T ) {
+	definition = function ( x , group=NULL, fromRaw = T, norm=TRUE ) {
 	
 	object <- NULL
 	message('Create Seurat object from raw data')
@@ -28,7 +29,9 @@ setMethod('as_Seurat', signature = c ('BioData'),
 		#		normalization.method = "LogNormalize",
 		#		scale.factor = 10000
 		)
-		object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
+		if ( norm ){
+			object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
+		}
 	}else {
 		object <- Seurat::CreateSeuratObject(
 				x$dat,
@@ -38,7 +41,9 @@ setMethod('as_Seurat', signature = c ('BioData'),
 		#		normalization.method = "LogNormalize",
 		#		scale.factor = 10000
 		)
-		object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
+		if ( norm ){
+			object <- Seurat::NormalizeData( object, normalization.method = "LogNormalize",scale.factor= 10000)
+		}
 	}
 	if ( ! fromRaw ) {
 		message("replacing Seurat norm data with BioData norm data")

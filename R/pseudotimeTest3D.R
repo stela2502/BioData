@@ -76,6 +76,7 @@ setMethod('pseudotimeTest3D', signature = c ('BioData'),
 	localLoess <- function (ids, a,b,c ) {
 		## return a 3d loess line part
 		ret = list()
+		n = names(a)
 		inp = list( a=a, b=b, c=c )
 		ranges = unlist(lapply( list(a,b,c), function(d) { r = range(d[ids]); r[2] - r[1]} ))
 		inp$order= c('a','b','c')[ order( ranges )]
@@ -85,8 +86,9 @@ setMethod('pseudotimeTest3D', signature = c ('BioData'),
 		ret[[inp$order[2]]] = predict( ls)
 		ls = loess(  inp[[inp$order[3]]][ids] ~ inp[[inp$order[1]]][ids] )
 		ret[[inp$order[3]]] = predict( ls )
-		
-		RET = list( 'x' = ret$a, 'y' = ret$b, 'z' = ret$c)
+		o = order(ret[[inp$order[1]]])
+		names(ret[['a']]) = n
+		RET = list( 'x' = ret$a[o], 'y' = ret$b[o], 'z' = ret$c[o])
 		RET
 	}
 #	ret= list()

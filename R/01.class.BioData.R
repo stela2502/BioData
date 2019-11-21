@@ -1,5 +1,4 @@
 require('R6')
-#require("r6x")
 
 #' Class a simple interface to biological data (numeric) and rich annotation for both columns (samples) and rows (values)
 #'
@@ -21,11 +20,23 @@ require('R6')
 #' annotation <- data.frame( GeneID = paste( 'gene', 1:100), Start= 101:200 )
 #' x <- BioData$new( cbind(annotation,dat), 
 #' 	Samples=samples, name="testObject",namecol='sname', outpath = "" )
-#' @field data the numerical data as data.frame
+#' @field data the numerical data as sparse Matrix
+#' @field raw the raw numerical data as sparse Matrix
+#' @field raw_intronic the raw numerical intronic data as sparse Matrix
+#' @filed zscored the zscored data as sparse matrix (mean 10.0 sd 1.0)
 #' @field samples the sample annotation as data.frame
 #' @field annotation the row annotation as data.frame
 #' @field usedObj a multi purpose list to store whichever ananlyis results do not fit in the stats list
 #' @field stats all stats with one result for each data row
+#' @field ranks currently unused
+#' @field logged a logical value stating if the data has been logged
+#' @field snorm a logical value stating if the object has been sample or cell normalized
+#' @field rownamescol which column in the annotation table contains the data rownames
+#' @field sampleNamesCol which column in the samples table contains the data rownames
+#' @field outpath where to store the object
+#' @field name the name of the object (e.g. project name)
+#' @field drop=c('MDS') currently unused
+#' @field version the version string of the BioData library that created this object
 #' @export 
 BioData <- #withFormalClass(
 		R6::R6Class(
@@ -34,6 +45,7 @@ BioData <- #withFormalClass(
 				public = list ( 
 						dat=NULL,
 						raw=NULL,
+						raw_intronic=NULL,
 						zscored=NULL,
 						samples=NULL,
 						annotation=NULL,

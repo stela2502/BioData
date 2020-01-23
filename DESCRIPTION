@@ -39,6 +39,7 @@ RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Imports: 
     DDRTree,
+    RcppEigen,
 	DESeq2,
 	dplyr,
 	FastWilcoxTest (>= 0.1.9),

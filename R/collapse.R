@@ -9,14 +9,15 @@
 #' @param fun the collapsing function (default function(x) {mean(x, ns.rm=TRUE )} )
 #' @title description of function collapse
 #' @export 
-if ( ! isGeneric('collapse') ){ setGeneric('collapse', ## Name
+#if ( ! isGeneric('collapse') ){ 
+methods::setGeneric('collapse', ## Name
 	function ( x, what='row', group, fun = function(x){ mean(x, na.rm=TRUE)} ) { ## Argumente der generischen Funktion
 		standardGeneric('collapse') ## der Aufruf von standardGeneric sorgt für das Dispatching
 	}
 )
-}else {
-	print ("Onload warn generic function 'collapse' already defined - no overloading here!")
-}
+#}else {
+#	print ("Onload warn generic function 'collapse' already defined - no overloading here!")
+#}
 
 setMethod('collapse', signature = c ('BioData'),
 	definition = function ( x, what='row', group, fun = function(x){ mean(x, na.rm=TRUE)} ) {

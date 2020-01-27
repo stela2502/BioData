@@ -6,8 +6,16 @@
 \alias{Get_PartialTest_Obj,BioData-method}
 \title{description of function Get_PartialTest_Obj}
 \usage{
-Get_PartialTest_Obj(obj, groupA, groupB, k = NULL, pcut = 1e-05,
-  logfc.threshold = 0.1, minPct = 0.1, debug = F)
+Get_PartialTest_Obj(
+  obj,
+  groupA,
+  groupB,
+  k = NULL,
+  pcut = 1e-05,
+  logfc.threshold = 0.1,
+  minPct = 0.1,
+  debug = F
+)
 }
 \arguments{
 \item{obj}{The BioData object}

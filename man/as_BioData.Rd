@@ -11,6 +11,8 @@
 \alias{as_BioData,character-method}
 \title{create a BioData from an other object}
 \usage{
+as_BioData(dat, ...)
+
 \S4method{as_BioData}{list}(dat)
 
 \S4method{as_BioData}{matrix}(dat)
@@ -24,23 +26,13 @@
 \S4method{as_BioData}{character}(dat, minUMI = 100, minGexpr = NULL)
 }
 \arguments{
-\item{dat}{a list coming for Rsubread scanning of NGS data}
+\item{dat}{a sqlite database as created by the cellexalvrR::export2cellexalvr() function}
+
+\item{...}{source object specififc options}
 
 \item{minUMI}{the minimum UMI count in order to read a cell (default=100)}
 
 \item{minGexpr}{the minimum UMI count for a gene to be included (default NULL - translates into 1)}
-
-\item{...}{source object specififc options}
-
-\item{dat}{a matrix object with cells in columns and genes in rows}
-
-\item{dat}{a cellexlvrR object}
-
-\item{dat}{a cellexlvrR object}
-
-\item{dat}{a seurat object}
-
-\item{dat}{a sqlite database as created by the cellexalvrR::export2cellexalvr() function}
 }
 \description{
 create a BioData from an other object
@@ -48,18 +40,18 @@ create a BioData from an other object
 Supports sqlite3 databases as used in the cellexalVR application, 
 10X output files and kallisto out files.
 }
-\section{Methods (by class)}{
+\section{Functions}{
 \itemize{
-\item \code{list}: create a BioData::R6 object from a Rsubread result list
+\item \code{as_BioData,list-method}: create a BioData::R6 object from a Rsubread result list
 
-\item \code{matrix}: convert a matrix to a BioData::R6 object
+\item \code{as_BioData,matrix-method}: convert a matrix to a BioData::R6 object
 
-\item \code{data.frame}: convert a data.frame to a BioData::R6 object
+\item \code{as_BioData,data.frame-method}: convert a data.frame to a BioData::R6 object
 
-\item \code{cellexalvrR}: convert a cellexalvrR object to a SingleCells::BioData::R6 object
+\item \code{as_BioData,cellexalvrR-method}: convert a cellexalvrR object to a SingleCells::BioData::R6 object
 
-\item \code{Seurat}: convert a seurat object into a SingleCells::BioData::R6 object
+\item \code{as_BioData,Seurat-method}: convert a seurat object into a SingleCells::BioData::R6 object
 
-\item \code{character}: character path or sqlite3 database name
+\item \code{as_BioData,character-method}: character path or sqlite3 database name
 }}
 

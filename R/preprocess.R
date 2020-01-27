@@ -28,11 +28,8 @@ setMethod('preprocess', signature = c ('BioData'),
 			if ( is.na( match( condition, names(x$usedObj[['cds']]) ) )) {
 				#condition <- as.factor(x$samples[,condition])
 				dat <- list()
-				if ( nrow(x$raw) > 0 ) {
-					t <- as.matrix(x$raw)
-				}else {
-					t <- as.matrix(x$dat)
-				}
+				t = x$rawData()
+				
 				#colnames( t ) <- x$samples[,condition]
 				colnames( t ) <- make.names(colnames( t ))
 				s <- x$samples

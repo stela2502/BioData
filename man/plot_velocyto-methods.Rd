@@ -6,8 +6,16 @@
 \alias{plot_velocyto,BioData-method}
 \title{description of function plot_velocyto}
 \usage{
-plot_velocyto(x, velo, translation, group, mds_name = "Expression PCA",
-  ret = list(), ofile = NULL, ...)
+plot_velocyto(
+  x,
+  velo,
+  translation,
+  group,
+  mds_name = "Expression PCA",
+  ret = list(),
+  ofile = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{The BioData object}

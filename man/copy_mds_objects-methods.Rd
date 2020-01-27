@@ -6,12 +6,14 @@
 \alias{copy_mds_objects,BioData-method}
 \title{copy MDS structures and checking that the dimensions and order is OK.}
 \usage{
-copy_mds_objects(x, from, nameExt = NULL)
+copy_mds_objects(x, from, name = NULL, nameExt = NULL)
 }
 \arguments{
 \item{x}{the BioData object the MDS tables should be copied to}
 
 \item{from}{the BioData object that provides the MDS tables}
+
+\item{name}{name the MDS you want to copy (default NULL copy all)}
 
 \item{nameExt}{the attached name (default from$name)}
 }

@@ -1,5 +1,0 @@
-CXX_STD = CXX14
-PKG_CXX14FLAGS+=-Wno-ignored-attributes
-PKG_CXXFLAGS += -Wno-ignored-attributes
-PKG_CPPFLAGS = -I../inst/include/
-

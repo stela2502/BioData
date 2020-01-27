@@ -6,8 +6,16 @@
 \alias{runStats_inThread,BioData-method}
 \title{description of function runStats_inThread}
 \usage{
-runStats_inThread(x, condition, files = F, A = NULL, B = NULL,
-  covariates = NULL, form = NULL, settings = NULL)
+runStats_inThread(
+  x,
+  condition,
+  files = F,
+  A = NULL,
+  B = NULL,
+  covariates = NULL,
+  form = NULL,
+  settings = NULL
+)
 }
 \arguments{
 \item{x}{the BioData object}

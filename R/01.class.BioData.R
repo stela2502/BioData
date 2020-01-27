@@ -60,7 +60,9 @@ BioData <- #withFormalClass(
 						usedObj = NULL,
 						drop=c('MDS'),
 						version=NULL,
-						print = function (...) {
+						#' @description
+						#' print a summary of the object
+						print = function () {
 							cat (paste("An object of class", paste(collapse="::",rev(class(self))),"\n" ) )
 							cat("named ",self$name,"\n")
 							cat (paste( 'with',nrow(self$dat),'genes and', ncol(self$dat),' samples.'),"\n")
@@ -91,6 +93,16 @@ BioData <- #withFormalClass(
 								}
 							}
 						},
+						#' @description
+						#' initialize the object - depricated - use the as_BioData functions instead
+						#' @param dat the expression sparse Matrix
+						#' @param Samples a data.frame describing the column data
+						#' @param annotation a data.frame describing the row data
+						#' @param name the name of the project - make it phony - will be used as filename
+						#' @param namecol the column in the Samples data that is the rownames of the data Matrix
+						#' @param namerow the column in the annotation data that is the rownames of the data Matrix
+						#' @param outpath the path the file is stored in (defaults to getwd())
+
 						initialize = function (dat,Samples, annotation=NULL, name='BioData', namecol=NULL, namerow= 'GeneID', outpath = ''  ){
 							
 							S <- Samples
@@ -160,21 +172,27 @@ BioData <- #withFormalClass(
 							self$version = utils::sessionInfo('BioData')$otherPkgs$BioData$Version
 							self$force.numeric()
 						},
-						data = function(...){
+						#' @description
+						#' data accessor function either reports the dat spot or the zscored if existing
+						data = function(){
 							if ( is.null(self$zscored)){
 								self$dat
 							}else {
 								self$zscored
 							}
 						},
-						rawData = function(...){
+						#' @description
+						#' data accessor function either reports the dat spot or the raw if existing
+						rawData = function(){
 							if ( is.null(self$raw) ) {
 								self$dat
 							} else {
 								self$raw
 							}
 						},
-						force.numeric = function(...) {
+						#' @description
+						#' useless and depricated
+						force.numeric = function() {
 							## useless for a Matrix - that one can only be numeric ;-)
 							#lapply(colnames(self$dat), function(x) 
 							#		{
@@ -182,6 +200,7 @@ BioData <- #withFormalClass(
 							#		})
 							self
 						},
+						#' @description useless
 						pwd = function () {
 							system( 'pwd > __pwd' )
 							t <- utils::read.delim( file = '__pwd', header=F)
@@ -190,6 +209,11 @@ BioData <- #withFormalClass(
 							unlink( '__pwd')
 							t
 						},
+						#' @description 
+						#' likely useless and sotherwise implemented, but makes sure all entries in the vector are unique.
+						#' by default adds _1, _2, ... , _n to the not unique names
+						#' @param x the vector
+						#' @param separator by default '_'
 						forceAbsoluteUniqueSample = function( x ,separator='_') {
 							last = ''
 							ret <- vector(length=length(x))

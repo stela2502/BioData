@@ -6,8 +6,14 @@
 \alias{ontologyLogPage,BioData-method}
 \title{description of function ontologyLogPage}
 \usage{
-ontologyLogPage(x, genes, ontology = "BP", topNodes = 10,
-  GOfname = "GOgenes.csv", ...)
+ontologyLogPage(
+  x,
+  genes,
+  ontology = "BP",
+  topNodes = 10,
+  GOfname = "GOgenes.csv",
+  ...
+)
 }
 \arguments{
 \item{x}{the BioData object}

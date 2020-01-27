@@ -6,8 +6,14 @@
 \alias{PartialTests,BioData-method}
 \title{description of function PartialTests}
 \usage{
-PartialTests(obj, groupA, groupB, pcut = 1e-05, logfc.threshold = 0.1,
-  minPct = 0.1)
+PartialTests(
+  obj,
+  groupA,
+  groupB,
+  pcut = 1e-05,
+  logfc.threshold = 0.1,
+  minPct = 0.1
+)
 }
 \arguments{
 \item{obj}{The BioData object}

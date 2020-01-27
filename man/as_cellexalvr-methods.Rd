@@ -6,8 +6,7 @@
 \alias{as_cellexalvr,BioData-method}
 \title{description of function as_cellexalvr}
 \usage{
-as_cellexalvr(x, outpath, specie, meta.cell.groups,
-  meta.genes.groups = NULL, userGroups = NULL, minGene = 1)
+as_cellexalvr(x, cellInfo, groups = NULL, linear = NULL)
 }
 \arguments{
 \item{x}{The BioData object}

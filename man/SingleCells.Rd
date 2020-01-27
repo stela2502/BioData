@@ -5,29 +5,14 @@
 \alias{SingleCells}
 \title{Class interface for single cell data}
 \format{\code{\link{R6Class}} object.}
-\usage{
-SingleCells
-}
 \value{
 Object of \code{\link{R6Class}} to store single cell data.
 }
 \description{
 Class interface for single cell data
+
+Class interface for single cell data
 }
-\section{Fields}{
-
-\describe{
-\item{\code{data}}{the numerical data as data.frame}
-
-\item{\code{samples}}{the sample annotation as data.frame}
-
-\item{\code{annotation}}{the row annotation as data.frame}
-
-\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
-
-\item{\code{stats}}{all stats with one result for each data row}
-}}
-
 \examples{
 set.seed(1)
 dat = matrix(rnorm(1000),ncol=10)
@@ -44,3 +29,80 @@ x <- SingleCells$new( cbind(annotation,dat),
 \keyword{NGS}
 \keyword{cell,}
 \keyword{single}
+\section{Super class}{
+\code{\link[BioData:BioData]{BioData::BioData}} -> \code{SingleCells}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{data}}{the numerical data as data.frame}
+
+\item{\code{samples}}{the sample annotation as data.frame}
+
+\item{\code{annotation}}{the row annotation as data.frame}
+
+\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
+
+\item{\code{stats}}{all stats with one result for each data row}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{data}}{the numerical data as data.frame}
+
+\item{\code{samples}}{the sample annotation as data.frame}
+
+\item{\code{annotation}}{the row annotation as data.frame}
+
+\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
+
+\item{\code{stats}}{all stats with one result for each data row}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-force.numeric}{\code{SingleCells$force.numeric()}}
+\item \href{#method-clone}{\code{SingleCells$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="data">}\href{../../BioData/html/BioData.html#method-data}{\code{BioData::BioData$data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="forceAbsoluteUniqueSample">}\href{../../BioData/html/BioData.html#method-forceAbsoluteUniqueSample}{\code{BioData::BioData$forceAbsoluteUniqueSample()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="initialize">}\href{../../BioData/html/BioData.html#method-initialize}{\code{BioData::BioData$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="print">}\href{../../BioData/html/BioData.html#method-print}{\code{BioData::BioData$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="pwd">}\href{../../BioData/html/BioData.html#method-pwd}{\code{BioData::BioData$pwd()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="rawData">}\href{../../BioData/html/BioData.html#method-rawData}{\code{BioData::BioData$rawData()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-force.numeric"></a>}}
+\subsection{Method \code{force.numeric()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SingleCells$force.numeric(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SingleCells$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

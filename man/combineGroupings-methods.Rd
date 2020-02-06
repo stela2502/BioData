@@ -6,9 +6,14 @@
 \alias{combineGroupings,BioData-method}
 \title{description of function combineGroupings}
 \usage{
-combineGroupings(x, colGroups, new_name = "Merged Group 1",
-  minCellOverlap = 5, minGroupOverlap = length(colGroups) - 2,
-  minCellsInReturnGroup = NULL)
+combineGroupings(
+  x,
+  colGroups,
+  new_name = "Merged Group 1",
+  minCellOverlap = 5,
+  minGroupOverlap = length(colGroups) - 2,
+  minCellsInReturnGroup = NULL
+)
 }
 \arguments{
 \item{x}{The BioData object}

@@ -6,11 +6,29 @@
 \alias{vioplot,Rscexv-method}
 \title{description of function vioplot}
 \usage{
-vioplot(x, ..., range = 1.5, h = NULL, ylim = NULL, names = NULL,
-  horizontal = FALSE, col = "magenta", border = "black", lty = 1,
-  lwd = 1, rectCol = "black", colMed = "white", pchMed = 19, at,
-  add = FALSE, wex = 1, drawRect = TRUE, main = NULL,
-  cex.axis = 1, neg = NULL)
+vioplot(
+  x,
+  ...,
+  range = 1.5,
+  h = NULL,
+  ylim = NULL,
+  names = NULL,
+  horizontal = FALSE,
+  col = "magenta",
+  border = "black",
+  lty = 1,
+  lwd = 1,
+  rectCol = "black",
+  colMed = "white",
+  pchMed = 19,
+  at,
+  add = FALSE,
+  wex = 1,
+  drawRect = TRUE,
+  main = NULL,
+  cex.axis = 1,
+  neg = NULL
+)
 }
 \arguments{
 \item{x}{a numerix vector}

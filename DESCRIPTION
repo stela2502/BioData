@@ -35,10 +35,11 @@ Suggests:
     knitr,
     scran,
     rmarkdown
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Imports: 
     DDRTree,
+    RcppEigen,
 	DESeq2,
 	dplyr,
 	FastWilcoxTest (>= 0.1.9),
@@ -67,4 +68,3 @@ Imports:
 	topGO,
 	umap,
 	weights
-    

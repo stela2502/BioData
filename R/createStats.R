@@ -76,7 +76,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			}
 			str = levels(x$samples[,condition])
 			Factor=x$samples[,condition]
-			design <- stats::model.matrix( ~1+ Factor )
+			design <- stats::model.matrix( ~0+ Factor )
 			colnames(design) <- stringr::str_replace_all( colnames(design), 'Factor', '' )
 			fit <- limma::lm.series(data$data(), design)
 			contr <- list()
@@ -91,6 +91,17 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 				}
 			}
 			contr$levels =design
+			if ( !is.null(A) & ! is.null(B)) {
+				contr = list()
+				cmps <- NULL
+				for ( a in A ) {
+					for (b in B ) {
+						contr[[paste(sep="-",A,B)]] = paste(sep="-",A,B)
+						cmps = c(cmps, paste(sep="-",A,B))
+					}
+				}
+				contr$levels =design
+			}
 			cont.matrix <- do.call(limma::makeContrasts, contr )
 			fit2 <- limma::contrasts.fit(fit,cont.matrix)
 			if ( is.null(x$stats) ) {

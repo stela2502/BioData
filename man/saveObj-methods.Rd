@@ -3,13 +3,19 @@
 \docType{methods}
 \name{saveObj}
 \alias{saveObj}
-\alias{saveObj,BioData-method}
+\alias{saveObj,ANY-method}
 \title{description of function saveObj}
 \arguments{
-\item{data}{the BioData object}
+\item{data}{the BioData, Seurat or something else object}
 
-\item{file}{the outfile default=paste(str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')}
+\item{file}{the outfile default=paste(str_replace_all(data$name, "\\s+", "_" ), '.RData',sep='')
+the file parameter has to be set for all but BioData objects!}
 }
 \description{
 This function saves the object either as analysis.RData or norm_data.RData if the analysi.RData has not been produced before
+}
+\details{
+BioData has moved from, being my main analysis pipeline to mere herlper status.
+
+I do not wnat to remove anything here, but instead implement a way to handle Seurat objects, too.
 }

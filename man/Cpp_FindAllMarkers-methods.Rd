@@ -6,8 +6,13 @@
 \alias{Cpp_FindAllMarkers,BioData-method}
 \title{description of function Cpp_FindAllMarkers}
 \usage{
-Cpp_FindAllMarkers(x, condition, logfc.threshold = 1, minPct = 0.1,
-  onlyPos = FALSE)
+Cpp_FindAllMarkers(
+  x,
+  condition,
+  logfc.threshold = 1,
+  minPct = 0.1,
+  onlyPos = FALSE
+)
 }
 \arguments{
 \item{x}{the BioData object}

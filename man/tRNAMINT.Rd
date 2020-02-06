@@ -5,29 +5,14 @@
 \alias{tRNAMINT}
 \title{Class interface for the MINT output}
 \format{\code{\link{R6Class}} object.}
-\usage{
-tRNAMINT
-}
 \value{
 Object of \code{\link{R6Class}} to store MINT results.
 }
 \description{
 Class interface for the MINT output
+
+Class interface for the MINT output
 }
-\section{Fields}{
-
-\describe{
-\item{\code{data}}{the numerical data as data.frame}
-
-\item{\code{samples}}{the sample annotation as data.frame}
-
-\item{\code{annotation}}{the row annotation as data.frame}
-
-\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
-
-\item{\code{stats}}{all stats with one result for each data row}
-}}
-
 \examples{
 set.seed(1)
 dat = data.frame( matrix(rnorm(1000),ncol=10) ) 
@@ -40,3 +25,72 @@ x <- tRNAMINT$new( cbind(annotation,dat),
 }
 \keyword{MINT}
 \keyword{tRNA}
+\section{Super class}{
+\code{\link[BioData:BioData]{BioData::BioData}} -> \code{tRNAMINT}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{data}}{the numerical data as data.frame}
+
+\item{\code{samples}}{the sample annotation as data.frame}
+
+\item{\code{annotation}}{the row annotation as data.frame}
+
+\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
+
+\item{\code{stats}}{all stats with one result for each data row}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{data}}{the numerical data as data.frame}
+
+\item{\code{samples}}{the sample annotation as data.frame}
+
+\item{\code{annotation}}{the row annotation as data.frame}
+
+\item{\code{usedObj}}{a multi purpose list to store whichever ananlyis results do not fit in the stats list}
+
+\item{\code{stats}}{all stats with one result for each data row}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-clone}{\code{tRNAMINT$clone()}}
+}
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="data">}\href{../../BioData/html/BioData.html#method-data}{\code{BioData::BioData$data()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="force.numeric">}\href{../../BioData/html/BioData.html#method-force.numeric}{\code{BioData::BioData$force.numeric()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="forceAbsoluteUniqueSample">}\href{../../BioData/html/BioData.html#method-forceAbsoluteUniqueSample}{\code{BioData::BioData$forceAbsoluteUniqueSample()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="initialize">}\href{../../BioData/html/BioData.html#method-initialize}{\code{BioData::BioData$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="print">}\href{../../BioData/html/BioData.html#method-print}{\code{BioData::BioData$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="pwd">}\href{../../BioData/html/BioData.html#method-pwd}{\code{BioData::BioData$pwd()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="rawData">}\href{../../BioData/html/BioData.html#method-rawData}{\code{BioData::BioData$rawData()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{tRNAMINT$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

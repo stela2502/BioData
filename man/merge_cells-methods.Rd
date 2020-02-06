@@ -6,8 +6,14 @@
 \alias{merge_cells,BioData-method}
 \title{description of function merge_cells}
 \usage{
-merge_cells(dataObj, group, mergeNcells = 10, gID = NULL,
-  by = c("median", "mean", "sd", "sum", "var"), copy = TRUE)
+merge_cells(
+  dataObj,
+  group,
+  mergeNcells = 10,
+  gID = NULL,
+  by = c("median", "mean", "sd", "sum", "var"),
+  copy = TRUE
+)
 }
 \arguments{
 \item{dataObj}{the BioData object}

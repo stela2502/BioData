@@ -4,14 +4,16 @@
 #' @param ... source object specififc options
 #' @title create a BioData from an other object
 #' @export 
-if ( ! isGeneric('as_BioData') ){ methods::setGeneric('as_BioData', ## Name
+#if ( ! isGeneric('as_BioData') ){ 
+
+methods::setGeneric('as_BioData', ## Name
 	function ( dat, ... ) { 
 		standardGeneric('as_BioData') ## der Aufruf von standardGeneric sorgt für das_BioData Dispatching
 	}
 )
-}else {
-	print ("Onload warn generic function 'as_BioData' already defined - no overloading here!")
-}
+# }else {
+# 	print ("Onload warn generic function 'as_BioData' already defined - no overloading here!")
+# }
 
 #' @describeIn as_BioData create a BioData::R6 object from a Rsubread result list
 #' @docType methods

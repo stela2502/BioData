@@ -6,8 +6,15 @@
 \alias{getGeneInfo,BioData-method}
 \title{description of function getEnsembl}
 \usage{
-getGeneInfo(x, species = "mMus", from, from_tab = NULL,
-  what = "symbol", what_tab = NULL, tab.res = FALSE)
+getGeneInfo(
+  x,
+  species = "mMus",
+  from,
+  from_tab = NULL,
+  what = "symbol",
+  what_tab = NULL,
+  tab.res = FALSE
+)
 }
 \arguments{
 \item{x}{the query string or a vector of query strings}

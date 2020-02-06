@@ -8,29 +8,22 @@
 \alias{normalize,MicroArray-method}
 \title{normalize a BioData::R6 object}
 \usage{
-\S4method{normalize}{SingleCells}(object, reads = 600, force = FALSE,
-  name = NULL)
+normalize(object, ..., name = NULL)
+
+\S4method{normalize}{SingleCells}(object, reads = 600, force = FALSE, name = NULL)
 
 \S4method{normalize}{MicroArray}(object, to = NULL, name = NULL)
 }
 \arguments{
+\item{name}{the name of the new object}
+
 \item{reads}{the required read depth}
 
-\item{force}{replace old norm data (FALSE)}
-
-\item{name}{the new name of the object (deafule old name + normalized)}
+\item{force}{re-normalize this object (default FALSE)}
 
 \item{to}{a numeric vector to normalize the samples to. Has to have the same length as are columns in the data table}
 
-\item{x}{The BioData object (NGS expression data, not single cells)}
-
 \item{readCounts}{The number of reads from each bam file or another value you want to normalize the data to}
-
-\item{x}{The SingleCells::BioData::R6 object}
-
-\item{name}{the name of the new object}
-
-\item{force}{re-normalize this object (default FALSE)}
 
 \item{x}{the MicoArray::BioData::R6 object}
 }
@@ -47,10 +40,10 @@ normalize the expression data by subsampling as described in PMID 24531970
 constructor that has to be implemented for a generic BioData
 This generic version was meant for array data and I have not had the need nor time to implement this part.
 }
-\section{Methods (by class)}{
+\section{Functions}{
 \itemize{
-\item \code{SingleCells}: a SingleCells::BioData::R6 object using subsampling
+\item \code{normalize,SingleCells-method}: a SingleCells::BioData::R6 object using subsampling
 
-\item \code{MicroArray}: normalize a MicoArray::BioData::R6 object using quantile normalization
+\item \code{normalize,MicroArray-method}: normalize a MicoArray::BioData::R6 object using quantile normalization
 }}
 

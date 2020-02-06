@@ -6,8 +6,13 @@
 \alias{auto_order_grouping,BioData-method}
 \title{Auto re-order a (RF) grouping}
 \usage{
-auto_order_grouping(x, group, settings = list(A = "lsens2017-3-2", t =
-  "01:00:00", p = "dell", n = 1, N = 1), k = 5, colapseBy = "median")
+auto_order_grouping(
+  x,
+  group,
+  settings = list(A = "lsens2017-3-2", t = "01:00:00", p = "dell", n = 1, N = 1),
+  k = 5,
+  colapseBy = "median"
+)
 }
 \arguments{
 \item{x}{The BioData object}

@@ -24,5 +24,6 @@ setMethod('auto_reorder_grouping', signature = c ('BioData'),
 	clusters( colapsed, groups.n= 2 )
 	new_order <- colapsed$usedObj$hc$labels[colapsed$usedObj$hc$order]
 	reorder_grouping( x, group= group, new_order= new_order )
-	new_order
+	reorder_grouping( colapsed, group= group, new_order= new_order )
+	colapsed
 } )

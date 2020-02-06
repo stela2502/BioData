@@ -58,14 +58,21 @@ setMethod('getGenesExpressedHigherThanExpected', signature = c ('SingleCells'),
 		g = lm( cor ~ B )
 		# get the data
 		order_of_interest = names(sort(g$residuals))
+		OK = which( g$residuals > mean(g$residuals) + 3* var(g$residuals) )
+		if ( length(OK) < n ){
+			message(paste("WARNING for level",name,"less reliable genes",length(OK),"than requested genes", n ))
+		}
 		OrderN = paste('GExHiEx_OoI',name,sep="_")
 		DataN = paste('GExHiEx_RES',name,sep="_")
 		# init order vector
 		x$annotation[, OrderN] = rep(nrow(x$dat), nrow(x$dat))
 		# init data vector
 		x$annotation[, DataN] = rep(0, nrow(x$dat))
-		
 		m = match( order_of_interest, rownames(x) )
+		if ( length( which(is.na(m))) >0){
+			order_of_interest = order_of_interest[which(!is.na(m))]
+			m = match( order_of_interest, rownames(x) )
+		}
 		x$annotation[m, OrderN] = 1:length(m)
 		x$annotation[m, DataN ] = order_of_interest
 		sort(order_of_interest[1:n+1])

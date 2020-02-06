@@ -45,6 +45,15 @@ setMethod('as_BioData', signature = c ('list'),
 	ret
 } )
 
+setMethod("as_BioData","missing",function(x) {
+			m = matrix(1,ncol=10, nrow=10)
+			rownames(m) =paste( 'gene', 1:10)
+			colnames(m) =paste( 'cell', 1:10)
+			ret = as_BioData(m)
+			ret$name="FakeObject"
+			ret
+		})
+
 #' @describeIn as_BioData convert a matrix to a BioData::R6 object
 #' @docType methods
 #' @param dat a matrix object with cells in columns and genes in rows
@@ -97,10 +106,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
-			m = matrix(1,ncol=10, nrow=10)
- 			rownames(m) =paste( 'gene', 1:10)
- 			colnames(m) =paste( 'cell', 1:10)
-			ret = as_BioData(m) 
+			m = as_BioData()
 
 			ret$dat = dat@data
 			if ( ncol(dat@userGroups) > 0  ) {
@@ -175,10 +181,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 setMethod('as_BioData', signature = c ('Seurat'),
 				definition = function ( dat ) {
 					
- 					m = matrix(1,ncol=10, nrow=10)
- 					rownames(m) =paste( 'gene', 1:10)
- 					colnames(m) =paste( 'cell', 1:10)
-					ret = as_BioData(m) 
+ 					m = as_BioData() 
 					ret$dat = dat@assays$RNA@data
 					ret$raw = Seurat::GetAssayData(t, slot = "counts")
 					nCell = FastWilcoxTest::ColNotZero( Matrix::t(ret$dat) )
@@ -327,6 +330,9 @@ setMethod('as_BioData', signature = c ('character'),
 				message("Process 10x output")
 				return( load_10x(dat, minUMI=minUMI, minGexpr=minGexpr ) ) 
 			}else { ## should be a sqlite databse then
+				if ( length(grep( "loom$", dat))> 0 ){
+					## readLoomFile
+				}
 				message("Load sqlite database")
 				return( load_database(dat, minUMI=minUMI, minGexpr=minGexpr ) ) 
 			}

@@ -141,7 +141,7 @@ setMethod('normalize', signature = c ('SingleCells'),
 				force = FALSE
 			if ( force | object$usedObj$snorm == 0 ) {
 				if ( length( object$samples$nUMI ) == 0 ) {
-					object$samples$nUMI <- apply( object$dat, 2, sum)
+					object$samples$nUMI <- FastWilcoxTest::ColNotZero( object$dat )
 				}
 				
 				if(is.null(name)){

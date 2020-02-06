@@ -25,7 +25,7 @@ setMethod('createStats', signature = c ('BioData'),
 	definition = function (x, condition, files=F, A=NULL, B=NULL) {
 		#stop( "Not implemented / broken!")
 			if (!requireNamespace("DESeq2", quietly = TRUE)) {
-				stop("limma needed for this function to work. Please install it.",
+				stop("DESeq2 needed for this function to work. Please install it.",
 						call. = FALSE)
 			}
 		if ( nrow(x$data()) < 1e+3 ) {

@@ -25,7 +25,7 @@ biocViews:
     GO.db
 Remotes: 
    stela2502/RFclust.SGE,
-   stela2502/FastWilcoxTest,
+   sonejilab/FastWilcoxTest,
    sonejilab/cellexalvrR
 LazyData: true
 Suggests:

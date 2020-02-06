@@ -18,18 +18,19 @@
 #' @param X11type sometimes needed for compatibility (default = 'cairo')
 #' @param green if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)
 #' @param noBreaks show linear data colors instead of bined ones; impossible if green=TRUE (default =FALSE)
+#' @param family the grDevices font family (default 'Helvetica')
 #' @title description of function complexHeatmap
 #' @export 
 setGeneric('complexHeatmap', ## Name
 		function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE, subpath='', 
-				main = '',  heapmapCols= function(x){ c("darkgrey", gplots::bluered(x))}, brks=10, X11type= 'cairo', green = F, noBreaks = F ) { 
+				main = '',  heapmapCols= function(x){ c("darkgrey", gplots::bluered(x))}, brks=10, X11type= 'cairo', green = F, noBreaks = F, family="Helvetica" ) { 
 			standardGeneric('complexHeatmap')
 		}
 )
 
 setMethod('complexHeatmap', signature = c ('BioData'),
 		definition = function ( x,  ofile=NULL, colGroups=NULL, rowGroups=NULL, colColors=NULL, rowColors=NULL, pdf=FALSE,
-				subpath='', main = '' ,  heapmapCols=NULL, brks=10, X11type= 'cairo', green = F, noBreaks = F ) {
+				subpath='', main = '' ,  heapmapCols=NULL, brks=10, X11type= 'cairo', green = F, noBreaks = F , family="Helvetica") {
 			
 			Rowv = FALSE
 			Colv = FALSE
@@ -130,17 +131,17 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					if ( height < 8){
 						height = 8
 					}
-					grDevices::pdf( file=paste(ofile ,'pdf',sep='.'), width=10, height=height)
+					grDevices::pdf( file=paste(ofile ,'pdf',sep='.'), width=10, height=height, family=family)
 				}else{
 					width= ceiling(nrow(x$samples)/300) * 1600
 					height = ceiling( nrow(x$annotation) / 100 ) *800
-					grDevices::png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type)
+					grDevices::png( file=paste(ofile,'png',sep='.'), width=1600, height=800, type=X11type, family=family)
 				}
 				for ( v in colGroups ) {
-					plotLegend(x, file=paste(x$name, 'col', sep="_"), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'col', sep="_"), colname=v, pdf=pdf, col=colColors[[v]], X11type=X11type, family=family )
 				}
 				for ( v in rowGroups ) {
-					plotLegend(x, file=paste(x$name, 'row', sep="_"), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type )
+					plotLegend(x, file=paste(x$name, 'row', sep="_"), colname=v, pdf=pdf, col=rowColors[[v]], X11type=X11type, family=family )
 				}
 			}
 			if ( length(brks) < 3 ) {
@@ -192,7 +193,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 					grDevices::dev.off()
 					fn <- paste(file.path(x$outpath,x$name),'_legend_values.pdf',sep='.')
 					if ( ! file.exists(fn) ){
-						grDevices::pdf( file=fn, width=8, height=4)
+						grDevices::pdf( file=fn, width=8, height=4, family=family)
 						Z <- as.matrix(1:(length(brks)-2))
 						graphics::image(Z, col=heapmapCols(length(brks)-2),axes = FALSE, main='color key')
 						if ( min(x$data()) == -1) {

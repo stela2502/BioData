@@ -37,14 +37,14 @@ setMethod('preprocess', signature = c ('BioData'),
 				#browser()
 				#storeage.mode(t) <- 'numeric'
 				
-				dat$cds <- DESeq2::DESeqDataSetFromMatrix(
-					t,
-					x$samples,
-					formula( paste('~',condition ) )
-				)
-				#dat$cds <- DESeq2::estimateSizeFactors(dat$cds)
-				#DESeq2::sizeFactors(x$cds)
-				#dat$cds <- DESeq2::estimateDispersions(dat$cds)
+				se <- SummarizedExperiment::SummarizedExperiment(assays = list( counts = as.matrix(t)), colData=x$samples)
+				
+				design = formula( paste('~',condition ) )
+				dat$cds <- DESeq2::DESeqDataSet(se, design= design)
+
+				dat$cds <- DESeq2::estimateSizeFactors(dat$cds)
+				dat$cds <- DESeq2::estimateDispersions(dat$cds)
+				
 				#dat$vsdFull = DESeq2::varianceStabilizingTransformation( dat$cds )
 				x$usedObj[['cds']][[length(x$usedObj[['cds']])+1]] = dat$cds
 				names(x$usedObj[['cds']])[length(x$usedObj[['cds']])] = condition

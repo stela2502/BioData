@@ -11,19 +11,21 @@
 #' @param svg create a svg file default=F
 #' @param pdf create a pdf file default=F
 #' @param col a vector of color names default=NULL
+#' @param family the grDevices font family (default 'Helvetica')
 #' @title description of function plot.legend
 #' @export 
-if ( ! isGeneric('plotLegend') ){ methods::setGeneric('plotLegend', ## Name
-		function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' ) { 
+#if ( ! isGeneric('plotLegend') ){ 
+methods::setGeneric('plotLegend', ## Name
+		function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo', family='Helvetica' ) { 
 			standardGeneric('plotLegend')
 		}
 )
-}else {
-	print ("Onload warn generic function 'plotLegend' already defined - no overloading here!")
-}
+#}else {
+	#print ("Onload warn generic function 'plotLegend' already defined - no overloading here!")
+#}
 
 setMethod('plotLegend', signature = c ('BioData'),
-		definition = function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' ) {
+		definition = function ( x, colname, file=NULL, svg=F, pdf=F, col=NULL, X11type='cairo' , family='Helvetica') {
 			if ( is.null(col) ){
 				col=x$usedObj[['colorRange']][[colname]]
 			}
@@ -43,13 +45,13 @@ setMethod('plotLegend', signature = c ('BioData'),
 				file = file.path(x$outpath, paste( collapse='_',unlist(strsplit( c(file, colname), '\\s+', perl=T))))
 				h = 4 * ceiling(n /10)
 				if ( svg ) {
-					RSvgDevice::devSVG( file=paste(file,'svg',sep='.'), width= 4, height=h )
+					RSvgDevice::devSVG( file=paste(file,'svg',sep='.'), width= 4, height=h , family=family)
 				}
 				else if ( pdf ) {
-					grDevices::pdf( file=paste(file, 'pdf', sep='.'), width= 4, height=h )
+					grDevices::pdf( file=paste(file, 'pdf', sep='.'), width= 4, height=h , family=family)
 				}
 				else {
-					grDevices::png(file=paste(file, 'png', sep='.'), width= 400, height=h*100, type=X11type )
+					grDevices::png(file=paste(file, 'png', sep='.'), width= 400, height=h*100, type=X11type, family= family)
 				}
 			}
 			graphics::plot(1, type="n", axes=F, xlab="", ylab="", main=colname)

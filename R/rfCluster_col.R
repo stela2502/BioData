@@ -38,6 +38,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 		definition = function ( x, rep=1, SGE=F, email="none", k=16, slice=4, 
 				subset=200 ,nforest=500, ntree=1000, name='RFclust',
 				settings=list(), ids=NULL) {
+			
 			if ( rep > 1) {
 				lapply(1:rep, function(i) { 
 							rfCluster_col(
@@ -101,13 +102,13 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					if ( length(settings) > 0 ) {
 						#browser()
 						x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-								dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
+								dat=x$usedObj[['rfExpressionSets']][[ i ]]$data(), 
 								SGE=F, slices=slice, email=email, tmp.path=opath, 
 								name= tname, settings=settings, slurm=T 
 						)
 					}else {
 						x$usedObj[['rfObj']][[ i ]] <- RFclust.SGE::RFclust.SGE ( 
-								dat=as.data.frame(as.matrix(x$usedObj[['rfExpressionSets']][[ i ]]$data())), 
+								dat=x$usedObj[['rfExpressionSets']][[ i ]]$data(), 
 								SGE=SGE, slices=slice, email=email, tmp.path=opath, name= tname 
 						)
 					}
@@ -143,6 +144,7 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 			}
 			
 			gc()
+			
 			invisible(x)		
 		}
 )
@@ -180,8 +182,8 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 			groups <- RFclust.SGE::createGroups( x$usedObj[['rfObj']][[RFname]], k=k, name=RFname )
 			## store the MDS representation of the rfClust dissimilarity object
 			## in case all samples have been used to create the object.
-			if ( is.null (x$usedObj$MDS[[RFname]]) & nrow(x$usedObj$rfObj[[RFname]]@distRF[[RFname]]$cl1) == ncol(x$dat) ) {
-				a <- (x$usedObj$rfObj[[RFname]]@distRF[[RFname]]$cl1)
+			if ( is.null (x$usedObj$MDS[[RFname]]) & nrow(x$usedObj$rfObj[[RFname]]@distRF[[RFname]]) == ncol(x$dat) ) {
+				a <- (x$usedObj$rfObj[[RFname]]@distRF[[RFname]])
 				d <- stats::cmdscale(a,3)
 				m <- match( colnames(x$dat), rownames(d) )
 				x$usedObj$MDS[[single_res_col]] <- d[m,]
@@ -194,6 +196,7 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
+			browser()
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
 				print ( "using the calcualted grouping")

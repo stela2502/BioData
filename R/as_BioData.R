@@ -103,7 +103,11 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 			ret = as_BioData(m) 
 
 			ret$dat = dat@data
-			ret$samples=cbind( 'cell.name' = colnames(ret$dat), dat@userGroups )
+			if ( ncol(dat@userGroups) > 0  ) {
+				ret$samples=cbind( 'cell.name' = colnames(ret$dat), dat@userGroups )
+			}else {
+				ret$samples=cbind( 'cell.name' = colnames(ret$dat) )
+			}
 			ret$usedObj <- dat@usedObj
 			ret$usedObj$Seurat.meta.cell = dat@meta.cell
 			class(ret) = c( 'SingleCells', 'BioData', 'R6')

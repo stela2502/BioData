@@ -2,7 +2,9 @@ readLoomFile <- function( x ) {
 	require( 'hdf5r' )
 	ret = as_BioData()
 	
-	x= loomR::connect(filename = x, mode = "r")
+	x= hdf5r::h5file(x)
+	message(class(x))
+	#x= loomR::connect(filename = x, mode = "r")
 	
 	as.sparse <- function(x, ...) {
 		for (i in c('data', 'indices', 'indptr')) {
@@ -18,6 +20,7 @@ readLoomFile <- function( x ) {
 							dims = rev(x = hdf5r::h5attr(x = x, which = 'h5sparse_shape'))
 					))
 		}
+
 		return(Matrix::sparseMatrix(
 						i = x[['indices']][] + 1,
 						p = x[['indptr']][],
@@ -32,13 +35,16 @@ readLoomFile <- function( x ) {
 	if (is(object = x[['matrix']], class2 = 'H5Group')) {
 		dat <- as.sparse(x = x[['matrix']])
 	} else {
-		dat <- x[['matrix']][, ]
+		message( "Converting full matrix to sparse (SLOW)")
+		obj = Dense2SparseHDF5::Dense2SparseHDF5$new('/mnt/VR_Project/Organogenesis/organo2.loom')
+		obj$toSparse()
+		dat = obj$Matrix
+		rm(obj)
+		gc()
+		message('finished')
 	}
 	# x will be an S3 matrix if X was scaled, otherwise will be a dgCMatrix
-	if (is.matrix(x = dat)) {
-		## the loom files seam to store all data as matrix and not as sparse matrix?!
-		dat = Matrix::Matrix(dat, sparse=T)
-	}
+
 	print ( "reading feature data")
 	ret$annotation = H5Anno2df(x, 'row_attrs', 'gene_names', onlyStrings=TRUE ) #function definition in file 'as_cellexalvrR.R'
 	dat = Matrix::t(dat)

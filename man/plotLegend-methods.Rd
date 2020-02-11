@@ -5,6 +5,18 @@
 \alias{plotLegend}
 \alias{plotLegend,BioData-method}
 \title{description of function plot.legend}
+\usage{
+plotLegend(
+  x,
+  colname,
+  file = NULL,
+  svg = F,
+  pdf = F,
+  col = NULL,
+  X11type = "cairo",
+  family = "Helvetica"
+)
+}
 \arguments{
 \item{x}{the StefansExpressionSet object}
 
@@ -17,6 +29,8 @@
 \item{pdf}{create a pdf file default=F}
 
 \item{col}{a vector of color names default=NULL}
+
+\item{family}{the grDevices font family (default 'Helvetica')}
 }
 \description{
 Creates the legend for one sample or annotation variable using either the inbuilt 

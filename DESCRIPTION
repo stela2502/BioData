@@ -26,7 +26,8 @@ biocViews:
 Remotes: 
    stela2502/RFclust.SGE,
    sonejilab/FastWilcoxTest,
-   sonejilab/cellexalvrR
+   sonejilab/cellexalvrR,
+   stela2502/Dens2SparseHDF5
 LazyData: true
 Suggests:
 	Rtsne,
@@ -39,6 +40,7 @@ RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Imports: 
     DDRTree,
+    hdf5r,
     RcppEigen,
 	DESeq2,
 	dplyr,

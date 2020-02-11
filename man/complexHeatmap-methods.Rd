@@ -20,7 +20,8 @@ complexHeatmap(
   brks = 10,
   X11type = "cairo",
   green = F,
-  noBreaks = F
+  noBreaks = F,
+  family = "Helvetica"
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ complexHeatmap(
 \item{green}{if in SingleCell mode normalization losses get a -1 and can be displayed as green or black in the default coloring (default green=F => black)}
 
 \item{noBreaks}{show linear data colors instead of bined ones; impossible if green=TRUE (default =FALSE)}
+
+\item{family}{the grDevices font family (default 'Helvetica')}
 }
 \description{
 plot the PCR heatmap using the heatmap.3 function included in this package

@@ -43,20 +43,35 @@ BioData <- #withFormalClass(
 				'BioData',
 				class = TRUE,
 				public = list ( 
+						#' @field dat the numerical data as sparse Matrix
 						dat=NULL,
+						#' @field raw the raw numerical data as sparse Matrix
 						raw=NULL,
+						#' @field raw_intronic the raw numerical intronic data as sparse Matrix
 						raw_intronic=NULL,
+						#' @filed zscored the zscored data as sparse matrix (mean 10.0 sd 1.0)
 						zscored=NULL,
+						#' @field samples the sample annotation as data.frame
 						samples=NULL,
+						#' @field annotation the row annotation as data.frame
 						annotation=NULL,
+						#' @field ranks currently unused
 						ranks=NULL,
+						#' @field logged a logical value stating if the data has been logged
 						logged=FALSE,
+						#' @field stats all stats with one result for each data row
 						stats=NULL,
+						#' @field snorm a logical value stating if the object has been sample or cell normalized
 						snorm=FALSE,
+						#' @field snorm a logical value stating if the object has been sample or cell normalized
 						rownamescol=NULL,
+						#' @field rownamescol which column in the annotation table contains the data rownames
 						sampleNamesCol=NULL,
+						#' @field outpath where to store the object
 						outpath='../outpath/',
+						#' @field name the name of the object (e.g. project name)
 						name='BioData',
+						#' @field usedObj a multi purpose list that storeas everything we forgot a slot for
 						usedObj = NULL,
 						drop=c('MDS'),
 						version=NULL,
@@ -171,6 +186,94 @@ BioData <- #withFormalClass(
 							self$sampleNamesCol <- 'samples'
 							self$version = utils::sessionInfo('BioData')$otherPkgs$BioData$Version
 							self$force.numeric()
+						},
+						#' reorder a mds object based on an ordering ID
+						#' This function should never be called by the user!!!
+						#' @docType methods
+						#' @param mdsName the name of the MDS
+						#' @param ids the new order
+						#' @param mdsClass the MDS class name like MDS_PCA100
+						reorder.mds = function( mdsName, ids, mdsClass ){
+							self$usedObj[[mdsClass]][[mdsName]] = self$usedObj[[mdsClass]][[mdsName]][ids,]
+						},
+						#' reorder a BioData object based on annotation information.
+						#' If the ordering data is all numeric the numeric values and not the factor levels will be used!
+						#' @aliases reorder.genes,BioData-method
+						#' @rdname reorder.genes-methods
+						#' @docType methods
+						#' @description this function reorderes the BioData object based on a column in the annotation table (e.g. for plotting)
+						#' @param column the annotation column to reorder on
+						reorder.genes = function (column) {
+							suppressWarnings( {
+							if (is.factor(self$annotation[,column]) &
+								all( is.null(as.numeric(as.vector(self$annotation[,column])))) == FALSE ){
+								idx <-  order(as.numeric(as.vector(self$annotation[,column])))
+							}else {
+								idx <-  order( self$annotation[,column])
+							}
+							})
+							self$dat <- self$dat[ idx ,]
+							if( !is.null(self$zscored)) {
+								self$zscored <- self$zscored[ idx, ]
+							}
+							if( !is.null(self$raw)) {
+								self$raw <- self$raw[ idx, ]
+							}
+							t <- self$annotation[ idx,]
+							if ( class(t) == 'factor' ) {
+								t <- data.frame(t)
+								colnames(t) <- colnames(self$annotation)
+								}
+							if ( ! is.null(self$stats)) {
+								lapply( names(self$stats), function(n) { self$stats[[n]] <-self$stats[[n]][idx,] })
+							}
+							for ( n in names(self$usedObj$MDSgene)){
+								self$reorder.mds(n, idx,'MDSgene')
+							}
+							for ( n in names(self$usedObj$MDSgenes_PCA100)){
+								self$reorder.mds(n, idx,'MDSgenes_PCA100')
+							}
+							if ( !is.null(self$usedObj$prGenes) ) {
+								self$usedObj$pr = self$usedObj$prGenes[idx,]
+							}
+							self$annotation <- t
+						},
+						#' reorder a BioData object based on sample information.
+						#' If the ordering data is all numeric the numeric values and not the factor levels will be used!
+						#' @aliases reorder.samples,BioData-method
+						#' @rdname reorder.samples-methods
+						#' @docType methods
+						#' @description this function reorderes the BioData object based on a column in the samples table (e.g. for plotting)
+						#' @param column the samples column to reorder on
+						reorder.samples = function(column) {
+							suppressWarnings( {
+							if (is.factor(self$samples[,column]) &
+								all( is.null(as.numeric(as.vector(self$samples[,column])))) == FALSE ){
+								idx <-  order(as.numeric(as.vector(self$samples[,column])))
+							}else {
+								idx <-  order( self$samples[,column])
+							}
+							})
+							self$dat <- self$dat[ , idx ]
+							if( !is.null(self$zscored)) {
+								self$zscored <- self$zscored[ , idx]
+							}
+							if( !is.null(self$raw)) {
+								self$raw <- self$raw[ , idx]
+							}
+							for ( n in names(self$usedObj$MDS)){
+								self$reorder.mds(n, idx,'MDS')
+							}
+							for ( n in names(self$usedObj$MDS_PCA100)){
+								self$reorder.mds(n, idx,'MDS_PCA100')
+							}
+							if (isS4(self$usedObj$pr) ) {
+								self$usedObj$pr@scores = self$usedObj$pr@scores[idx,]
+							}
+							else if ( !is.null(self$usedObj$pr$x) ) {
+								self$usedObj$pr$x = self$usedObj$pr$x[idx,]
+							}
+							self$samples <- self$samples[idx ,]
 						},
 						#' @description
 						#' data accessor function either reports the dat spot or the zscored if existing
@@ -360,15 +463,5 @@ MicroArray <-
 #	r6x::formalizeClasses()
 }
 
-
-#' @name show
-#' @title the BioData show function
-#' @param object the BioData object
-#' @docType methods
-#' @export show
-setMethod('show', signature = c ('BioData'),
-		definition = function (  object ) {
-			object$print()
-		})
 
 #try(t <- BioData$new(),silent=T)

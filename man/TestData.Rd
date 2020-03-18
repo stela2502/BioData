@@ -4,7 +4,9 @@
 \name{TestData}
 \alias{TestData}
 \title{merged the two smallest Mouse Tabular muris datasets facs_Aorta_TabulaMuris and droplet_Heart_TabulaMuris}
-\format{BioData}
+\format{
+BioData
+}
 \usage{
 TestData
 }

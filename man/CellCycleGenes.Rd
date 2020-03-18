@@ -4,7 +4,9 @@
 \name{CellCycleGenes}
 \alias{CellCycleGenes}
 \title{A simple table containing the Human and mouse orthologe ensembl ids for the cell cycle genes used in PMID28263960 using BioMart and GRCh38.p10}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 CellCycleGenes
 }

@@ -4,7 +4,9 @@
 \name{tRNAMINT}
 \alias{tRNAMINT}
 \title{Class interface for the MINT output}
-\format{\code{\link{R6Class}} object.}
+\format{
+\code{\link{R6Class}} object.
+}
 \value{
 Object of \code{\link{R6Class}} to store MINT results.
 }
@@ -74,11 +76,15 @@ x <- tRNAMINT$new( cbind(annotation,dat),
 \item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="print">}\href{../../BioData/html/BioData.html#method-print}{\code{BioData::BioData$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="pwd">}\href{../../BioData/html/BioData.html#method-pwd}{\code{BioData::BioData$pwd()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="rawData">}\href{../../BioData/html/BioData.html#method-rawData}{\code{BioData::BioData$rawData()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="reorder.genes">}\href{../../BioData/html/BioData.html#method-reorder.genes}{\code{BioData::BioData$reorder.genes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="reorder.mds">}\href{../../BioData/html/BioData.html#method-reorder.mds}{\code{BioData::BioData$reorder.mds()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="BioData" data-topic="BioData" data-id="reorder.samples">}\href{../../BioData/html/BioData.html#method-reorder.samples}{\code{BioData::BioData$reorder.samples()}}\out{</span>}
 }
 \out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -39,7 +39,7 @@ setMethod('get.genes.cor.to', signature = c ('BioData'),
 		else if (method == "propr::perb" ){
 			#this is a sparse matrix...
 			system.time(cor.mat <- propr::perb(as.matrix(t(this))))
-
+			cor.values = cor.mat@matrix
 		}
 		names(cor.values) = rownames(x)
 		

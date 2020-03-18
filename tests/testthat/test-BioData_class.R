@@ -1,6 +1,6 @@
 context( 'Class usage')
 #library(BioData)
-test_that("basic class usage",{
+
 set.seed(1)
 dat = matrix(round(rnorm(10000,mean = 1, sd = 1)),ncol=100)
 dat[which(dat < 1)] = 0
@@ -49,7 +49,30 @@ context( 'colors_4')
 colors_4( x, 'group' )
 exp = rainbow(4)
 expect_equal( x$usedObj$colorRange$group, exp )
-})
+
+context( 'reorder')
+
+x <- BioData$new( as.data.frame(dat), annotation=annotation,  Samples=samples, name="testObject",namecol='sname', outpath = "" )
+
+x$samples$group <- paste( 'Group', rep(c(1,2,3,4)) )
+x$annotation$group <- paste( 'Group', rep(c(4,3,2,1))  )
+
+x$annotation$groupNumeric <-rep(c(1,2,3,4))
+x$annotation$groupNumeric = factor( x$annotation$groupNumeric, levels=c(4,3,2,1))
+
+
+sgroup = x$samples$group
+agroup = x$annotation$group
+groupNumeric = x$annotation$groupNumeric
+
+x$reorder.samples( 'group')
+expect_equal( sort( sgroup ), x$samples$group, info="reorder.samples" )
+
+x$reorder.genes( 'group')
+expect_equal( sort( agroup ), x$annotation$group, info="reorder.genes" )
+
+x$reorder.genes( 'groupNumeric' )
+expect_equal( rev(sort( agroup )), x$annotation$group, info="reorder.genes numeric value" )
 
 
 #x2 <- tRNAMINT$new( dat, annotation=annotation, Samples=samples, name="testObject2",namecol='sname', outpath = "" )

@@ -20,27 +20,9 @@ if ( ! isGeneric('reorder.samples') ){
 
 setMethod('reorder.samples', signature = c ('BioData'),
 		definition = function ( x, column, ... ) {
-			idx <-  order( x$samples[,column])
-			x$dat <- x$dat[ , idx ]
-			if( !is.null(x$zscored)) {
-				x$zscored <- x$zscored[ , idx]
-			}
-			if( !is.null(x$raw)) {
-				x$raw <- x$raw[ , idx]
-			}
-			lapply( names(x$usedObj$MDS),reorder.mds, idx, x, 'MDS')
-			lapply( names(x$usedObj$MDS_PCA100),reorder.mds, idx, x, 'MDS_PCA100')
-			if ( !is.null(x$usedObj$pr) ) {
-				x$usedObj$pr = x$usedObj$pr[idx,]
-			}
-			x$samples <- x$samples[idx ,]
-			invisible(x)
+			stop("please use the new R6 function instead - more memory efficient!\nobj$reorder.samples(columnName) ")
 		}
 )
-
-reorder.mds <- function ( mds.name, idx, obj, mds.type) {
-	obj$usedObj[[mds.type]][[mds.name]] <- obj$usedObj[[mds.type]][[mds.name]][ idx, ]
-}
 
 #' @name reorder.genes
 #' @aliases reorder.genes,BioData-method
@@ -63,29 +45,7 @@ if ( ! isGeneric('reorder.genes') ){ setGeneric('reorder.genes', ## Name
 
 setMethod('reorder.genes', signature = c ('BioData'),
 		definition = function ( x, column, ... ) {
-			idx <-  order( x$annotation[,column])
-			x$dat <- x$dat[ idx ,]
-			if( !is.null(x$zscored)) {
-				x$zscored <- x$zscored[ idx, ]
-			}
-			if( !is.null(x$raw)) {
-				x$raw <- x$raw[ idx, ]
-			}
-			t <- x$annotation[ idx,]
-			if ( class(t) == 'factor' ) {
-				t <- data.frame(t)
-				colnames(t) <- colnames(x$annotation)
-			}
-			if ( ! is.null(x$stats)) {
-				lapply( names(x$stats), function(n) { x$stats[[n]] <-x$stats[[n]][idx,] })
-			}
-			lapply( names(x$usedObj$MDSgene),reorder.mds, idx, x, 'MDSgene')
-			lapply( names(x$usedObj$MDSgenes_PCA100),reorder.mds, idx, x, 'MDSgenes_PCA100')
-			if ( !is.null(x$usedObj$prGenes) ) {
-				x$usedObj$pr = x$usedObj$prGenes[idx,]
-			}
-			x$annotation <- t
-			invisible(x)
+			stop("please use the new R6 function instead - more memory efficient!\nobj$reorder.genes(columnName) ")
 		}
 
 )

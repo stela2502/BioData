@@ -25,6 +25,6 @@ setMethod('SeuratVarGenes', signature = c ('BioData'),
 		}
 		x$annotation$VarGene = FALSE
 		OK = order(x$annotation$VarGeneValue, decreasing=T)[1:n]
-		x$annotation$VarGene [ match( rownames(m)[OK], rownames(x))] = TRUE
+		x$annotation$VarGene [ match( rownames(x)[OK], rownames(x))] = TRUE
 		sort(rownames(x)[which(x$annotation$VarGene ==TRUE)])
 } )

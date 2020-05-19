@@ -48,7 +48,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			if ( ! is.null(colGroups) ) {
 				ColSideColorsSize <- length(colGroups)
-				x <- reorder.samples(x, colGroups[1] )
+				x$reorder.samples( colGroups[1] )
 				for ( i in colGroups ){
 					if ( is.na(match( i, names(colColors))) ){
 						x <- colors_4( x, i )
@@ -70,7 +70,7 @@ setMethod('complexHeatmap', signature = c ('BioData'),
 			}
 			if ( ! is.null(rowGroups) ) {
 				RowSideColorsSize <- length(rowGroups)
-				x <- reorder.genes(x, rowGroups[1] )
+				x$reorder.genes( rowGroups[1] )
 				for ( i in rowGroups ){
 					if ( is.na(match( i, names(rowColors))) ){
 						x <- colors_4( x, i )

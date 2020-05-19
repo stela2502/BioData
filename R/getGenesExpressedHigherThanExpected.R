@@ -34,7 +34,17 @@ if ( ! isGeneric('getGenesExpressedHigherThanExpected') ){setGeneric('getGenesEx
 
 setMethod('getGenesExpressedHigherThanExpected', signature = c ('SingleCells'),
 	definition = function ( x, group, ref='nUMI', n= 300 ) {
-	
+
+		if (is.null( x$samples[,group]) ){
+			if ( group == 'total' ) {
+				x$samples[,group] = factor(rep(1, ncol(x$dat)))
+			}
+			stop(paste("The column", group,"does not exist in the objec"))
+		}
+		if ( class(x$samples[,group] ) != "factor" ){
+			x$samples[,group] = factor(x$samples[,group])
+		}
+
 	genes = lapply ( levels( x$samples[,group]) , function(name) {
 				
 		OrderN = paste('GExHiEx_OoI',name,sep="_")

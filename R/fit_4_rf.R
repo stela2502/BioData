@@ -22,14 +22,8 @@ setMethod('fit_4_rf', signature = c ('BioData'),
 	x$zscored = NULL
 	m <- min(x$dat)
 	if ( m == -1 ) {
-		lapply( 1:ncol(x$dat), function(i) { 
-					to0 <- which(x$dat[,i] == -1 ) 
-					if ( length(to0) > 0 ){
-						x$dat[to0,i] = 0
-					}
-					NULL
-					 } 
-			 )
+		x$dat@x [ which( x$dat@x == -1)] = 0;
+		x$dat = Matrix::drop0( x$dat)
 	}
 	invisible(x)
 } )

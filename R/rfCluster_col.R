@@ -93,9 +93,11 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 				
 				if ( length( x$usedObj[['rfExpressionSets']] ) < i  ) {
 					if ( ! is.null(ids) ) {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[ids], name=tname, copy=TRUE )
+						x$usedObj[['rfExpressionSets']][[ i ]] <- 
+						  reduceTo( x, what='col', to=colnames(x$dat)[ids], name=tname, copy=TRUE )
 					}else {
-						x$usedObj[['rfExpressionSets']][[ i ]] <- reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
+						x$usedObj[['rfExpressionSets']][[ i ]] <- 
+						  reduceTo( x, what='col', to=colnames(x$dat)[sample(c(1:total),subset)], name=tname, copy=TRUE )
 					}
 					## here I need to get rid of the -1 values!
 					fit_4_rf(x$usedObj[['rfExpressionSets']][[ i ]], copy=F)

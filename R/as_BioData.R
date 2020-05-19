@@ -106,7 +106,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
-			m = as_BioData()
+			ret = as_BioData()
 
 			ret$dat = dat@data
 			if ( ncol(dat@userGroups) > 0  ) {
@@ -117,6 +117,12 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 			ret$usedObj <- dat@usedObj
 			ret$usedObj$Seurat.meta.cell = dat@meta.cell
 			class(ret) = c( 'SingleCells', 'BioData', 'R6')
+
+			ret$usedObj$MDS_PCR100 = list()
+
+			for (name in  names ( dat@drc ) ){
+				ret$usedObj$MDS_PCR100[[name]] = dat@drc[[name]]
+			}
 
 			return( ret)
 

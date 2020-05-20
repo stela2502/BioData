@@ -100,30 +100,15 @@ setMethod('mds', signature = c ('BioData'),
 					}
 					rm( tmp) 
 					gc()
-#				}
-#				#	mds.trans <- prcomp(t(tab))$x[,1:3]
-#				
-#				else if ( mds.type=='DM') { # removed due to a ssl library problem on aurora ls2.
-#					if (!library("destiny", quietly = TRUE,logical.return=TRUE )) {
-#						stop("package 'destiny' needed for this function to work. Please install it.",
-#								call. = FALSE)
-#					}
-#					if ( ! exists('sigma', mode='numeric') ){
-#						if ( exists('find_sigmas', where='package:destiny', mode='function') ){
-#							sigmas <- destiny::find_sigmas(tab, verbose=F)
-#							sigma <- destiny::optimal_sigma(sigmas)
-#						}else {
-#							sigmas <- destiny::find.sigmas(tab, verbose=F)
-#							sigma <- destiny::optimal.sigma(sigmas)
-#						}
-#						
-#					}
-#					if ( !exists('distance', mode='character')){
-#						distance = 'cosine'
-#					}
-#					dm <- destiny::DiffusionMap(tab, distance = distance, sigma = sigma, n_eigs = dim)
-#					mds.proj <- destiny::as.data.frame(dm)[,1:dim]
-#					
+
+				}else if ( mds.type == 'Phate') {
+					if (!requireNamespace("phateR", quietly = TRUE ) == T ) {
+						stop("package 'phateR' needed for this function to work. Please install it.",
+								call. = FALSE)
+					}
+					phateR::Phate = phate( tab , ndim=3)
+					mds.proj <- phateR::Phate$embedding
+
 				}else if ( mds.type == "TSNE"){
 					browser()
 					## there is an extremely efficient python implementation of that available.

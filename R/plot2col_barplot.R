@@ -2,7 +2,7 @@
 #' @aliases plot2col_barplot,BioData-method
 #' @rdname plot2col_barplot-methods
 #' @docType methods
-#' @description Plot n1 vs n2 columns as colored barplot to show the distribution of n2 inside of n1
+#' @description Plot sample column n1 vs sample column n2 as colored barplot to show the distribution of n2 inside of n1
 #' @param x the BioData object
 #' @param n1 the samples column for the x axis
 #' @param n2 the samples column for the y axis and the coloring of the bars#' @name plot2col_barplot

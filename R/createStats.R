@@ -49,7 +49,10 @@ setMethod('createStats', signature = c ('BioData'),
 			for ( i in 1:(length(conditions)-1) ){
 				for ( a in (i+1):length(conditions) ){
 					x <- add_to_stat ( x, 
-						stat = as.data.frame(DESeq2::results(x$usedObj[['cds']][[id]], contrast= c( condition, conditions[i] , conditions[a] ) )), 
+						stat = as.data.frame(
+							DESeq2::results(x$usedObj[['cds']][[id]], 
+							contrast= c( condition, conditions[i] , conditions[a] ) )
+						), 
 						name = paste( conditions[i], conditions[a],sep=' vs. ')
 					)
 
@@ -109,7 +112,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			}
 			
 			for ( i in cmps ) {
-				x$stats[[i]] <- limma::toptable(fit2, coef = i, adjust='fdr',number=1000000)
+				x$stats[[i]] <- limma::topTable(fit2, coef = i, adjust='fdr',number=1000000)
 				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data()),rownames(x$stats[[i]])) ,]
 				x$stats[[i]] <- cbind( rownames(x$data()), x$stats[[i]] )
 			}

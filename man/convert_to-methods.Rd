@@ -6,7 +6,7 @@
 \alias{convert_to,BioData-method}
 \title{description of function convert_to}
 \usage{
-convert_to(x, type = c("MAST", "DESeq2", "scran"), species = NULL, ...)
+convert_to(x, type = c("DESeq2", "scran", "Seurat"), species = NULL, ...)
 }
 \arguments{
 \item{x}{the BioData object}

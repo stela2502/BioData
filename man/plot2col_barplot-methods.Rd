@@ -23,5 +23,5 @@
 \item{X11type}{a type for the plot devices default='cairo'}
 }
 \description{
-Plot n1 vs n2 columns as colored barplot to show the distribution of n2 inside of n1
+Plot sample column n1 vs sample column n2 as colored barplot to show the distribution of n2 inside of n1
 }

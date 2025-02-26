@@ -49,7 +49,10 @@ setMethod('createStats', signature = c ('BioData'),
 			for ( i in 1:(length(conditions)-1) ){
 				for ( a in (i+1):length(conditions) ){
 					x <- add_to_stat ( x, 
-						stat = as.data.frame(DESeq2::results(x$usedObj[['cds']][[id]], contrast= c( condition, conditions[i] , conditions[a] ) )), 
+						stat = as.data.frame(
+							DESeq2::results(x$usedObj[['cds']][[id]], 
+							contrast= c( condition, conditions[i] , conditions[a] ) )
+						), 
 						name = paste( conditions[i], conditions[a],sep=' vs. ')
 					)
 
@@ -109,7 +112,7 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 			}
 			
 			for ( i in cmps ) {
-				x$stats[[i]] <- limma::toptable(fit2, coef = i, adjust='fdr',number=1000000)
+				x$stats[[i]] <- limma::topTable(fit2, coef = i, adjust='fdr',number=1000000)
 				x$stats[[i]] <- x$stats[[i]][match(rownames(x$data()),rownames(x$stats[[i]])) ,]
 				x$stats[[i]] <- cbind( rownames(x$data()), x$stats[[i]] )
 			}
@@ -120,60 +123,8 @@ setMethod('createStats', signature = c ( 'MicroArray') ,
 
 setMethod('createStats', signature = c ( 'SingleCells') ,
 		definition = function ( x, condition, files=F, A=NULL, B=NULL, covariates=NULL, form=NULL ) {
-			if (!requireNamespace("MAST", quietly = TRUE)) {
-				stop("MAST needed for this function to work. Please install it.",
-						call. = FALSE)
-			}
-			toM <- function (x) {
-				d <- as.matrix(x$dat)
-				d[which(d<=-20)] <- NA
-				d[is.na(d)] <- 0
-				d
-			}
-			if ( is.null(x$samples[,condition]) ) {
-				stop( paste("the condition",condition, "is not defined in the samples table!"))
-			}
-			if ( is.null(A) ) {
-				name = paste ("SingleCellAssay",condition)
-				a <- x
-			}else {
-				keep <- which( x$samples[,condition] ==A | x$samples[,condition] == B)
-				name = paste ("SingleCellAssay",condition, A, B)
-				a <- reduceTo( x, what='col',to= colnames(x$data())[keep], name=name, copy=T)
-			}
-			d <- toM(a)
-			cData = data.frame(wellKey=colnames(d), GroupName = a$samples[,condition])
-			if ( ! is.null(covariates)) {
-				for (n in covariates ){
-					new = ncol(cData) +1
-					cData = cbind(cData, a$samples[,n] )
-					colnames(cData)[new] = n
-				}
-				if ( is.null(form) ) {
-					print ( "You have not given me a function - I will create a simple one:" )
-					form = paste( "~ GroupName + ", paste( collapse=" + ",covariates))
-					print ( form )
-				}
-			}else {
-				form = "~ GroupName"
-			}
 			
-			sca <- MAST::FromMatrix(class='SingleCellAssay', 
-					exprsArray=d, 
-					cData=cData, 
-					fData=data.frame(primerid=rownames(d)))
-			#groups <- sca@elementMetadata$GroupName <- a$samples[,condition]
-			zlm.output <- MAST::zlm( as.formula(form), sca, method='glm', ebayes=T)
-			zlm.lr <- MAST::lrTest(zlm.output, form)
-			
-			x <- add_to_stat ( x, zlm.lr[,,'Pr(>Chisq)'], name )
-
-			rm(sca)
-			rm(zlm.output)
-			rm(zlm.lr)
-			gc(FALSE)
-			#detach( 'package:MAST' )
-			invisible(x)
+			stop("This package is depricated - please shift to using an other single cell package.",call. = FALSE)
 			
 		}
 )

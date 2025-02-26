@@ -10,13 +10,13 @@
 #' @title description of function convert_to
 #' @export 
 setGeneric('convert_to', ## Name
-	function (x, type=c("MAST", "DESeq2", "scran") , species=NULL, ...) { 
+	function (x, type=c( "DESeq2", "scran", "Seurat") , species=NULL, ...) { 
 		standardGeneric('convert_to')
 	}
 )
 
 setMethod('convert_to', signature = c ('BioData'),
-	definition = function (x, type=c("MAST", "DESeq2", "scran", 'Seurat') , species=NULL, ...) {
+	definition = function (x, type=c( "DESeq2", "scran", 'Seurat') , species=NULL, ...) {
 	ret <- NULL
 	toM <- function (x) {
 		d <- as.matrix(x)

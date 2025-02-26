@@ -11,7 +11,8 @@ Depends:
     R (>= 3.4.2),
     R6,
     Matrix,
-	RFclust.SGE
+	RFclust.SGE,
+	BiocManager
 biocViews: 
     RDRToolbox,
     pcaMethods,
@@ -35,8 +36,10 @@ Suggests:
     testthat,
     knitr,
     scran,
-    rmarkdown
-RoxygenNote: 7.1.0
+    phateR,
+    rmarkdown,
+    Seurat (>= 3.0.0)
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Imports: 
     DDRTree,
@@ -44,12 +47,12 @@ Imports:
     RcppEigen,
 	DESeq2,
 	dplyr,
+	randomForest,
 	FastWilcoxTest (>= 0.1.9),
 	ggplot2,
 	GO.db,
 	gplots,
 	limma,
-	MAST,
 	progress,
 	Matrix.utils,
 	mclust,
@@ -65,7 +68,6 @@ Imports:
 	RSvgDevice,
 	Rtsne,
 	R.utils,
-	Seurat (>= 3.0.0),
 	stringr,
 	topGO,
 	umap,

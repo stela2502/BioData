@@ -2,7 +2,6 @@
 #' @importFrom DDRTree DDRTree
 #' @importFrom DESeq2 DESeq DESeqDataSetFromMatrix results
 #' @importFrom FastWilcoxTest CorMatrix NormalizeCells StatTest ZScore
-#' @importFrom MAST FromMatrix lrTest zlm
 #' @importFrom Matrix Matrix colSums drop0 rowSums sparseMatrix t
 #' @importFrom R6 R6Class
 #' @importFrom RDRToolbox Isomap LLE

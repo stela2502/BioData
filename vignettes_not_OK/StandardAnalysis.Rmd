@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 BioData is a R6 R class to handle different kinds of biological data. At the moment a BioData object is for NGS expression data and will 
-e.g. use DEseq2 for statistical analysis; a SingleCells object is meant to store SingleCell NGS data and is using the MAST statistics by default; and finally Microarray, the oldes implemtaion and using limma for the startistics.
+e.g. use DEseq2 for statistical analysis; a SingleCells object is meant to store SingleCell NGS data statistics for this type of data is not implemented any more; and finally Microarray is an old implemtaion using limma for the startistics.
 
 BioData is an R6 class and therefore objects are modified by functions.
 Please keep that in mind when you use it.

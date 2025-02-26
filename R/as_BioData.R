@@ -118,6 +118,12 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 			ret$usedObj$Seurat.meta.cell = dat@meta.cell
 			class(ret) = c( 'SingleCells', 'BioData', 'R6')
 
+			ret$usedObj$MDS_PCR100 = list()
+
+			for (name in  names ( dat@drc ) ){
+				ret$usedObj$MDS_PCR100[[name]] = dat@drc[[name]]
+			}
+
 			return( ret)
 
 			

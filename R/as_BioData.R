@@ -106,7 +106,7 @@ setMethod('as_BioData', signature = c ('cellexalvrR'),
 		definition = function ( dat ) {
 			#dat <- cellexalvr::renew(dat)
 			#cbind(annotation,dat), Samples=samples, name="testObject",namecol='sname', outpath = ""
-			m = as_BioData()
+			ret = as_BioData()
 
 			ret$dat = dat@data
 			if ( ncol(dat@userGroups) > 0  ) {
@@ -258,7 +258,12 @@ SQLite_2_matrix <- function ( fname, useS=NULL, useG=NULL, cells=  list( 'table'
 	rm(sth)
 	#browser()
 	if (  ! is.null(useS) ) {
-		q <- paste("select",cells$name,"from", cells$table, " where id IN (", paste( useS, collapse= ", ") , ") ", 'order by id' )	 
+		bad = which(Matrix::colSums(ret)==0)
+		if ( length(bad) > 0 ){
+			ret = ret[,-bad]
+		}
+		q <- paste("select",cells$name,"from", cells$table, " where id IN (", paste( useS, collapse= ", ") , ") ", 'order by id' )
+
 	}else {
 		q <- paste("select",cells$name,"from", cells$table,'order by id' ) 
 	}
@@ -282,7 +287,7 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 			sample_UMIs = tryCatch({ SQLite_SampleSummary( dat ) }, error = function(e) { 
 						SQLite_SampleSummary( dat, list( 'table' = 'cells', name='cname', rev='cell_id') )
 					} )
-			useS =  sample_UMIs$sample_id[which(sample_UMIs$count > minUMI ) ]
+			useS =  sample_UMIs$sample_id[which(sample_UMIs$reads> minUMI ) ]
 			
 			useG = NULL
 			gene_UMI <- SQLite_ExpressionSummary( dat )
@@ -292,6 +297,7 @@ load_database <- function( dat, minUMI=100, minGexpr=NULL ) {
 			useG = length(gene_UMI$gene_id)
 			mat = tryCatch({ SQLite_2_matrix ( dat, useS = useS, useG = NULL , list( 'table' = 'samples', name='sname', rev='sample_id')) } ,
 					 error = function(e) {
+					 	message("the sqlite database does not have a sample table - does it have a cells table instead?")
 						 SQLite_2_matrix ( dat, useS = useS, useG = NULL, list( 'table' = 'cells', name='cname', rev='cell_id') )
 					 }
 			 )

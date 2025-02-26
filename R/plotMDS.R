@@ -13,17 +13,18 @@
 #' @param pdf use pdf instead of png output (default TRUE)
 #' @param width width of the plots (default pdf 10)
 #' @param height height of the plots (default pdf 10)
+#' @param uCol color for not expressing cell ( default 'black')
 #' @param ... additional plot arguments for the 2D dr plot
 #' @title description of function plotMDS
 #' @export 
 if ( ! isGeneric('plotMDS') ){setGeneric('plotMDS', ## Name
-	function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10,... ) { 
+	function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10, uCol= 'black', ... ) { 
 		standardGeneric('plotMDS')
 	}
 ) }
 
 setMethod('plotMDS', signature = c ('BioData'),
-	definition = function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10, ... ) {
+	definition = function (obj, mds, group, genes, x=1, y=2, green=F, pdf=TRUE, width=10, height=10, uCol= 'black', ... ) {
 	mds.dat = NULL
 	if ( ! is.null(obj$usedObj$MDS_PCA100_dim_2[[mds]] )){
 		print( "Propper 2D dimension reduction found" )
@@ -102,9 +103,9 @@ setMethod('plotMDS', signature = c ('BioData'),
 				d  <- factor(brks [cut( n, breaks= brks)], levels=brks)
 			}
 			if ( green) {
-				COLS = c('#006D2C', 'black', gplots::bluered(length(levels(d)) -2  ))
+				COLS = c('#006D2C', uCol, gplots::bluered(length(levels(d)) -2  ))
 			}else{
-				COLS = c('black', 'black', gplots::bluered(length(levels(d)) -2  ))
+				COLS = c(uCol, uCol, gplots::bluered(length(levels(d)) -2  ))
 			}
 			
 			if ( length(COLS) == 3 ) {

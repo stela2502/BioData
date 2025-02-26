@@ -132,10 +132,14 @@ setMethod('rfCluster_col', signature = c ('BioData'),
 					stop( "please re-run this function later - the clustring process has not finished!")
 				}
 				for ( a in k ){
-					x$usedObj[["rfExpressionSets"]][[i]]$samples <- 
+					if ( class(x$usedObj[["rfExpressionSets"]][[i]]$samples) == 'factor') {
+					    message("samples information is a factor!! Should be data.frame!!")
+					}else{
+						x$usedObj[["rfExpressionSets"]][[i]]$samples <- 
 							x$usedObj[["rfExpressionSets"]][[i]]$samples[ ,
 									is.na(match ( colnames(x$usedObj[["rfExpressionSets"]][[i]]$samples), paste('group n=',a) ))==T 
 							]
+					}
 				}
 				x <- createRFgrouping_col( x, RFname=tname,  k=k, single_res_col = paste( single_res_col, i) )
 				
@@ -196,15 +200,15 @@ setMethod('createRFgrouping_col', signature = c ('BioData'),
 					paste('group n=',k)
 			m <- max(k)
 			## create the predictive random forest object
-			browser()
+			
 			if ( all.equal(sort( colnames(x$usedObj[['rfObj']][[RFname]]@dat) ), sort( colnames(x$dat) ) ) == TRUE ) {
 				## use the column in grouping
 				print ( "using the calcualted grouping")
 				mat <- match(colnames(x$dat), colnames(x$usedObj[['rfObj']][[RFname]]@dat))
 				for ( id in 1:length(k) ){
 					#browser()
-					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
-					lapply( paste( single_res_col, ' n=', k[id], sep=""), function( n ) { colors_4(x,n) }) 
+					x$samples[, paste( single_res_col, ' n=', k[id], sep="") ] = factor(as.numeric(groups[mat,2+id]), levels=c(1:k[id]))
+					colors_4(x, paste( single_res_col, ' n=', k[id], sep="") )
 				}
 			}else {
 				#predict based on the RFdata

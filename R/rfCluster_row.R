@@ -180,7 +180,7 @@ setMethod('createRFgrouping_row', signature = c ('BioData'),
 				for ( id in 1:length(k) ){
 					### needs a fix for second third and so on!
 					mat <- match(rownames(x$dat), colnames(x$usedObj[['rfObj_row']][[RFname]]@dat))
-					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(groups[mat,2+id], levels=c(1:k[id]))
+					x$annotation[, paste( single_res_row, ' n=', k[id], sep="") ] = factor(as.numeric(groups[mat,2+id]), levels=c(1:k[id]))
 					x <- colors_4( x, paste( single_res_row, ' n=', k[id], sep="")  )	
 				}
 			}
